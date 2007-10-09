@@ -5,16 +5,33 @@
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000">
-<h1>Bayesian Classifiers for Java</h1>
+
+<h1>Bayesian Classifiers for Java</h1>  
 <p>This project contains two bayesian classifiers for Java: a Naive
 implementation and a Fishers implementation. It's merely a port from Toby
-Segaran's python code from his book "Programming Collective Intelligence,"
-which is included in the /lib directory.
+Segaran's python code from his book &quot;Programming Collective
+Intelligence,&quot; which is included in the /lib directory.  </p>
+ 
+ <p>The only requirement for this library is <a
+href="http://javolution.org">javolution</a>.   </p>
+ 
+ <p>It's licensed under the Artistic License.</p>
+  <h2>Usage</h2> Basically, using ci-bayes is a matter of defining a way to
+extract elements from a body of text (an implementation of the WordLister
+interface), and then constructing a Classifier.   
+<p>A default naive WordListerImpl is supplied with the library.  </p>
+<p>A simple example of the NaiveClassifier in use might look like this:</p>
+<pre>FisherClassifier fc=new FisherClassifierImpl(); <br />
+fc.train(&quot;The quick brown fox jumps over the lazy dog's tail&quot;,
+&quot;good&quot;); <br />
+fc.train(&quot;Make money fast!&quot;, &quot;bad&quot;); <br />
+String classification=fc.getClassification(&quot;money&quot;); // should be
+&quot;bad&quot;</pre>There's also a Serializer class provided, which shows
+how a given Classifier can be persisted (through Java Serialization, even.)
+The class shows how any given classifier can be persisted.  
+<p>Other storage mechanisms - like JDBC, JPA, XML, etc. - can be built as
+well.</p>
 
-<p>The only requirement for this library is <a
-href="http://javolution.org">javolution</a>. 
-
-<p>It's licensed under the Artistic License.
 </body>
 </html>
 
