@@ -21,10 +21,9 @@ extract elements from a body of text (an implementation of the WordLister
 interface), and then constructing a Classifier.   
 <p>A default naive WordListerImpl is supplied with the library.  </p>
 <p>A simple example of the NaiveClassifier in use might look like this:</p>
-<pre>FisherClassifier fc=new FisherClassifierImpl(); <br />
-fc.train(&quot;The quick brown fox jumps over the lazy dog's tail&quot;,
-&quot;good&quot;); <br />
-fc.train(&quot;Make money fast!&quot;, &quot;bad&quot;); <br />
+<pre>FisherClassifier fc=new FisherClassifierImpl();
+fc.train(&quot;The quick brown fox jumps over the lazy dog's tail&quot;,&quot;good&quot;);
+fc.train(&quot;Make money fast!&quot;, &quot;bad&quot;); 
 String classification=fc.getClassification(&quot;money&quot;); // should be &quot;bad&quot;</pre>There's also a Serializer class provided, which shows
 how a given Classifier can be persisted (through Java Serialization, even.)
 The class shows how any given classifier can be persisted.  
