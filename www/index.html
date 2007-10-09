@@ -25,8 +25,7 @@ interface), and then constructing a Classifier.
 fc.train(&quot;The quick brown fox jumps over the lazy dog's tail&quot;,
 &quot;good&quot;); <br />
 fc.train(&quot;Make money fast!&quot;, &quot;bad&quot;); <br />
-String classification=fc.getClassification(&quot;money&quot;); // should be
-&quot;bad&quot;</pre>There's also a Serializer class provided, which shows
+String classification=fc.getClassification(&quot;money&quot;); // should be &quot;bad&quot;</pre>There's also a Serializer class provided, which shows
 how a given Classifier can be persisted (through Java Serialization, even.)
 The class shows how any given classifier can be persisted.  
 <p>Other storage mechanisms - like JDBC, JPA, XML, etc. - can be built as
