@@ -25,7 +25,8 @@ import java.util.regex.Pattern;
 
  */
 public class WordListerImpl implements WordLister {
-    public Set<String> getUniqueWords(String document) {
+    public Set<String> getUniqueWords(Object obj) {
+        String document=obj.toString();
         Pattern p= Pattern.compile("\\W");
         String[] words=p.split(document.toLowerCase());
         Set<String> features=new FastSet<String>();

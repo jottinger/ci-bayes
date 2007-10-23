@@ -10,5 +10,5 @@ import java.util.Set;
  * @author <a href="mailto:joeo@enigmastation.com">Joseph B. Ottinger</a>
  */
 public interface WordLister {
-    Set<String> getUniqueWords(String document);
+    Set<String> getUniqueWords(Object document);
 }
