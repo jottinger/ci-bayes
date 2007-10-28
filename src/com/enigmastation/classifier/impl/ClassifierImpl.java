@@ -115,9 +115,9 @@ public class ClassifierImpl implements Classifier {
     /**
      * Direct port from Segaran's book, including method name.
      *
-     * @return the list of all categories
+     * @return the list of all getCategories
      */
-    Set<String> categories() {
+    public Set<String> getCategories() {
         Set<String> cats = new FastSet<String>();
         cats.addAll(getCategoryDocCount().keySet());
         return cats;
@@ -172,7 +172,7 @@ public class ClassifierImpl implements Classifier {
     public double getWeightedProbability(String feature, String category) {
         double basicprob = getFeatureProbability(feature, category);
         long totals = 0;
-        for (String cat : categories()) {
+        for (String cat : getCategories()) {
             totals += fcount(feature, cat);
         }
         return ((WEIGHT * ASSUMED_PROBABILITY) + (totals * basicprob)) / (WEIGHT + totals);
