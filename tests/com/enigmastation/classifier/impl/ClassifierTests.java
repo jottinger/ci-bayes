@@ -11,7 +11,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 
 public class ClassifierTests {
-    @Test
+    @Test(groups = {"all"})
     public void testWords() {
         WordLister w=new WordListerImpl();
         assertEquals(w.getUniqueWords("Now is the time - 'now'").size(),3);
