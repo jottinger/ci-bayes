@@ -1,6 +1,8 @@
 package com.enigmastation.classifier.persistence;
 
 import com.enigmastation.classifier.Classifier;
+import com.enigmastation.classifier.FeatureMap;
+import com.enigmastation.classifier.ClassifierMap;
 
 import java.io.*;
 import java.util.Map;
@@ -28,8 +30,8 @@ public class Serializer {
         FileInputStream fos=new FileInputStream(filename);
         ObjectInputStream oos=new ObjectInputStream(fos);
 
-        Map<String, Integer> cc= (Map<String, Integer>) oos.readObject();
-        Map<String, Map<String, Integer>> fc= (Map<String, Map<String, Integer>>) oos.readObject();
+        ClassifierMap cc= (ClassifierMap) oos.readObject();
+        FeatureMap fc= (FeatureMap) oos.readObject();
 
         classifier.getCategoryDocCount().clear();
         classifier.getCategoryFeatureMap().clear();

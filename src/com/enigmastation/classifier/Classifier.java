@@ -17,9 +17,9 @@ public interface Classifier {
 
     double getWeightedProbability(String feature, String category);
 
-    Map<String, Map<String, Integer>> getCategoryFeatureMap();
+    FeatureMap getCategoryFeatureMap();
 
-    Map<String, Integer> getCategoryDocCount();
+    ClassifierMap getCategoryDocCount();
 
     Set<String> getCategories();
 }

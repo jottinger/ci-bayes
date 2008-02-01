@@ -2,10 +2,10 @@ package com.enigmastation.classifier.impl;
 
 import com.enigmastation.classifier.Classifier;
 import com.enigmastation.classifier.WordLister;
-import javolution.util.FastMap;
+import com.enigmastation.classifier.ClassifierMap;
+import com.enigmastation.classifier.FeatureMap;
 import javolution.util.FastSet;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,11 +21,11 @@ public class ClassifierImpl implements Classifier {
     /**
      * In Segaran's book, this is referred to as "fc"
      */
-    private Map<String, Map<String, Integer>> categoryFeatureMap = new FastMap<String, Map<String, Integer>>();
+    private FeatureMap categoryFeatureMap = new FeatureMap();
     /**
      * In Segaran's book, this is referred to as "cc"
      */
-    private Map<String, Integer> categoryDocCount = new FastMap<String, Integer>();
+    private ClassifierMap categoryDocCount = new ClassifierMap();
     WordLister extractor = null;
 
 
@@ -46,16 +46,8 @@ public class ClassifierImpl implements Classifier {
      * @param category the category
      */
     void incf(String feature, String category) {
-        Map<String, Integer> fm = getCategoryFeatureMap().get(feature);
-        if (fm == null) {
-            getCategoryFeatureMap().put(feature, new HashMap<String, Integer>());
-            fm = getCategoryFeatureMap().get(feature);
-        }
-        Integer c = 1;
-        if (fm.containsKey(category)) {
-            c = fm.get(category) + 1;
-        }
-        fm.put(category, c);
+        ClassifierMap fm = getCategoryFeatureMap().getFeature(feature);
+        fm.incrementCategory(category);
     }
 
     /**
@@ -65,11 +57,7 @@ public class ClassifierImpl implements Classifier {
      * @param category the category to increment
      */
     void incc(String category) {
-        int i = 1;
-        if (getCategoryDocCount().containsKey(category)) {
-            i = getCategoryDocCount().get(category) + 1;
-        }
-        getCategoryDocCount().put(category, i);
+        getCategoryDocCount().incrementCategory(category);
     }
 
     /**
@@ -105,11 +93,7 @@ public class ClassifierImpl implements Classifier {
      * @return the total number of items
      */
     double totalcount() {
-        long d = 0;
-        for (Integer i : getCategoryDocCount().values()) {
-            d += i;
-        }
-        return d;
+        return getCategoryDocCount().getTotalCount();
     }
 
     /**
@@ -178,11 +162,11 @@ public class ClassifierImpl implements Classifier {
         return ((WEIGHT * ASSUMED_PROBABILITY) + (totals * basicprob)) / (WEIGHT + totals);
     }
 
-    public Map<String, Map<String, Integer>> getCategoryFeatureMap() {
+    public FeatureMap getCategoryFeatureMap() {
         return categoryFeatureMap;
     }
 
-    public Map<String, Integer> getCategoryDocCount() {
+    public ClassifierMap getCategoryDocCount() {
         return categoryDocCount;
     }
 }
