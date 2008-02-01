@@ -1,12 +1,8 @@
 package com.enigmastation.classifier.impl;
 
-import com.enigmastation.classifier.Classifier;
-import com.enigmastation.classifier.WordLister;
-import com.enigmastation.classifier.ClassifierMap;
-import com.enigmastation.classifier.FeatureMap;
+import com.enigmastation.classifier.*;
 import javolution.util.FastSet;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -26,9 +22,13 @@ public class ClassifierImpl implements Classifier {
      * In Segaran's book, this is referred to as "cc"
      */
     private ClassifierMap categoryDocCount = new ClassifierMap();
-    WordLister extractor = null;
-
-
+    protected WordLister extractor = null;
+    Set<ClassifierListener> listeners=new FastSet<ClassifierListener>();
+    
+    public void addListener(ClassifierListener listener) {
+        listeners.add(listener);
+    }
+    
     public ClassifierImpl(WordLister w) {
         extractor = w;
     }
@@ -48,6 +48,12 @@ public class ClassifierImpl implements Classifier {
     void incf(String feature, String category) {
         ClassifierMap fm = getCategoryFeatureMap().getFeature(feature);
         fm.incrementCategory(category);
+        if(listeners.size()>0) {
+            FeatureIncrement fi=new FeatureIncrement(feature, category, fm.get(category));
+            for(ClassifierListener l:listeners) {
+                l.handleFeatureUpdate(fi);
+            }
+        }
     }
 
     /**
@@ -58,6 +64,12 @@ public class ClassifierImpl implements Classifier {
      */
     void incc(String category) {
         getCategoryDocCount().incrementCategory(category);
+        if(listeners.size()>0) {
+            CategoryIncrement fi=new CategoryIncrement(category, getCategoryDocCount().get(category));
+            for(ClassifierListener l:listeners) {
+                l.handleCategoryUpdate(fi);
+            }
+        }
     }
 
     /**

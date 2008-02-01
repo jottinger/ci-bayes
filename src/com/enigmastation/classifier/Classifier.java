@@ -1,6 +1,5 @@
 package com.enigmastation.classifier;
 
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -22,4 +21,6 @@ public interface Classifier {
     ClassifierMap getCategoryDocCount();
 
     Set<String> getCategories();
+
+    void addListener(ClassifierListener listener);
 }
