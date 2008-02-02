@@ -1,5 +1,6 @@
 package com.enigmastation.classifier.impl;
 
+import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.FisherClassifier;
 import com.enigmastation.classifier.WordLister;
 import javolution.util.FastMap;
@@ -37,7 +38,7 @@ public class FisherClassifierImpl extends NaiveClassifierImpl implements FisherC
         return clf / freqsum;
     }
 
-    double fisherprob(String item, String cat) {
+    double fisherprob(Object item, String cat) {
         double p = 1.0;
         Set<String> features = extractor.getUniqueWords(item);
         for (String f : features) {
@@ -47,7 +48,11 @@ public class FisherClassifierImpl extends NaiveClassifierImpl implements FisherC
         return invchi2(fscore, features.size() * 2);
     }
 
-    public double getFisherProbability(String item, String category) {
+    public double getFisherProbability(Object item, String category) {
+        return fisherprob(item, category);
+    }
+
+    public double getProbabilityForCategory(Object item, String category) {
         return fisherprob(item, category);
     }
 
@@ -70,8 +75,8 @@ public class FisherClassifierImpl extends NaiveClassifierImpl implements FisherC
         super();
     }
 
-    @Override
-    public String getClassification(String item, String defaultCat) {
+    /*
+    public String getClassificationOld(Object item, String defaultCat) {
         String best = defaultCat;
         double max = 0.0;
         for (String c : getCategories()) {
@@ -82,5 +87,20 @@ public class FisherClassifierImpl extends NaiveClassifierImpl implements FisherC
             }
         }
         return best;
+    }
+    */
+
+    @Override
+    public String getClassification(Object item, String defaultCat) {
+            if(getCategories().size()==0) {
+            return defaultCat;
+        }
+        ClassifierProbability[] probs=getProbabilities(item);
+        for(ClassifierProbability p:probs) {
+            if(p.getScore()>getMinimum(p.getCategory())) {
+                return p.getCategory();
+            }
+        }
+        return defaultCat;
     }
 }

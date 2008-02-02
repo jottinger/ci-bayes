@@ -1,9 +1,11 @@
 package com.enigmastation.classifier.impl;
 
+import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.NaiveClassifier;
 import com.enigmastation.classifier.WordLister;
 import javolution.util.FastMap;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,35 +45,69 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
         return getClassification(item, defaultCat);
     }
 
-    public String getClassification(String item, String defaultCat) {
-        Map<String, Double> probs = new FastMap<String, Double>();
-
-        double max = 0.0;
-        String category = null;
+    public ClassifierProbability[] getProbabilities(Object item) {
+        ClassifierProbability[] probabilities = new ClassifierProbability[getCategories().size()];
+        int index = 0;
         for (String cat : getCategories()) {
-            double p = getProbabilityForCategory(item, cat);
-            probs.put(cat, p);
-            if (p > max) {
-                max = p;
-                category = cat;
-            }
+            probabilities[index] = new ClassifierProbability();
+            probabilities[index].setCategory(cat);
+            probabilities[index].setScore(getProbabilityForCategory(item, cat));
+            index++;
+        }
+        Arrays.sort(probabilities);
+        return probabilities;
+    }
+
+
+    public String getClassification(Object item, String defaultCat) {
+        if (getCategories().size() == 0) {
+            return defaultCat;
         }
 
-        for (String cat : probs.keySet()) {
-            if (cat.equals(category))
+        ClassifierProbability[] probs = getProbabilities(item);
+        ClassifierProbability cp = probs[0];
+
+        for (ClassifierProbability p : probs) {
+            if (p.getCategory().equals(cp.getCategory())) {
                 continue;
-            if (probs.get(cat) * getCategoryThreshold(category) > probs.get(category)) {
+            }
+            if (p.getScore() * getCategoryThreshold(cp.getCategory()) > cp.getScore()) {
                 return defaultCat;
             }
         }
-        return category;
+        return cp.getCategory();
     }
 
+    /*
+        private String getClassificationOld(Object item, String defaultCat) {
+            Map<String, Double> probs = new FastMap<String, Double>();
+
+            double max = 0.0;
+            String category = null;
+            for (String cat : getCategories()) {
+                double p = getProbabilityForCategory(item, cat);
+                probs.put(cat, p);
+                if (p > max) {
+                    max = p;
+                    category = cat;
+                }
+            }
+
+            for (String cat : probs.keySet()) {
+                if (cat.equals(category))
+                    continue;
+                if (probs.get(cat) * getCategoryThreshold(category) > probs.get(category)) {
+                    return defaultCat;
+                }
+            }
+            return category;
+        }
+    */
     protected double docprob(String item, String category) {
         return getDocumentProbabilityForCategory(item, category);
     }
 
-    public double getDocumentProbabilityForCategory(String item, String category) {
+    public double getDocumentProbabilityForCategory(Object item, String category) {
         Set<String> features = this.extractor.getUniqueWords(item);
         double p = 1.0;
         for (String f : features) {
@@ -84,7 +120,7 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
         return getProbabilityForCategory(item, category);
     }
 
-    public double getProbabilityForCategory(String item, String category) {
+    public double getProbabilityForCategory(Object item, String category) {
         double catprob = catcount(category);
         catprob /= totalcount();
         double dp = getDocumentProbabilityForCategory(item, category);

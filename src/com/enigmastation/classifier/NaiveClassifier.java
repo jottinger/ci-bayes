@@ -13,11 +13,11 @@ package com.enigmastation.classifier;
  * @author <a href="mailto:joeo@enigmastation.com">Joseph B. Ottinger</a>
  */
 public interface NaiveClassifier extends Classifier {
-    double getDocumentProbabilityForCategory(String item, String category);
+    double getDocumentProbabilityForCategory(Object item, String category);
 
-    double getProbabilityForCategory(String item, String category);
+    double getProbabilityForCategory(Object item, String category);
 
-    String getClassification(String item, String defaultCat);
+    String getClassification(Object item, String defaultCat);
 
     void setCategoryThreshold(String cat, double t);
 

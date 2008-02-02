@@ -1,9 +1,6 @@
 package com.enigmastation.classifier.impl;
 
-import com.enigmastation.classifier.Classifier;
-import com.enigmastation.classifier.FisherClassifier;
-import com.enigmastation.classifier.NaiveClassifier;
-import com.enigmastation.classifier.WordLister;
+import com.enigmastation.classifier.*;
 import com.enigmastation.classifier.persistence.Serializer;
 import static org.testng.Assert.assertEquals;
 import org.testng.annotations.Test;
@@ -18,6 +15,7 @@ public class ClassifierTests {
         c.testIncc();
         c.testInternalFeatureCount();
         c.testNaiveCategoryAssignment();
+        c.testClassifierProbabilitySort();
         /*
         try {
             c.testSerializableSave();
@@ -34,6 +32,19 @@ public class ClassifierTests {
         */
         c.testWeightedProbabilityByCategory();
         c.testWords();
+    }
+
+    private void testClassifierProbabilitySort() {
+        ClassifierProbability c1=new ClassifierProbability(), c2=new ClassifierProbability();
+        c1.setCategory("foo");
+        c2.setCategory("foo");
+        assertEquals(c1.compareTo(c2), 0);
+        c2.setCategory("bar");
+        c1.setScore(0.1);
+        c2.setScore(0.2);
+        assertEquals(c1.compareTo(c2), 1);
+        c2.setScore(0.05);
+        assertEquals(c1.compareTo(c2), -1);
     }
 
     @Test(groups = {"all"})
@@ -96,6 +107,11 @@ public class ClassifierTests {
     @Test
     public void testNaiveCategoryAssignment() {
         NaiveClassifier nc = getNaiveClassifier();
+        /*
+        if (!nc.getClassificationOld("quick rabbit", "unknown").equals("good")) {
+            throw new RuntimeException("failed getting good");
+        }
+        */
         if (!nc.getClassification("quick rabbit", "unknown").equals("good")) {
             throw new RuntimeException("failed getting good");
         }
