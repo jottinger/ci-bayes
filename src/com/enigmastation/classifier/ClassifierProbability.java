@@ -36,9 +36,8 @@ public class ClassifierProbability implements Comparable<ClassifierProbability> 
 
         if(category!=null && category.equals(that.category)) return true;
 
-        if(score!=null && score.equals(that.score)) return true;
+        return score != null && score.equals(that.score);
 
-        return false;
     }
 
     public int hashCode() {
