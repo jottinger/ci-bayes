@@ -1,10 +1,10 @@
 package com.enigmastation.classifier.springframework;
 
-import org.springframework.beans.factory.FactoryBean;
-import com.enigmastation.classifier.impl.WordListerImpl;
 import com.enigmastation.classifier.WordLister;
+import com.enigmastation.classifier.impl.WordListerImpl;
+import org.springframework.beans.factory.FactoryBean;
 
-public class WordListerFactory implements FactoryBean {
+public final class WordListerFactory implements FactoryBean {
     public Object getObject() throws Exception {
         return new WordListerImpl();
     }

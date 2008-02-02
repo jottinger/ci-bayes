@@ -5,19 +5,19 @@ public class CategoryIncrement {
     String category;
     int count;
 
-    public String getCategory() {
+    public final String getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public final void setCategory(String category) {
         this.category = category;
     }
 
-    public int getCount() {
+    public final int getCount() {
         return count;
     }
 
-    public void setCount(int count) {
+    public final void setCount(int count) {
         this.count = count;
     }
 

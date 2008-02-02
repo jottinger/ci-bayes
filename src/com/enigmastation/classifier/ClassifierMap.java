@@ -4,7 +4,7 @@ import javolution.util.FastMap;
 
 import java.util.Map;
 
-public class ClassifierMap extends FastMap<String, Integer> implements Map<String, Integer> {
+public final class ClassifierMap extends FastMap<String, Integer> implements Map<String, Integer> {
     private long totalCount;
 
     public void incrementCategory(String category) {

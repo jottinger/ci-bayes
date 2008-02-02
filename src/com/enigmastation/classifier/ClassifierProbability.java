@@ -1,6 +1,6 @@
 package com.enigmastation.classifier;
 
-public class ClassifierProbability implements Comparable<ClassifierProbability> {
+public final class ClassifierProbability implements Comparable<ClassifierProbability> {
     String category;
     Double score;
 
@@ -20,6 +20,7 @@ public class ClassifierProbability implements Comparable<ClassifierProbability> 
         this.score = score;
     }
 
+    @Override
     public int compareTo(ClassifierProbability o) {
         if(getCategory().equals(o.getCategory())) {
             return 0;
@@ -28,6 +29,7 @@ public class ClassifierProbability implements Comparable<ClassifierProbability> 
         return (int)(Math.signum(o.getScore()-getScore()));
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -40,6 +42,7 @@ public class ClassifierProbability implements Comparable<ClassifierProbability> 
 
     }
 
+    @Override
     public int hashCode() {
         int result;
         result = (category != null ? category.hashCode() : 0);
