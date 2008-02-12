@@ -10,7 +10,7 @@ import java.util.Set;
  * @see com.enigmastation.classifier.impl.ClassifierImpl
  */
 public interface Classifier {
-    void train(String item, String category);
+    void train(Object item, String category);
 
     double getFeatureProbability(String feature, String category);
 

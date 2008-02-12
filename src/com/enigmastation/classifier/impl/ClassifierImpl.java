@@ -119,7 +119,7 @@ public class ClassifierImpl implements Classifier {
         return cats;
     }
 
-    public void train(String item, String category) {
+    public void train(Object item, String category) {
         Set<String> features = extractor.getUniqueWords(item);
 
         for (String f : features) {
