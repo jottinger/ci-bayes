@@ -16,6 +16,7 @@ public class TestTrainingCorpus {
 
     interface Command {
         String getType();
+
         void execute(String s, String type);
     }
 
@@ -45,7 +46,7 @@ public class TestTrainingCorpus {
 
             public void execute(String s, String type) {
             }
-        });
+        }, false);
     }
 
     private void testClassifier() throws IOException {
@@ -83,7 +84,7 @@ public class TestTrainingCorpus {
                     hits[0]++;
                 }
             }
-        });
+        }, false);
         System.out.println("Hits: " + hits[0]);
         System.out.println("Misses: " + (misses[0] + misses[1]));
         System.out.println("Wrong classifications: " + misses[0]);
@@ -114,11 +115,11 @@ public class TestTrainingCorpus {
             public void execute(String s, String type) {
                 classifier.train(s, type);
             }
-        });
+        }, true);
     }
 
 
-    void processFiles(Manager m, Command c) throws IOException {
+    void processFiles(Manager m, Command c, boolean expand) throws IOException {
 
         File file = new File(System.getProperty("user.dir") + "/training");
         File[] files = file.listFiles(new FilenameFilter() {
@@ -134,14 +135,17 @@ public class TestTrainingCorpus {
         for (File f : files) {
             System.out.println(f);
             File x = new File(f.toString() + ".data");
-            x.mkdir();
-            FileInputStream fis = new FileInputStream(f);
-            BufferedInputStream bis = new BufferedInputStream(fis);
-            //noinspection ResultOfMethodCallIgnored
-            bis.read(new byte[2]);
-            CBZip2InputStream bzip2 = new CBZip2InputStream(bis);
-            TarArchive archive = new TarArchive(bzip2);
-            archive.extractContents(x);
+            if (expand) {
+                x.mkdir();
+
+                FileInputStream fis = new FileInputStream(f);
+                BufferedInputStream bis = new BufferedInputStream(fis);
+                //noinspection ResultOfMethodCallIgnored
+                bis.read(new byte[2]);
+                CBZip2InputStream bzip2 = new CBZip2InputStream(bis);
+                TarArchive archive = new TarArchive(bzip2);
+                archive.extractContents(x);
+            }
             System.out.printf("...%s!\n", c.getType());
             String type = f.toString().indexOf("ham") == -1 ? "spam" : "ham";
             int t = 0;
@@ -157,6 +161,7 @@ public class TestTrainingCorpus {
                     }
                 }
             }
+            // break;
         }
 
     }
