@@ -8,9 +8,11 @@ public final class ClassifierMap extends FastMap<String, Integer> implements Map
     private long totalCount;
 
     public void incrementCategory(String category) {
-        int i=1;
-        if(containsKey(category)) {
-            i=i+get(category).intValue();
+        int i=0;
+        try { 
+            i=get(category).intValue()+1;
+        } catch(NullPointerException npe) {
+            i=1;
         }
         put(category, i);
         totalCount+=1;

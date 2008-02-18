@@ -3,6 +3,7 @@ package com.enigmastation.classifier.impl;
 import com.enigmastation.classifier.*;
 import javolution.util.FastSet;
 
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -23,12 +24,13 @@ public class ClassifierImpl implements Classifier {
      */
     private ClassifierMap categoryDocCount = new ClassifierMap();
     protected WordLister extractor = null;
-    Set<ClassifierListener> listeners=new FastSet<ClassifierListener>();
-    
+    Set<ClassifierListener> listeners = new FastSet<ClassifierListener>();
+    Set<String> categories = new FastSet<String>();
+
     public void addListener(ClassifierListener listener) {
         listeners.add(listener);
     }
-    
+
     public ClassifierImpl(WordLister w) {
         extractor = w;
     }
@@ -48,9 +50,9 @@ public class ClassifierImpl implements Classifier {
     void incf(String feature, String category) {
         ClassifierMap fm = getCategoryFeatureMap().getFeature(feature);
         fm.incrementCategory(category);
-        if(listeners.size()>0) {
-            FeatureIncrement fi=new FeatureIncrement(feature, category, fm.get(category));
-            for(ClassifierListener l:listeners) {
+        if (listeners.size() > 0) {
+            FeatureIncrement fi = new FeatureIncrement(feature, category, fm.get(category));
+            for (ClassifierListener l : listeners) {
                 l.handleFeatureUpdate(fi);
             }
         }
@@ -64,9 +66,9 @@ public class ClassifierImpl implements Classifier {
      */
     void incc(String category) {
         getCategoryDocCount().incrementCategory(category);
-        if(listeners.size()>0) {
-            CategoryIncrement fi=new CategoryIncrement(category, getCategoryDocCount().get(category));
-            for(ClassifierListener l:listeners) {
+        if (listeners.size() > 0) {
+            CategoryIncrement fi = new CategoryIncrement(category, getCategoryDocCount().get(category));
+            for (ClassifierListener l : listeners) {
                 l.handleCategoryUpdate(fi);
             }
         }
@@ -93,10 +95,10 @@ public class ClassifierImpl implements Classifier {
      * @return the number of items in a category
      */
     double catcount(String category) {
-        if (getCategoryDocCount().containsKey(category)) {
-            return getCategoryDocCount().get(category);
-        }
-        return 0.0;
+        //if (getCategoryDocCount().containsKey(category)) {
+        return getCategoryDocCount().get(category);
+        //}
+        //return 0.0;
     }
 
     /**
@@ -114,9 +116,7 @@ public class ClassifierImpl implements Classifier {
      * @return the list of all getCategories
      */
     public Set<String> getCategories() {
-        Set<String> cats = new FastSet<String>();
-        cats.addAll(getCategoryDocCount().keySet());
-        return cats;
+        return Collections.unmodifiableSet(categories);
     }
 
     public void train(Object item, String category) {
@@ -126,21 +126,25 @@ public class ClassifierImpl implements Classifier {
             incf(f, category);
         }
         incc(category);
+        categories.add(category);
     }
 
     /**
      * Convenience method for descendant classes - aids in porting from Segaran's book.
+     * <p/>
+     * I want to change this method to use the arithmetic exception *only* if it's rare. It's possible
+     * that determining rarity might be even more expensive, though.
      *
      * @param feature  the feature to consider
      * @param category the category
      * @return the feature probability for the class
      */
     protected double fprob(String feature, String category) {
-        if (catcount(category) == 0) {
+        try {
+            return fcount(feature, category) / catcount(category);
+        } catch (ArithmeticException ae) {
             return 0;
         }
-
-        return fcount(feature, category) / catcount(category);
     }
 
     /**

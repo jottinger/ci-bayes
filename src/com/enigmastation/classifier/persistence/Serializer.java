@@ -1,11 +1,10 @@
 package com.enigmastation.classifier.persistence;
 
 import com.enigmastation.classifier.Classifier;
-import com.enigmastation.classifier.FeatureMap;
 import com.enigmastation.classifier.ClassifierMap;
+import com.enigmastation.classifier.FeatureMap;
 
 import java.io.*;
-import java.util.Map;
 
 /**
  * This class uses serialization to store "pure" classifier data to a file. It doesn't preserve any
@@ -33,10 +32,10 @@ public class Serializer {
         ClassifierMap cc= (ClassifierMap) oos.readObject();
         FeatureMap fc= (FeatureMap) oos.readObject();
 
-        classifier.getCategoryDocCount().clear();
+        //classifier.getCategoryDocCount().clear();
         classifier.getCategoryFeatureMap().clear();
 
-        classifier.getCategoryDocCount().putAll(cc);
+        //classifier.getCategoryDocCount().putAll(cc);
         classifier.getCategoryFeatureMap().putAll(fc);
 
         oos.close();

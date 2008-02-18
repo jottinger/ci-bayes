@@ -6,9 +6,10 @@ import java.util.Map;
 
 public final class FeatureMap extends FastMap<String, ClassifierMap> implements Map<String, ClassifierMap> {
     public ClassifierMap getFeature(String feature) {
-        if(!containsKey(feature)) {
-            put(feature, new ClassifierMap());
+        ClassifierMap cm=get(feature);
+        if(cm==null) {
+            put(feature, cm=new ClassifierMap());
         }
-        return get(feature);
+        return cm;        
     }
 }
