@@ -54,6 +54,18 @@ classification. For this reason, the Classifier interface defines getCategoryFea
     <b>very very large</b>, especially as they grow more useful (assuming the classic use of bayesian
     classification), so be aware that walking through the data structures, storing tuples, is likely to be
     unworkable.</p>
+
+<h2>Listeners</h2>
+A classifier can have a ClassifierListener added to it, to receive events as the classifier processes them.
+This is useful for cases where you might not want to manage the entire Classifier dataset as a monolithic
+block of data (since a trained classifier can be many megabytes in size).
+
+<p>There are currently two types of events that a ClassifierListener can handle: a feature update and a category
+update. One might use this information to update a JDBC row, for example, that represents a piece of classifier
+data. As yet, updates can not be vetoed. (If anyone can think of a reason you'd want to veto a feature or
+    category update, please chime in and it'll be added.)</p>
+
+<h2>Tests</h2>
 </body>
 </html>
 
