@@ -36,7 +36,7 @@ public class ClassifierImpl implements Classifier {
     }
 
     public ClassifierImpl() {
-        this(new WordListerImpl());
+        this(new StemmingWordLister());
     }
 
     /**
@@ -115,7 +115,7 @@ public class ClassifierImpl implements Classifier {
      *
      * @return the list of all getCategories
      */
-    public Set<String> getCategories() {
+    public final Set<String> getCategories() {
         return Collections.unmodifiableSet(categories);
     }
 
@@ -152,7 +152,7 @@ public class ClassifierImpl implements Classifier {
      * @param category the category
      * @return the feature probability for the class
      */
-    public double getFeatureProbability(String feature, String category) {
+    public final double getFeatureProbability(String feature, String category) {
         return fprob(feature, category);
     }
 
@@ -178,11 +178,11 @@ public class ClassifierImpl implements Classifier {
         return ((WEIGHT * ASSUMED_PROBABILITY) + (totals * basicprob)) / (WEIGHT + totals);
     }
 
-    public FeatureMap getCategoryFeatureMap() {
+    public final FeatureMap getCategoryFeatureMap() {
         return categoryFeatureMap;
     }
 
-    public ClassifierMap getCategoryDocCount() {
+    public final ClassifierMap getCategoryDocCount() {
         return categoryDocCount;
     }
 }

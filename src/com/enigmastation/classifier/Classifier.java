@@ -1,5 +1,6 @@
 package com.enigmastation.classifier;
 
+import java.io.Serializable;
 import java.util.Set;
 
 /**
@@ -9,7 +10,7 @@ import java.util.Set;
  * @version $Revision$
  * @see com.enigmastation.classifier.impl.ClassifierImpl
  */
-public interface Classifier {
+public interface Classifier extends Serializable {
     void train(Object item, String category);
 
     double getFeatureProbability(String feature, String category);

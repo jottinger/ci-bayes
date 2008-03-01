@@ -49,19 +49,19 @@ public class ClassifierTests {
 
     @Test(groups = {"all"})
     public void testWords() {
-        WordLister w = new WordListerImpl();
+        WordLister w = new SimpleWordLister();
         assertEquals(w.getUniqueWords("Now is the time - 'now'").size(), 3);
     }
 
     @Test
     public void testIncc() {
-        ClassifierImpl impl = new ClassifierImpl(new WordListerImpl());
+        ClassifierImpl impl = new ClassifierImpl(new SimpleWordLister());
         impl.incc("foo");
     }
 
     @Test
     public void testInternalFeatureCount() {
-        ClassifierImpl impl = new ClassifierImpl(new WordListerImpl());
+        ClassifierImpl impl = new ClassifierImpl(new SimpleWordLister());
         impl.train("the quick brown fox jumps over the lazy dog", "good");
         impl.train("make quick money in the online casino", "bad");
         assertEquals(impl.fcount("quick", "good"), 1.0, 0.1);
@@ -147,13 +147,13 @@ public class ClassifierTests {
     }
 
     Classifier getClassifier() {
-        Classifier cl = new ClassifierImpl(new WordListerImpl());
+        Classifier cl = new ClassifierImpl(new SimpleWordLister());
         sampleTrain(cl);
         return cl;
     }
 
     NaiveClassifier getNaiveClassifier() {
-        NaiveClassifier nc = new NaiveClassifierImpl(new WordListerImpl());
+        NaiveClassifier nc = new NaiveClassifierImpl(new SimpleWordLister());
         sampleTrain(nc);
         return nc;
     }

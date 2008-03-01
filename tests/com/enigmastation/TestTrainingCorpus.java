@@ -2,13 +2,14 @@ package com.enigmastation;
 
 import com.enigmastation.classifier.FisherClassifier;
 import com.enigmastation.classifier.impl.FisherClassifierImpl;
+import com.enigmastation.classifier.impl.SimpleWordLister;
 import com.ice.tar.TarArchive;
 import org.apache.tools.bzip2.CBZip2InputStream;
 
 import java.io.*;
 
 public class TestTrainingCorpus {
-    FisherClassifier classifier = new FisherClassifierImpl();
+    FisherClassifier classifier = new FisherClassifierImpl(new SimpleWordLister());
 
     interface Manager {
         void handleFile(Command c, String type, File corpus) throws IOException;
@@ -18,6 +19,10 @@ public class TestTrainingCorpus {
         String getType();
 
         void execute(String s, String type);
+    }
+
+    interface Selector {
+        boolean accept(int i);
     }
 
     public static void main(String[] args) throws IOException {
@@ -45,6 +50,10 @@ public class TestTrainingCorpus {
             }
 
             public void execute(String s, String type) {
+            }
+        }, new Selector() {
+            public boolean accept(int i) {
+                return true;
             }
         }, false);
     }
@@ -84,6 +93,10 @@ public class TestTrainingCorpus {
                     hits[0]++;
                 }
             }
+        }, new Selector() {
+            public boolean accept(int i) {
+                return (i%10)>7;
+            }
         }, false);
         System.out.println("Hits: " + hits[0]);
         System.out.println("Misses: " + (misses[0] + misses[1]));
@@ -115,11 +128,15 @@ public class TestTrainingCorpus {
             public void execute(String s, String type) {
                 classifier.train(s, type);
             }
+        }, new Selector() {
+            public boolean accept(int i) {
+                return (i%10)<=7;
+            }
         }, true);
     }
 
 
-    void processFiles(Manager m, Command c, boolean expand) throws IOException {
+    void processFiles(Manager m, Command c, final Selector s, boolean expand) throws IOException {
 
         File file = new File(System.getProperty("user.dir") + "/training");
         File[] files = file.listFiles(new FilenameFilter() {
@@ -149,13 +166,16 @@ public class TestTrainingCorpus {
             System.out.printf("...%s!\n", c.getType());
             String type = f.toString().indexOf("ham") == -1 ? "spam" : "ham";
             int t = 0;
+            final int t1 = t;
             for (File dir : x.listFiles(new FilenameFilter() {
                 public boolean accept(File dir, String name) {
                     return name.indexOf("data") == -1;
                 }
             })) {
                 for (File corpus : dir.listFiles()) {
-                    m.handleFile(c, type, corpus);
+                    if(s.accept(t)) {
+                        m.handleFile(c, type, corpus);
+                    }
                     if (++t % 100 == 0) {
                         System.out.println(t);
                     }
