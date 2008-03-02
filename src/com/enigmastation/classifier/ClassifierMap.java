@@ -1,27 +1,39 @@
 package com.enigmastation.classifier;
 
-import gnu.trove.TObjectIntHashMap;
+import javolution.util.FastMap;
+
+import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * @version: $Revision$
+ * ClassifierMap
+ *
+ * With FastMap, it clocks in at 160MB max usage with the training corpus.
+ * @author <a href="mailto:joeo@enigmastation.com">Joseph Ottinger</a>
+ * @version $Revision$
  */
-public final class ClassifierMap extends TObjectIntHashMap<String> {
+
+public final class ClassifierMap extends FastMap<String, Integer> implements Map<String, Integer> {
     private long totalCount;
+    private final ReentrantLock lock = new ReentrantLock();
 
     public void incrementCategory(String category) {
-        //       int i=0;
-//        try {
-//            i=get(category)+1;
-        //       } catch(NullPointerException npe) {
-        //          i=1;
-        //     }
-        if (this.containsKey(category)) {
-            this.increment(category);
-        } else {
-            put(category, 1);
+        lock.lock();
+        try {
+            int i = 0;
+            try {
+                i = get(category).intValue() + 1;
+            } catch (NullPointerException npe) {
+                i = 1;
+            }
+            put(category, i);
+            totalCount += 1;
+            lock.unlock();
+        } finally {
+            if (lock.isHeldByCurrentThread()) {
+                lock.unlock();
+            }
         }
-//        put(category, i);
-        totalCount += 1;
     }
 
     public double getTotalCount() {
