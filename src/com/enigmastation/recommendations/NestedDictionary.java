@@ -1,7 +1,7 @@
 package com.enigmastation.recommendations;
 
-import javolution.util.FastMap;
 import javolution.util.FastComparator;
+import javolution.util.FastMap;
 
 import java.util.Map;
 

@@ -7,6 +7,7 @@ import com.ice.tar.TarArchive;
 import org.apache.tools.bzip2.CBZip2InputStream;
 
 import java.io.*;
+import java.util.Date;
 
 public class TestTrainingCorpus {
     FisherClassifier classifier = new FisherClassifierImpl(new SimpleWordLister());
@@ -26,17 +27,25 @@ public class TestTrainingCorpus {
     }
 
     public static void main(String[] args) throws IOException {
-        long start = System.currentTimeMillis();
+        savedOutput = new PrintWriter(sw);
         TestTrainingCorpus ttc = new TestTrainingCorpus();
+        long start = System.currentTimeMillis();
         ttc.buildClassifier();
         long end = System.currentTimeMillis();
-        System.out.printf("Training Runtime: %dms\n", (end - start));
+        System.gc();
+        savedOutput.printf("Training Runtime: %dms\n", (end - start));
         start = System.currentTimeMillis();
         ttc.testClassifier();
         end = System.currentTimeMillis();
-        System.out.printf("Testing Runtime: %dms\n", (end - start));
+        System.gc();
+        savedOutput.printf("Testing Runtime: %dms\n", (end - start));
         ttc.emptyFilesystem();
+        showOutput();
 
+    }
+
+    private static void showOutput() {
+        System.err.println(sw.getBuffer().toString());
     }
 
     private void emptyFilesystem() throws IOException {
@@ -55,10 +64,14 @@ public class TestTrainingCorpus {
             public boolean accept(int i) {
                 return true;
             }
-        }, false);
+        }, false, true);
     }
 
+    static PrintWriter savedOutput;
+    static StringWriter sw = new StringWriter();
+
     private void testClassifier() throws IOException {
+
         final int[] hits = new int[1];
         final int[] misses = new int[2];
         processFiles(new Manager() {
@@ -95,15 +108,15 @@ public class TestTrainingCorpus {
             }
         }, new Selector() {
             public boolean accept(int i) {
-                return (i%10)>7;
+                return (i % 10) > 7;
             }
         }, false);
-        System.out.println("Hits: " + hits[0]);
-        System.out.println("Misses: " + (misses[0] + misses[1]));
-        System.out.println("Wrong classifications: " + misses[0]);
-        System.out.println("Unclear classifications: " + misses[1]);
-        System.out.println("Totals: " + (hits[0] + misses[0] + misses[1]) + " items");
-        System.out.println("Hit rate: " + ((1.0 * hits[0]) / (hits[0] + misses[0] + misses[1])) + "%");
+        savedOutput.println("Hits: " + hits[0]);
+        savedOutput.println("Misses: " + (misses[0] + misses[1]));
+        savedOutput.println("Wrong classifications: " + misses[0]);
+        savedOutput.println("Unclear classifications: " + misses[1]);
+        savedOutput.println("Totals: " + (hits[0] + misses[0] + misses[1]) + " items");
+        savedOutput.println("Hit rate: " + ((1.0 * hits[0]) / (hits[0] + misses[0] + misses[1])) + "%");
     }
 
     private void buildClassifier() throws IOException {
@@ -130,16 +143,19 @@ public class TestTrainingCorpus {
             }
         }, new Selector() {
             public boolean accept(int i) {
-                return (i%10)<=7;
+                return (i % 10) <= 7;
             }
-        }, true);
+        }, true, true);
     }
 
+    void processFiles(final Manager m, Command c, final Selector s, boolean expand) throws IOException {
+        processFiles(m, c, s, expand, false);
+    }
 
-    void processFiles(Manager m, Command c, final Selector s, boolean expand) throws IOException {
+    void processFiles(final Manager m, final Command c, final Selector s, final boolean expand, boolean multithread) throws IOException {
 
         File file = new File(System.getProperty("user.dir") + "/training");
-        File[] files = file.listFiles(new FilenameFilter() {
+        final File[] files = file.listFiles(new FilenameFilter() {
             public boolean accept(File dir, String name) {
                 if (name.indexOf("bz2") != -1) {
                     if (name.indexOf("data") == -1) {
@@ -149,41 +165,86 @@ public class TestTrainingCorpus {
                 return false;
             }
         });
-        for (File f : files) {
-            System.out.println(f);
-            File x = new File(f.toString() + ".data");
-            if (expand) {
-                x.mkdir();
+        ThreadGroup g = new ThreadGroup("CORPUS GROUP");
+        if (expand) {
+            for (final File f : files) {
+                Thread e1 = new Thread(g, "Expando ") {
+                    public void run() {
+                        try {
+                            final File x = new File(f.toString() + ".data");
+                            x.mkdir();
 
-                FileInputStream fis = new FileInputStream(f);
-                BufferedInputStream bis = new BufferedInputStream(fis);
-                //noinspection ResultOfMethodCallIgnored
-                bis.read(new byte[2]);
-                CBZip2InputStream bzip2 = new CBZip2InputStream(bis);
-                TarArchive archive = new TarArchive(bzip2);
-                archive.extractContents(x);
+                            FileInputStream fis = new FileInputStream(f);
+                            BufferedInputStream bis = new BufferedInputStream(fis);
+                            //noinspection ResultOfMethodCallIgnored
+                            bis.read(new byte[2]);
+                            CBZip2InputStream bzip2 = new CBZip2InputStream(bis);
+                            TarArchive archive = new TarArchive(bzip2);
+                            archive.extractContents(x);
+                            System.out.printf("%s finished expanding.\n", f.getName());
+                        } catch (IOException ioe) {
+                            ioe.printStackTrace();
+                        }
+                    }
+                };
+                e1.start();
             }
-            System.out.printf("...%s!\n", c.getType());
-            String type = f.toString().indexOf("ham") == -1 ? "spam" : "ham";
-            int t = 0;
-            final int t1 = t;
-            for (File dir : x.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    return name.indexOf("data") == -1;
-                }
-            })) {
-                for (File corpus : dir.listFiles()) {
-                    if(s.accept(t)) {
-                        m.handleFile(c, type, corpus);
-                    }
-                    if (++t % 100 == 0) {
-                        System.out.println(t);
-                    }
+            while(g.activeCount()>0) {
+                try {
+                    Thread.sleep(2000);
+                    System.out.printf("%s waiting for expansion to finish: %d threads\n", new Date(), g.activeCount());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();  
                 }
             }
-            // break;
+
         }
 
+        for (final File f : files) {
+            Thread t = new Thread(g, f.getName()) {
+                public void run() {
+                    try {
+                        System.out.println(f);
+                        final File x = new File(f.toString() + ".data");
+
+                        System.out.printf("%s...%s!\n", f.getName(), c.getType());
+                        String type = f.toString().indexOf("ham") == -1 ? "spam" : "ham";
+                        int t = 0;
+                        for (File dir : x.listFiles(new FilenameFilter() {
+                            public boolean accept(File dir, String name) {
+                                return name.indexOf("data") == -1;
+                            }
+                        })) {
+                            for (File corpus : dir.listFiles()) {
+                                if (s.accept(t)) {
+                                    m.handleFile(c, type, corpus);
+                                }
+                                if (++t % 100 == 0) {
+                                    System.out.printf("%s: %d mark\n", c.getType(), t);
+                                }
+                            }
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            if (multithread) {
+                t.start();
+            } else {
+                t.run();
+            }
+        }
+        if (multithread) {
+            while (g.activeCount() > 0) {
+                try {
+                    Thread.sleep(2000);
+                    System.out.printf("%s: Waiting for %d threads to finish...\n", new Date().toString(), g.activeCount());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 }
