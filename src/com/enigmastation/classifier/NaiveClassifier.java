@@ -22,4 +22,8 @@ public interface NaiveClassifier extends Classifier {
     void setCategoryThreshold(String cat, double t);
 
     double getCategoryThreshold(String cat);
+
+    ClassifierProbability[] getProbabilities(final Object item);
+
+    void normalizeProbabilities(ClassifierProbability[] probabilities);
 }

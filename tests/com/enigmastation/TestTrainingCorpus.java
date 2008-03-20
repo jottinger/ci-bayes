@@ -1,8 +1,10 @@
 package com.enigmastation;
 
+import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.FisherClassifier;
 import com.enigmastation.classifier.impl.FisherClassifierImpl;
 import com.enigmastation.classifier.impl.SimpleWordLister;
+import com.enigmastation.testing.MemoryMonitor;
 import com.ice.tar.TarArchive;
 import org.apache.tools.bzip2.CBZip2InputStream;
 
@@ -27,6 +29,8 @@ public class TestTrainingCorpus {
     }
 
     public static void main(String[] args) throws IOException {
+        MemoryMonitor monitor=new MemoryMonitor();
+        monitor.start();
         savedOutput = new PrintWriter(sw);
         TestTrainingCorpus ttc = new TestTrainingCorpus();
         long start = System.currentTimeMillis();
@@ -34,13 +38,16 @@ public class TestTrainingCorpus {
         long end = System.currentTimeMillis();
         System.gc();
         savedOutput.printf("Training Runtime: %dms\n", (end - start));
+        monitor.setMonitoring(true);
         start = System.currentTimeMillis();
         ttc.testClassifier();
         end = System.currentTimeMillis();
+        monitor.setMonitoring(false);
         System.gc();
         savedOutput.printf("Testing Runtime: %dms\n", (end - start));
         ttc.emptyFilesystem();
         showOutput();
+        monitor.shutdown();
 
     }
 
@@ -77,7 +84,7 @@ public class TestTrainingCorpus {
         processFiles(new Manager() {
             public void handleFile(Command c, String type, File corpus) throws IOException {
                 FileReader fr = new FileReader(corpus);
-                BufferedReader br = new BufferedReader(fr);
+                BufferedReader br = new BufferedReader(fr, 16384);
                 StringBuilder sb = new StringBuilder();
                 String s;
                 while ((s = br.readLine()) != null) {
@@ -88,6 +95,7 @@ public class TestTrainingCorpus {
                 c.execute(sb.toString(), type);
             }
         }, new Command() {
+            boolean normalized=false;
             public String getType() {
                 return "testing";
             }
@@ -101,8 +109,15 @@ public class TestTrainingCorpus {
                     } else {
                         misses[0]++;
                     }
-
                 } else {
+                    if(normalized==false) {
+                        normalized=true;
+                        ClassifierProbability[] probs=classifier.getProbabilities(s);
+                        savedOutput.println("probabilities: ");
+                        for(ClassifierProbability prob:probs) {
+                            savedOutput.println(prob.toString());
+                        }
+                    }
                     hits[0]++;
                 }
             }

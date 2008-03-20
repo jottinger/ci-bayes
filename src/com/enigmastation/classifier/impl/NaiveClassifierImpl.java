@@ -45,7 +45,7 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
         return getClassification(item, defaultCat);
     }
 
-    public ClassifierProbability[] getProbabilities(Object item) {
+    public ClassifierProbability[] getProbabilities(final Object item) {
         ClassifierProbability[] probabilities = new ClassifierProbability[getCategories().size()];
         int index = 0;
         for (String cat : getCategories()) {
@@ -58,6 +58,14 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
         return probabilities;
     }
 
+    public void normalizeProbabilities(ClassifierProbability[] probabilities) {
+        if(probabilities.length>0) {
+            double multiplier=1.0/probabilities[0].getScore();
+            for(ClassifierProbability prob:probabilities) {
+                prob.setScore(prob.getScore()*multiplier);
+            }
+        }
+    }
 
     public String getClassification(Object item, String defaultCat) {
         if (getCategories().size() == 0) {

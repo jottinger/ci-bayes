@@ -1,8 +1,14 @@
 package com.enigmastation.classifier;
 
+import java.text.MessageFormat;
+
 public final class ClassifierProbability implements Comparable<ClassifierProbability> {
     String category;
     Double score;
+
+    public String toString() {
+        return MessageFormat.format("[ClassifierProbability:category=\"{0}\",score={1}]", category, score);
+    }
 
     public String getCategory() {
         return category;
