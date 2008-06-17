@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class FisherClassifierImpl extends NaiveClassifierImpl implements FisherClassifier {
-    Map<String, Double> minimums = new FastMap<String, Double>();
+    private Map<String, Double> minimums = new FastMap<String, Double>();
 
     public void setMinimum(String category, double minimum) {
         minimums.put(category, minimum);

@@ -3,8 +3,8 @@ package com.enigmastation.classifier;
 import java.text.MessageFormat;
 
 public final class ClassifierProbability implements Comparable<ClassifierProbability> {
-    String category;
-    Double score;
+    private String category;
+    private Double score;
 
     public String toString() {
         return MessageFormat.format("[ClassifierProbability:category=\"{0}\",score={1}]", category, score);
@@ -42,9 +42,7 @@ public final class ClassifierProbability implements Comparable<ClassifierProbabi
 
         ClassifierProbability that = (ClassifierProbability) o;
 
-        if(category!=null && category.equals(that.category)) return true;
-
-        return score != null && score.equals(that.score);
+        return category != null && category.equals(that.category) || score != null && score.equals(that.score);
 
     }
 

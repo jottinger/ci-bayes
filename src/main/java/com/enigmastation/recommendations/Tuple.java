@@ -1,11 +1,7 @@
 package com.enigmastation.recommendations;
 
 /**
- * Created by IntelliJ IDEA.
- * User: jottinger
- * Date: Jan 10, 2008
- * Time: 4:02:24 PM
- * To change this template use File | Settings | File Templates.
+ * Tuple
  */
 public class Tuple {
     Object key;

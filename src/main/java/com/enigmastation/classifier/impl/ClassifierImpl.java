@@ -24,8 +24,8 @@ public class ClassifierImpl implements Classifier {
      */
     private ClassifierMap categoryDocCount = new ClassifierMap();
     protected WordLister extractor = null;
-    Set<ClassifierListener> listeners = new FastSet<ClassifierListener>();
-    Set<String> categories = new FastSet<String>();
+    private Set<ClassifierListener> listeners = new FastSet<ClassifierListener>();
+    private Set<String> categories = new FastSet<String>();
 
     public void addListener(ClassifierListener listener) {
         listeners.add(listener);

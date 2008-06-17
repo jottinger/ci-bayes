@@ -1,7 +1,7 @@
 package com.enigmastation.classifier;
 
 public class FeatureIncrement extends CategoryIncrement {
-    String feature;
+    private String feature;
 
     public String getFeature() {
         return feature;

@@ -81,12 +81,12 @@ public class PorterStemmer {
     /**
      * Add a character to the word being stemmed.  When you are finished
      * adding characters, you can call stem(void) to process the word.
+     * @param ch ch
      */
     public void add(char ch) {
         if (b.length <= i + EXTRA) {
             char[] new_b = new char[b.length + INC];
-            for (int c = 0; c < b.length; c++)
-                new_b[c] = b[c];
+            System.arraycopy(b, 0, new_b, 0, b.length);
             b = new_b;
         }
         b[i++] = ch;
@@ -103,6 +103,7 @@ public class PorterStemmer {
 
     /**
      * Returns the length of the word resulting from the stemming process.
+     * @return result length
      */
     public int getResultLength() {
         return i;
@@ -112,6 +113,7 @@ public class PorterStemmer {
      * Returns a reference to a character buffer containing the results of
      * the stemming process.  You also need to consult getResultLength()
      * to determine the length of the result.
+     * @return result buffer
      */
     public char[] getResultBuffer() {
         return b;
@@ -119,7 +121,7 @@ public class PorterStemmer {
 
     /* cons(i) is true <=> b[i] is a consonant. */
 
-    private final boolean cons(int i) {
+    private boolean cons(int i) {
         switch (b[i]) {
             case 'a':
             case 'e':
@@ -128,7 +130,7 @@ public class PorterStemmer {
             case 'u':
                 return false;
             case 'y':
-                return (i == k0) ? true : !cons(i - 1);
+                return (i == k0) || !cons(i - 1);
             default:
                 return true;
         }
@@ -145,7 +147,7 @@ public class PorterStemmer {
             ....
     */
 
-    private final int m() {
+    private int m() {
         int n = 0;
         int i = k0;
         while (true) {
@@ -179,7 +181,7 @@ public class PorterStemmer {
 
     /* vowelinstem() is true <=> k0,...j contains a vowel */
 
-    private final boolean vowelinstem() {
+    private boolean vowelinstem() {
         int i;
         for (i = k0; i <= j; i++)
             if (!cons(i))
@@ -189,12 +191,8 @@ public class PorterStemmer {
 
     /* doublec(j) is true <=> j,(j-1) contain a double consonant. */
 
-    private final boolean doublec(int j) {
-        if (j < k0 + 1)
-            return false;
-        if (b[j] != b[j - 1])
-            return false;
-        return cons(j);
+    private boolean doublec(int j) {
+        return j >= k0 + 1 && b[j] == b[j - 1] && cons(j);
     }
 
     /* cvc(i) is true <=> i-2,i-1,i has the form consonant - vowel - consonant
@@ -206,7 +204,7 @@ public class PorterStemmer {
 
     */
 
-    private final boolean cvc(int i) {
+    private boolean cvc(int i) {
         if (i < k0 + 2 || !cons(i) || cons(i - 1) || !cons(i - 2))
             return false;
         else {
@@ -216,7 +214,7 @@ public class PorterStemmer {
         return true;
     }
 
-    private final boolean ends(String s) {
+    private boolean ends(String s) {
         int l = s.length();
         int o = k - l + 1;
         if (o < k0)
@@ -268,7 +266,7 @@ public class PorterStemmer {
 
     */
 
-    private final void step1() {
+    private void step1() {
         if (b[k] == 's') {
             if (ends("sses")) k -= 2;
             else if (ends("ies")) setto("i");
@@ -293,7 +291,7 @@ public class PorterStemmer {
 
     /* step2() turns terminal y to i when there is another vowel in the stem. */
 
-    private final void step2() {
+    private void step2() {
         if (ends("y") && vowelinstem()) {
             b[k] = 'i';
             dirty = true;
@@ -304,7 +302,7 @@ public class PorterStemmer {
  -ation) maps to -ize etc. note that the string before the suffix must give
  m() > 0. */
 
-    private final void step3() {
+    private void step3() {
         if (k == k0) return; /* For Bug 1 */
         switch (b[k - 1]) {
             case 'a':
@@ -411,7 +409,7 @@ public class PorterStemmer {
 
     /* step4() deals with -ic-, -full, -ness etc. similar strategy to step3. */
 
-    private final void step4() {
+    private void step4() {
         switch (b[k]) {
             case 'e':
                 if (ends("icate")) {
@@ -454,7 +452,7 @@ public class PorterStemmer {
 
     /* step5() takes off -ant, -ence etc., in context <c>vcvc<v>. */
 
-    private final void step5() {
+    private void step5() {
         if (k == k0) return; /* for Bug 1 */
         switch (b[k - 1]) {
             case 'a':
@@ -512,7 +510,7 @@ public class PorterStemmer {
 
     /* step6() removes a final -e if m() > 1. */
 
-    private final void step6() {
+    private void step6() {
         j = k;
         if (b[k] == 'e') {
             int a = m();
@@ -525,6 +523,8 @@ public class PorterStemmer {
 
     /**
      * Stem a word provided as a String.  Returns the result as a String.
+     * @param s word to stem
+     * @return stemmed word
      */
     public String stem(String s) {
         if (stem(s.toCharArray(), s.length()))
@@ -537,6 +537,8 @@ public class PorterStemmer {
      * Stem a word contained in a char[].  Returns true if the stemming process
      * resulted in a word different from the input.  You can retrieve the
      * result with getResultLength()/getResultBuffer() or toString().
+     * @param word wprd to stem
+     * @return true if the stemmed word is different from the submitted word
      */
     public boolean stem(char[] word) {
         return stem(word, word.length);
@@ -547,15 +549,18 @@ public class PorterStemmer {
      * true if the stemming process resulted in a word different from
      * the input.  You can retrieve the result with
      * getResultLength()/getResultBuffer() or toString().
+     * @param wordBuffer wordBuffer
+     * @param offset offset
+     * @param wordLen word length
+     * @return if the stemmed word was different than the buffer
      */
+    @SuppressWarnings({"SameParameterValue"})
     public boolean stem(char[] wordBuffer, int offset, int wordLen) {
         reset();
         if (b.length < wordLen) {
-            char[] new_b = new char[wordLen + EXTRA];
-            b = new_b;
+            b = new char[wordLen + EXTRA];
         }
-        for (int j = 0; j < wordLen; j++)
-            b[j] = wordBuffer[offset + j];
+        System.arraycopy(wordBuffer, offset, b, 0, wordLen);
         i = wordLen;
         return stem(0);
     }
@@ -565,6 +570,9 @@ public class PorterStemmer {
      * Returns true if the stemming process resulted in a word different
      * from the input.  You can retrieve the result with
      * getResultLength()/getResultBuffer() or toString().
+     * @param word word
+     * @param wordLen wordLen
+     * @return if the stemmed word was different
      */
     public boolean stem(char[] word, int wordLen) {
         return stem(word, 0, wordLen);
@@ -575,11 +583,13 @@ public class PorterStemmer {
      * Returns true if the stemming process resulted in a word different
      * from the input.  You can retrieve the result with
      * getResultLength()/getResultBuffer() or toString().
+     * @return true if the stemmed word was different from input
      */
     public boolean stem() {
         return stem(0);
     }
 
+    @SuppressWarnings({"SameParameterValue"})
     public boolean stem(int i0) {
         k = i - 1;
         k0 = i0;
@@ -602,21 +612,20 @@ public class PorterStemmer {
     /**
      * Test program for demonstrating the Stemmer.  It reads a file and
      * stems each word, writing the result to standard out.
-     * Usage: Stemmer file-name
+     * Usage: PorterStemmer file-name
+     * @param args program arguments
      */
     public static void main(String[] args) {
         PorterStemmer s = new PorterStemmer();
 
-        for (int i = 0; i < args.length; i++) {
+        for (String arg1 : args) {
             try {
 
-                String arg = args[i];
-
-                File file = new File(arg);
+                File file = new File(arg1);
 
                 if (!file.exists()) {
                     PorterStemmer stemmer = new PorterStemmer();
-                    System.out.println(stemmer.stem(arg));
+                    System.out.println(stemmer.stem(arg1));
                     continue;
                 }
 
@@ -658,7 +667,7 @@ public class PorterStemmer {
                 in.close();
             }
             catch (IOException e) {
-                System.out.println("error reading " + args[i]);
+                System.out.println("error reading " + arg1);
             }
         }
     }

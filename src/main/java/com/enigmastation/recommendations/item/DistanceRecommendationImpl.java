@@ -5,11 +5,7 @@ import com.enigmastation.recommendations.NestedDictionary;
 import java.util.List;
 
 /**
- * Created by IntelliJ IDEA.
- * User: jottinger
- * Date: Jan 9, 2008
- * Time: 8:00:30 PM
- * To change this template use File | Settings | File Templates.
+ * DistanceRecommendationImpl
  */
 public class DistanceRecommendationImpl extends RecommendationImpl {
     public double getDistance(NestedDictionary dict, Object key1, Object key2) {

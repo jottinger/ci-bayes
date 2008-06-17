@@ -19,6 +19,7 @@ public interface NaiveClassifier extends Classifier {
 
     String getClassification(Object item, String defaultCat);
 
+    @SuppressWarnings({"SameParameterValue"})
     void setCategoryThreshold(String cat, double t);
 
     double getCategoryThreshold(String cat);

@@ -12,11 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by IntelliJ IDEA.
- * User: jottinger
- * Date: Jan 9, 2008
- * Time: 8:24:37 PM
- * To change this template use File | Settings | File Templates.
+ * RecommendationImpl
  */
 public abstract class RecommendationImpl implements Recommendation {
     protected List<Object> getMatchingEntriesList(NestedDictionary dict, Object key1, Object key2) {

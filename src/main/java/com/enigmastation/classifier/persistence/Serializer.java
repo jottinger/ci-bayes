@@ -22,7 +22,7 @@ public class Serializer {
         this.filename = filename;
     }
 
-    String filename="classifier.ser";
+    private String filename="classifier.ser";
 
     @SuppressWarnings("unchecked")
     public void load(Classifier classifier) throws IOException, ClassNotFoundException {
@@ -35,7 +35,7 @@ public class Serializer {
         //classifier.getCategoryDocCount().clear();
         classifier.getCategoryFeatureMap().clear();
 
-        //classifier.getCategoryDocCount().putAll(cc);
+        classifier.getCategoryDocCount().putAll(cc);
         classifier.getCategoryFeatureMap().putAll(fc);
 
         oos.close();

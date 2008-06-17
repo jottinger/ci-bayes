@@ -27,7 +27,8 @@ public final class ClassifierMap extends ConcurrentHashMap<String,Integer> {
      * @param category The category for which the value changes
      * @param amount The delta for the change
      */
-    public void incrementCategory(String category, Integer amount) {
+    @SuppressWarnings({"SameParameterValue"})
+    public void incrementCategory(String category, int amount) {
         if (containsKey(category)) {
             put(category,get(category)+amount);
         } else {

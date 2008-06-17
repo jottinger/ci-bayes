@@ -6,25 +6,34 @@
 package com.enigmastation.collections;
 
 /**
- *
  * @author jottinger
  */
 public class CollectionsUtil {
-    static boolean[] isLetterArray=new boolean[256];
+    private static boolean[] isLetterArray = new boolean[256];
+    private static boolean limitArray;
+
     static {
-        for(byte b='a';b<='z';b++) {
-            isLetterArray[b]=true;
+        String limitArrayStr=System.getProperty("classifier.limitarray");
+        if("true".equalsIgnoreCase(limitArrayStr)) {
+            limitArray=true;
+        }
+        for (byte b = 'a'; b <= 'z'; b++) {
+            isLetterArray[b] = true;
         }
     }
 
+    @SuppressWarnings({"BooleanMethodIsAlwaysInverted", "ConstantConditions"})
     public static boolean validKey(String k) {
-        byte[] bytes=k.getBytes();
-        boolean okay=true;
-        int bi=0;
-        while(bi<bytes.length && okay) {            
-            okay&=isLetterArray[bytes[bi]];
-            bi++;
+        if (limitArray) {
+            byte[] bytes = k.getBytes();
+            boolean okay = true;
+            int bi = 0;
+            while (bi < bytes.length && okay) {
+                okay = okay && isLetterArray[bytes[bi]];
+                bi++;
+            }
+            return okay;
         }
-        return okay;
+        return true;
     }
 }
