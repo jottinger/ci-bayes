@@ -7,9 +7,9 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-public class ClassifierTests {
+public class ClassifierTest {
     public static void main(String[] args) {
-        ClassifierTests c = new ClassifierTests();
+        ClassifierTest c = new ClassifierTest();
         c.testCategoryProbabilities();
         c.testFisherClassifier();
         c.testIncc();
@@ -88,7 +88,7 @@ public class ClassifierTests {
         assertEquals(nc.getProbabilityForCategory("quick rabbit", "bad"), 0.05, 0.01);
     }
 
-    @Test
+    
     public void testSerializableSave() throws IOException {
         NaiveClassifier cl = new NaiveClassifierImpl();
         Serializer s = new Serializer();
@@ -96,7 +96,6 @@ public class ClassifierTests {
         s.save(cl);
     }
 
-    @Test(dependsOnMethods = {"testSerializableSave"})
     public void testSerializableLoad() throws IOException, ClassNotFoundException {
         NaiveClassifier cl = new NaiveClassifierImpl();
         Serializer s = new Serializer();
@@ -107,12 +106,7 @@ public class ClassifierTests {
 
     @Test
     public void testNaiveCategoryAssignment() {
-        NaiveClassifier nc = getNaiveClassifier();
-        /*
-        if (!nc.getClassificationOld("quick rabbit", "unknown").equals("good")) {
-            throw new RuntimeException("failed getting good");
-        }
-        */
+        NaiveClassifier nc = getNaiveClassifier();       
         if (!nc.getClassification("quick rabbit", "unknown").equals("good")) {
             throw new RuntimeException("failed getting good");
         }
@@ -160,7 +154,7 @@ public class ClassifierTests {
     }
 
     FisherClassifier getFisherClassifier() {
-        FisherClassifier nc = new FisherClassifierImpl();
+        FisherClassifier nc = new FisherClassifierImpl(new SimpleWordLister());
         sampleTrain(nc);
         return nc;
     }
