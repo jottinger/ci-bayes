@@ -50,12 +50,15 @@ public class ClassifierImpl implements Classifier {
     void incf(String feature, String category) {
         ClassifierMap fm = getCategoryFeatureMap().getFeature(feature);
         fm.incrementCategory(category);
-        if (listeners.size() > 0) {
-            FeatureIncrement fi = new FeatureIncrement(feature, category, fm.get(category));
-            for (ClassifierListener l : listeners) {
-                l.handleFeatureUpdate(fi);
+
+        FeatureIncrement fi = null;
+        for (ClassifierListener l : listeners) {
+            if (fi == null) {
+                fi = new FeatureIncrement(feature, category, fm.get(category));
             }
+            l.handleFeatureUpdate(fi);
         }
+
     }
 
     /**
@@ -66,12 +69,15 @@ public class ClassifierImpl implements Classifier {
      */
     void incc(String category) {
         getCategoryDocCount().incrementCategory(category);
-        if (listeners.size() > 0) {
-            CategoryIncrement fi = new CategoryIncrement(category, getCategoryDocCount().get(category));
-            for (ClassifierListener l : listeners) {
-                l.handleCategoryUpdate(fi);
+
+        CategoryIncrement ci = null;
+        for (ClassifierListener l : listeners) {
+            if (ci == null) {
+                ci = new CategoryIncrement(category, getCategoryDocCount().get(category));
             }
+            l.handleCategoryUpdate(ci);
         }
+
     }
 
     /**
