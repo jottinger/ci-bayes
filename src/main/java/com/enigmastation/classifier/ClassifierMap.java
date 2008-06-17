@@ -1,6 +1,5 @@
 package com.enigmastation.classifier;
 
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -17,31 +16,19 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class ClassifierMap extends ConcurrentHashMap<String,Integer> { //implements Map<String, Integer> {
     private long totalCount;
-    private final ReentrantLock lock = new ReentrantLock();
+
+    public void incrementCategory(String category, Integer amount) {
+        if (containsKey(category)) {
+            put(category,get(category)+amount);
+        } else {
+            put(category, amount);
+        }
+
+        totalCount += amount;
+    }
 
     public void incrementCategory(String category) {
-        lock.lock();
-        try {
-            // int i = 0;
-            //try {
-            //    i = get(category).intValue() + 1;
-            //} catch (NullPointerException npe) {
-            //    i = 1;
-            //}
-
-            if (containsKey(category)) {
-                put(category,get(category)+1);
-            } else {
-                put(category, 1);
-            }
-
-            totalCount += 1;
-            lock.unlock();
-        } finally {
-            if (lock.isHeldByCurrentThread()) {
-                lock.unlock();
-            }
-        }
+        incrementCategory(category, 1);
     }
 
     public double getTotalCount() {
