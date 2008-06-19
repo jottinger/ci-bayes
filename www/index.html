@@ -9,11 +9,12 @@
 <h1>Bayesian Classifiers for Java</h1>  
 <p>This project contains two bayesian classifiers for Java: a Naive
 implementation and a Fishers implementation. It's merely a port from Toby
-Segaran's python code from his book &quot;Programming Collective
-Intelligence,&quot; which is included in the /lib directory.  </p>
+Segaran's <a href="classifier.py">python code for Bayesian analysis</a> from his book &quot;Programming Collective
+Intelligence.&quot;</p>
  
  <p>The only requirement for this library is <a
-href="http://javolution.org">javolution</a>.   </p>
+href="http://javolution.org">javolution</a>. (Even this is debatable, but
+     javolution is good enough it's worth depending on.  </p>
  
  <p>It's licensed under the Artistic License.</p>
   <h2>Usage</h2><p>Basically, using ci-bayes is a matter of defining a way to
@@ -63,9 +64,18 @@ block of data (since a trained classifier can be many megabytes in size).
 <p>There are currently two types of events that a ClassifierListener can handle: a feature update and a category
 update. One might use this information to update a JDBC row, for example, that represents a piece of classifier
 data. As yet, updates can not be vetoed. (If anyone can think of a reason you'd want to veto a feature or
-    category update, please chime in and it'll be added.)</p>
+category update, please chime in and it'll be added.)</p>
 
 <h2>Tests</h2>
+The classifier includes a corpus test, using the corpus from SpamAssassin as training and testing corpora.
+As it stands right now, it has a 98% accuracy (compared to SpamAssassin) and runs the entire test in
+11 seconds or so.
+
+<p>Differences in accuracy really aren't as horrible as they might seem. For one thing, ci-bayes
+    uses a different algorithm than SpamAssassin - in that it can manage multiple classifications
+    (not just "ham" or "spam" as SA does) and it also uses Naive and Fishers algorithms - I'm not
+sure exactly which algorithms SpamAssassin uses. So: differences are okay, as long as they're not
+HUGE differences.</p>
 </body>
 </html>
 
