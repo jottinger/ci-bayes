@@ -35,7 +35,7 @@ public class CorpusTest {
         boolean accept(int i);
     }
 
-    @Test
+    @Test(groups = {"fulltest"})
     public void runTest() throws IOException {
         MemoryMonitor monitor = new MemoryMonitor();
         monitor.start();

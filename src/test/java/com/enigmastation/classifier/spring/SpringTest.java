@@ -9,31 +9,32 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.AfterTest;
+import static org.testng.Assert.*;
 
 public class SpringTest {
     ApplicationContext ctx;
     Classifier c;
 
-    @BeforeTest
+    @BeforeTest(groups = {"fulltest", "normal"})
     public void setup() {
         ApplicationContext ctx=new ClassPathXmlApplicationContext("/spring.xml");
         c= (Classifier) ctx.getBean("classifier");
     }
 
-    @AfterTest
+    @AfterTest(groups={"fulltest", "normal"})
     public void tearDown() {
         c=null;
     }
     
-    @Test
+    @Test(groups={"fulltest", "normal"})
     public void testCatCount() {
-        assert c.getCategories().size()==0;
+        assertEquals(c.getCategories().size(),0);
         c.train("this is but a test!", "test");
-        assert c.getCategories().size()==1;
+        assertEquals(c.getCategories().size(),1);
         c.getWeightedProbability("test", "test");
     }
 
-    @Test
+    @Test(groups={"fulltest", "normal"})
     public void testSpringFactories() {
         //final String user="foobaricus";
         final int[] fucount = new int[]{0};
@@ -54,11 +55,11 @@ public class SpringTest {
         c.train("a rotten dog is a spotted mule", "dog");
         c.train("the cat slept in the couch", "cat");
         c.train("the horse ran and jumped over the log", "horse");
-        System.out.println(fucount[0]+","+cucount[0]);
-        assert fucount[0]==24;
-        assert cucount[0]==5;
-        assert c.getWeightedProbability("the log was rotten", "dog")==0.5;
-        assert c.getWeightedProbability("The log was rotten", "horse")==0.5;
-        assert c.getWeightedProbability("The log was rotten", "cat")==0.5;
+        //System.out.println(fucount[0]+","+cucount[0]);
+        assertEquals(fucount[0],24);
+        assertEquals(cucount[0],5);
+        assertEquals(c.getWeightedProbability("the log was rotten", "dog"),0.5);
+        assertEquals(c.getWeightedProbability("The log was rotten", "horse"),0.5);
+        assertEquals(c.getWeightedProbability("The log was rotten", "cat"),0.5);
     }
 }

@@ -34,7 +34,7 @@ public class ClassifierTest {
         c.testWords();
     }
 
-    @Test
+    @Test(groups={"fulltest", "normal"})
     public void testClassifierProbabilitySort() {
         ClassifierProbability c1=new ClassifierProbability(), c2=new ClassifierProbability();
         c1.setCategory("foo");
@@ -48,19 +48,19 @@ public class ClassifierTest {
         assertEquals(c1.compareTo(c2), -1);
     }
 
-    @Test
+    @Test(groups={"fulltest", "normal"})
     public void testWords() {
         WordLister w = new SimpleWordLister();
         assertEquals(w.getUniqueWords("Now is the time - 'now'").size(), 3);
     }
 
-    @Test
+    @Test(groups={"fulltest", "normal"})
     public void testIncc() {
         ClassifierImpl impl = new ClassifierImpl(new SimpleWordLister());
         impl.incc("foo");
     }
 
-    @Test
+    @Test(groups={"fulltest", "normal"})
     public void testInternalFeatureCount() {
         ClassifierImpl impl = new ClassifierImpl(new SimpleWordLister());
         impl.train("the quick brown fox jumps over the lazy dog", "good");
@@ -69,7 +69,7 @@ public class ClassifierTest {
         assertEquals(impl.fcount("quick", "bad"), 1.0, 0.1);
     }
 
-    @Test
+    @Test(groups={"fulltest", "normal"})
     public void testWeightedProbabilityByCategory() {
         Classifier cl = getClassifier();
         assertEquals(cl.getFeatureProbability("quick", "good"), 0.666666, 0.000001);
@@ -81,7 +81,7 @@ public class ClassifierTest {
 
     }
 
-    @Test
+    @Test(groups={"fulltest", "normal"})
     public void testCategoryProbabilities() {
         NaiveClassifier nc = getNaiveClassifier();
         assertEquals(nc.getProbabilityForCategory("quick rabbit", "good"), 0.15624, 0.0001);
@@ -104,7 +104,7 @@ public class ClassifierTest {
         assertEquals(cl.getProbabilityForCategory("quick rabbit", "bad"), 0.05, 0.01);
     }
 
-    @Test
+    @Test(groups={"fulltest", "normal"})
     public void testNaiveCategoryAssignment() {
         NaiveClassifier nc = getNaiveClassifier();       
         if (!nc.getClassification("quick rabbit", "unknown").equals("good")) {
@@ -125,7 +125,7 @@ public class ClassifierTest {
         }
     }
 
-    @Test
+    @Test(groups={"fulltest", "normal"})
     public void testFisherClassifier() {
         FisherClassifier nc = getFisherClassifier();
         assertEquals(nc.getFeatureProbability("quick", "good"), 0.5714, 0.0001);
