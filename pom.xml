@@ -39,7 +39,6 @@
             <artifactId>javolution</artifactId>
             <version>5.2.6</version>
         </dependency>
-
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers</artifactId>
