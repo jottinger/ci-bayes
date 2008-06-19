@@ -34,7 +34,7 @@ public class SpringTest {
         c.getWeightedProbability("test", "test");
     }
 
-    @Test(groups={"fulltest", "normal"})
+    @Test(groups={"fulltest", "normal"},dependsOnMethods = {"testCatCount"})
     public void testSpringFactories() {
         //final String user="foobaricus";
         final int[] fucount = new int[]{0};
