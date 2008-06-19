@@ -17,7 +17,8 @@ href="http://javolution.org">javolution</a>. (Even this is debatable, but
      javolution is good enough it's worth depending on.  </p>
  
  <p>It's licensed under the Artistic License.</p>
-  <h2>Usage</h2><p>Basically, using ci-bayes is a matter of defining a way to
+  <h2>Usage</h2>
+<p>Basically, using ci-bayes is a matter of defining a way to
 extract elements from a body of text (an implementation of the WordLister
 interface), and then constructing a Classifier.   
 <p>A default naive WordListerImpl is supplied with the library.  </p>
@@ -32,6 +33,9 @@ how a given Classifier can be persisted (through Java Serialization, even.)
 The class shows how any given classifier can be persisted.  
 <p>Other storage mechanisms - like JDBC, JPA, XML, etc. - can be built as
 well.</p>
+<p>Note that classification tends to rely on <em>huge</em> datasets - so be prepared to add
+    heap memory to a JVM. This is tuneable, but finding the right balance of speed and concurrency and
+heap usage is ... interesting.</p>
 <h2>WordLister Usage</h2>
 <p>One of the keys to using the classifier is the provision of a WordLister. A word lister
 returns a set of strings (<code>Set&lt;String&gt;)</code>from an object.</p>
@@ -67,7 +71,7 @@ data. As yet, updates can not be vetoed. (If anyone can think of a reason you'd 
 category update, please chime in and it'll be added.)</p>
 
 <h2>Tests</h2>
-The classifier includes a corpus test, using the corpus from SpamAssassin as training and testing corpora.
+<p>The classifier includes a corpus test, using the corpus from SpamAssassin as training and testing corpora.
 As it stands right now, it has a 98% accuracy (compared to SpamAssassin) and runs the entire test in
 11 seconds or so.
 
