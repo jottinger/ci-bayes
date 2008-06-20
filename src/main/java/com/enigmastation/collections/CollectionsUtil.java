@@ -13,9 +13,9 @@ public class CollectionsUtil {
     private static boolean limitArray;
 
     static {
-        String limitArrayStr=System.getProperty("classifier.limitarray");
-        if("true".equalsIgnoreCase(limitArrayStr)) {
-            limitArray=true;
+        String limitArrayStr = System.getProperty("classifier.limitarray");
+        if ("true".equalsIgnoreCase(limitArrayStr)) {
+            limitArray = true;
         }
         for (byte b = 'a'; b <= 'z'; b++) {
             isLetterArray[b] = true;
@@ -35,5 +35,16 @@ public class CollectionsUtil {
             return okay;
         }
         return true;
+    }
+
+    public static String join(String[] wordIds) {
+        StringBuilder sb = new StringBuilder();
+        String separator = "";
+        for (String word : wordIds) {
+            sb.append(separator);
+            sb.append(word);
+            separator = ":";
+        }
+        return sb.toString();
     }
 }

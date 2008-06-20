@@ -1,8 +1,8 @@
 package com.enigmastation.recommendations.item;
 
-import com.enigmastation.recommendations.NestedDictionary;
+import com.enigmastation.collections.NestedDictionary;
 import com.enigmastation.recommendations.Recommendation;
-import com.enigmastation.recommendations.Tuple;
+import com.enigmastation.collections.Tuple;
 import javolution.util.FastList;
 import javolution.util.FastMap;
 

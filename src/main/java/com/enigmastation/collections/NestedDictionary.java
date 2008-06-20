@@ -1,4 +1,4 @@
-package com.enigmastation.recommendations;
+package com.enigmastation.collections;
 
 import javolution.util.FastComparator;
 import javolution.util.FastMap;

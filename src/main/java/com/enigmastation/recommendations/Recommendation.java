@@ -1,5 +1,8 @@
 package com.enigmastation.recommendations;
 
+import com.enigmastation.collections.NestedDictionary;
+import com.enigmastation.collections.Tuple;
+
 import java.util.List;
 
 /**

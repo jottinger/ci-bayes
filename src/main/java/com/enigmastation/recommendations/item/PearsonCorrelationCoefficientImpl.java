@@ -1,6 +1,6 @@
 package com.enigmastation.recommendations.item;
 
-import com.enigmastation.recommendations.NestedDictionary;
+import com.enigmastation.collections.NestedDictionary;
 
 import java.util.List;
 
