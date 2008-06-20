@@ -8,6 +8,8 @@ import com.enigmastation.recommendations.data.Critic;
 import com.enigmastation.recommendations.item.DistanceRecommendationImpl;
 import com.enigmastation.recommendations.item.RecommendationImpl;
 import com.enigmastation.recommendations.item.PearsonCorrelationCoefficientImpl;
+import com.enigmastation.collections.NestedDictionary;
+import com.enigmastation.collections.Tuple;
 
 import java.util.HashMap;
 import java.util.Map;
