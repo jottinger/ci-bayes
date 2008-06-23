@@ -29,5 +29,10 @@ public class NeuralNetTest {
         net.dump(1);
         System.out.println(net.getResult(new String[]{"wWorld", "wBank"},
                 new String[]{"uWorldBank", "uRiver", "uEarth"}));
+        net.trainquery(new String[]{"wWorld", "wBank"},
+                new String[]{"uWorldBank", "uRiver", "uEarth"}, "uWorldBank");
+        System.out.println(net.getResult(new String[]{"wWorld", "wBank"},
+                        new String[]{"uWorldBank", "uRiver", "uEarth"}));
+                
     }
 }
