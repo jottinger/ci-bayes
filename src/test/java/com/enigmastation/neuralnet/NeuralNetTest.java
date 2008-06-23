@@ -4,11 +4,12 @@ import org.testng.annotations.Test;
 import org.testng.annotations.BeforeTest;
 import com.enigmastation.neuralnet.impl.resolvers.StringResolver;
 import com.enigmastation.neuralnet.impl.neuralnets.Perceptron;
+import com.enigmastation.neuralnet.impl.neuralnets.BaseNeuralNet;
 
 
 public class NeuralNetTest {
     Resolver<String> resolver;
-    NeuralNet<String> net;
+    BaseNeuralNet<String> net;
     @BeforeTest(groups="normal")
     public void setup() {
         resolver=new StringResolver();
@@ -24,5 +25,9 @@ public class NeuralNetTest {
     public void testNeuralNet() {
         net.generateHiddenNode(new String[]{"wWorld", "wBank"},
                 new String[]{"uWorldBank", "uRiver", "uEarth"});
+        net.dump(0);
+        net.dump(1);
+        System.out.println(net.getResult(new String[]{"wWorld", "wBank"},
+                new String[]{"uWorldBank", "uRiver", "uEarth"}));
     }
 }

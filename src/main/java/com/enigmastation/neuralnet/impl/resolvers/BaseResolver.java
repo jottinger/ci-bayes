@@ -8,7 +8,7 @@ import java.util.Map;
 import javolution.util.FastMap;
 
 public class BaseResolver<T> implements Resolver<T> {
-    int nextkey = 0;
+    int nextkey = 1;
     Map<T, Integer> keyIdMap = new FastMap<T, Integer>();
     Map<Integer, T> idKeyMap = new FastMap<Integer, T>();
 

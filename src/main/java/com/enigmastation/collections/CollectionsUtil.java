@@ -37,13 +37,13 @@ public class CollectionsUtil {
         return true;
     }
 
-    public static String join(Object[] wordIds) {
+    public static String join(String separator, Object ... wordIds) {
         StringBuilder sb = new StringBuilder();
-        String separator = "";
+        String sep = "";
         for (Object word : wordIds) {
-            sb.append(separator);
+            sb.append(sep);
             sb.append(String.valueOf(word));
-            separator = ":";
+            sep = separator;
         }
         return sb.toString();
     }
