@@ -4,7 +4,7 @@ import com.gigaspaces.annotation.pojo.SpaceClass;
 import com.gigaspaces.annotation.pojo.SpaceProperty;
 
 @SpaceClass
-public class Linkage implements com.enigmastation.neuralnet.model.Linkage {
+public class GigaspacesLinkage implements com.enigmastation.neuralnet.model.Linkage {
     /**
      * can't look for an "undefined layer"
      */
@@ -14,16 +14,16 @@ public class Linkage implements com.enigmastation.neuralnet.model.Linkage {
     Double strength;
 
     public String toString() {
-        return "Linkage[layer=" + layer + ",fromId=" + fromId + ",toId=" + toId + ",strength=" + strength + "]";
+        return "GigaspacesLinkage[layer=" + layer + ",fromId=" + fromId + ",toId=" + toId + ",strength=" + strength + "]";
     }
 
-    public Linkage(int layer, Integer origin, Integer dest) {
+    public GigaspacesLinkage(int layer, Integer origin, Integer dest) {
         setLayer(layer);
         setFromId(origin);
         setToId(dest);
     }
 
-    public Linkage() {
+    public GigaspacesLinkage() {
     }
 
     @SpaceProperty

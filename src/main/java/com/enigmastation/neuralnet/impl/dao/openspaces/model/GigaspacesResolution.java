@@ -4,7 +4,7 @@ import com.gigaspaces.annotation.pojo.SpaceClass;
 import com.gigaspaces.annotation.pojo.SpaceProperty;
 
 @SpaceClass
-public class Resolution {
+public class GigaspacesResolution {
     Integer id;
     String term;
 

@@ -1,6 +1,6 @@
 package com.enigmastation.neuralnet;
 
-import com.enigmastation.neuralnet.impl.dao.openspaces.model.Linkage;
+import com.enigmastation.neuralnet.model.Linkage;
 
 import java.util.Collection;
 

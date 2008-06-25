@@ -2,8 +2,8 @@ package com.enigmastation.neuralnet.impl.dao.openspaces;
 
 import com.enigmastation.neuralnet.KeyNotFoundException;
 import com.enigmastation.neuralnet.NeuralNetDAO;
-import com.enigmastation.neuralnet.impl.dao.openspaces.model.Linkage;
-import com.enigmastation.neuralnet.impl.dao.openspaces.model.Resolution;
+import com.enigmastation.neuralnet.impl.dao.openspaces.model.GigaspacesLinkage;
+import com.enigmastation.neuralnet.impl.dao.openspaces.model.GigaspacesResolution;
 import org.openspaces.core.GigaSpace;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -25,10 +25,10 @@ public class OpenSpacesNeuralNetDAO implements NeuralNetDAO {
     }
 
     public boolean addKey(String term, int id) {
-        Resolution template = new Resolution();
+        GigaspacesResolution template = new GigaspacesResolution();
         template.setId(id);
         template.setTerm(term);
-        Resolution res = getSpace().read(template);
+        GigaspacesResolution res = getSpace().read(template);
         if (res == null) {
             getSpace().write(template);
             if (id > nextkey) {
@@ -40,13 +40,13 @@ public class OpenSpacesNeuralNetDAO implements NeuralNetDAO {
     }
 
     public int addKey(String key) {
-        Resolution template = new Resolution();
+        GigaspacesResolution template = new GigaspacesResolution();
         template.setTerm(key);
-        Resolution res = getSpace().read(template);
+        GigaspacesResolution res = getSpace().read(template);
         if (res != null) {
             return res.getId();
         }
-        res = new Resolution(); // we're trying to force it to LOOK....
+        res = new GigaspacesResolution(); // we're trying to force it to LOOK....
         template.setTerm(null);
         while (res != null) {
             template.setId(nextkey);
@@ -60,9 +60,9 @@ public class OpenSpacesNeuralNetDAO implements NeuralNetDAO {
     }
 
     public int getId(String key) {
-        Resolution template = new Resolution();
+        GigaspacesResolution template = new GigaspacesResolution();
         template.setTerm(key);
-        Resolution res = getSpace().read(template);
+        GigaspacesResolution res = getSpace().read(template);
         if (res != null) {
             return res.getId();
         }
@@ -70,39 +70,39 @@ public class OpenSpacesNeuralNetDAO implements NeuralNetDAO {
     }
 
     public String getKey(int id) {
-        Resolution template = new Resolution();
+        GigaspacesResolution template = new GigaspacesResolution();
         template.setId(id);
-        Resolution res = getSpace().read(template);
+        GigaspacesResolution res = getSpace().read(template);
         if (res != null) {
             return res.getTerm();
         }
         throw new KeyNotFoundException();
     }
 
-    public Linkage getLinkage(int layer, Integer origin, Integer dest) {
-        Linkage template = new Linkage(layer, origin, dest);
+    public GigaspacesLinkage getLinkage(int layer, Integer origin, Integer dest) {
+        GigaspacesLinkage template = new GigaspacesLinkage(layer, origin, dest);
         return getSpace().read(template);
     }
 
     public void setStrength(int layer, Integer origin, Integer dest, double v) {
-        Linkage template = new Linkage(layer, origin, dest);
+        GigaspacesLinkage template = new GigaspacesLinkage(layer, origin, dest);
         getSpace().take(template);
         template.setStrength(v);
         getSpace().write(template);
     }
 
     public Collection<? extends Integer> getHiddenIds(int layer, Integer o) {
-        Linkage template = new Linkage(layer, (layer == 0 ? o : null), (layer == 0 ? null : o));
-        Linkage[] linkages = getSpace().readMultiple(template, 40000);
+        GigaspacesLinkage template = new GigaspacesLinkage(layer, (layer == 0 ? o : null), (layer == 0 ? null : o));
+        GigaspacesLinkage[] linkages = getSpace().readMultiple(template, 40000);
         List<Integer> ids = new ArrayList<Integer>();
-        for (Linkage l : linkages) {
+        for (GigaspacesLinkage l : linkages) {
             ids.add((layer == 0 ? l.getToId() : l.getFromId()));
         }
         return ids;
     }
 
-    public Linkage[] getLinkages(int layer) {
-        Linkage template = new Linkage();
+    public GigaspacesLinkage[] getLinkages(int layer) {
+        GigaspacesLinkage template = new GigaspacesLinkage();
         template.setLayer(layer);
         return getSpace().readMultiple(template, 40000);
     }
