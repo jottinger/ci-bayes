@@ -1,6 +1,6 @@
 package com.enigmastation.neuralnet;
 
-import com.enigmastation.neuralnet.impl.neuralnets.BaseNeuralNet;
+import com.enigmastation.neuralnet.impl.neuralnets.Perceptron;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.testng.annotations.BeforeTest;
@@ -28,10 +28,10 @@ public class NeuralNetTest {
 
     @Test(groups = "normal")
     public void testNeuralNet() {
-        ((BaseNeuralNet) net).generateHiddenNode(new String[]{"wWorld", "wBank"},
+        ((Perceptron) net).generateHiddenNode(new String[]{"wWorld", "wBank"},
                 new String[]{"uWorldBank", "uRiver", "uEarth"});
-        ((BaseNeuralNet) net).dump(0);
-        ((BaseNeuralNet) net).dump(1);
+        ((Perceptron) net).dump(0);
+        ((Perceptron) net).dump(1);
         System.out.println(net.getResult(new String[]{"wWorld", "wBank"},
                 new String[]{"uWorldBank", "uRiver", "uEarth"}));
         net.trainquery(new String[]{"wWorld", "wBank"},
