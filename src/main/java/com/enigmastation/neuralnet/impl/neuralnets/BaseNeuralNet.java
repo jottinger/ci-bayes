@@ -141,8 +141,6 @@ public class BaseNeuralNet implements NeuralNet {
     }
 
     /**
-     * TODO: This method doesn't work.
-     *
      * @param wordIds     wordids
      * @param urlIds      urlids
      * @param selectedUrl selectedurl
@@ -166,14 +164,14 @@ public class BaseNeuralNet implements NeuralNet {
 
     private void updateDatabase() {
         log.severe("Updating database");
-        for (int i = 0; i < wordIds.size(); i++) {
-            for (int j = 0; j < hiddenIds.size(); j++) {
-                setStrength(0, wordIds.get(i), hiddenIds.get(j), wi.get(wordIds.get(i)).get(hiddenIds.get(j)));
+        for (Integer i : wordIds) {
+            for (Integer j : hiddenIds) {
+                setStrength(0, i, j, wi.get(i).get(j));
             }
         }
-        for (int j = 0; j < hiddenIds.size(); j++) {
-            for (int k = 0; k < urlIds.size(); k++) {
-                setStrength(1, hiddenIds.get(j), urlIds.get(k), wo.get(hiddenIds.get(j)).get(urlIds.get(k)));
+        for (Integer j : hiddenIds) {
+            for (Integer k : urlIds) {
+                setStrength(1, j, k, wo.get(j).get(k));
             }
         }
     }
@@ -210,6 +208,7 @@ public class BaseNeuralNet implements NeuralNet {
         return results;
     }
 
+    @SuppressWarnings({"UnusedDeclaration"})
     private void setupNetwork(String[] origins, String[] destinations) {
         wordIds.clear();
         wordIds.addAll(populatedList(origins));
