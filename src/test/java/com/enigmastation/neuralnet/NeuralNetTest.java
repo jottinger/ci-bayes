@@ -1,6 +1,6 @@
 package com.enigmastation.neuralnet;
 
-import com.enigmastation.neuralnet.impl.neuralnets.Perceptron;
+import com.enigmastation.neuralnet.impl.neuralnets.BaseNeuralNet;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.testng.annotations.BeforeTest;
@@ -28,19 +28,19 @@ public class NeuralNetTest {
 
     @Test(groups = "normal")
     public void testNeuralNet() {
-        net.generateHiddenNode(new String[]{"wWorld", "wBank"},
+        ((BaseNeuralNet) net).generateHiddenNode(new String[]{"wWorld", "wBank"},
                 new String[]{"uWorldBank", "uRiver", "uEarth"});
-        //net.dump(0);
-        //net.dump(1);
+        ((BaseNeuralNet) net).dump(0);
+        ((BaseNeuralNet) net).dump(1);
         System.out.println(net.getResult(new String[]{"wWorld", "wBank"},
                 new String[]{"uWorldBank", "uRiver", "uEarth"}));
         net.trainquery(new String[]{"wWorld", "wBank"},
                 new String[]{"uWorldBank", "uRiver", "uEarth"}, "uWorldBank");
         System.out.println(net.getResult(new String[]{"wWorld", "wBank"},
                 new String[]{"uWorldBank", "uRiver", "uEarth"}));
-       /* net.dump(0);
-        net.dump(1);
-             */
+        /* net.dump(0);
+   net.dump(1);
+        */
         for (int i = 0; i < 30; i++) {
             net.trainquery(new String[]{"wWorld", "wBank"},
                     new String[]{"uWorldBank", "uRiver", "uEarth"},

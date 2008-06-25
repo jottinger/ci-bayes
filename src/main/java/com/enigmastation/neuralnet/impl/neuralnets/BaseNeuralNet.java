@@ -69,22 +69,17 @@ public class BaseNeuralNet implements NeuralNet {
     }
 
     private void setStrength(int layer, Integer origin, Integer dest, double v) {
-        //log.severe(layer+","+origin+","+dest+","+v);
         dao.setStrength(layer, origin, dest, v);
     }
 
-    List<Integer> getAllHiddenIds(List<Integer> originList, List<Integer> destinationList) {
+    private List<Integer> getAllHiddenIds(List<Integer> originList, List<Integer> destinationList) {
         Set<Integer> ids = new TreeSet<Integer>();
-        //List<T> originList = Arrays.asList(origins);
-        //List<T> destinationList = Arrays.asList(destinations);
 
         for (Integer o : originList) {
             ids.addAll(dao.getHiddenIds(0, o));
-            //log.severe(dao.getHiddenIds(0,o).toString());
         }
         for (Integer o : destinationList) {
             ids.addAll(dao.getHiddenIds(1, o));
-            //log.severe(dao.getHiddenIds(0,o).toString());
         }
         List<Integer> list = new ArrayList<Integer>();
         list.addAll(ids);
@@ -105,12 +100,17 @@ public class BaseNeuralNet implements NeuralNet {
         return feedforward();
     }
 
-
-    double dtanh(double y) {
+    /**
+     * returns the dtanh of y - but why isn't this in the API?
+     *
+     * @param y y
+     * @return the dtanh of y
+     */
+    private double dtanh(double y) {
         return 1.0 - y * y;
     }
 
-    void backPropagate(double[] targets, double N) {
+    private void backPropagate(double[] targets, double N) {
         double[] outputDeltas = new double[urlIds.size()];
         double[] hiddenDeltas = new double[hiddenIds.size()];
 
@@ -145,14 +145,13 @@ public class BaseNeuralNet implements NeuralNet {
      * @param urlIds      urlids
      * @param selectedUrl selectedurl
      */
-    public void trainquery(String[] wordIds, String[] urlIds, String selectedUrl) {
+    public synchronized void trainquery(String[] wordIds, String[] urlIds, String selectedUrl) {
         generateHiddenNode(wordIds, urlIds);
         setupNetwork(wordIds, urlIds);
         feedforward();
         double targets[] = new double[urlIds.length];
         for (int i = 0; i < urlIds.length; i++) {
             if (urlIds[i].equals(selectedUrl)) {
-                System.out.println("assigned 1.0 to " + i);
                 targets[i] = 1.0;
             } else {
                 targets[i] = 0.0;
@@ -163,7 +162,6 @@ public class BaseNeuralNet implements NeuralNet {
     }
 
     private void updateDatabase() {
-        log.severe("Updating database");
         for (Integer i : wordIds) {
             for (Integer j : hiddenIds) {
                 setStrength(0, i, j, wi.get(i).get(j));
@@ -176,12 +174,11 @@ public class BaseNeuralNet implements NeuralNet {
         }
     }
 
-    void backPropagate(double[] targets) {
+    private void backPropagate(double[] targets) {
         backPropagate(targets, 0.5);
     }
 
-    List<Double> feedforward() {
-        List<Double> results = new ArrayList<Double>();
+    private List<Double> feedforward() {
         for (int i = 0; i < ai.size(); i++) {
             ai.set(i, 1.0);
         }
@@ -203,9 +200,8 @@ public class BaseNeuralNet implements NeuralNet {
                 sum += d * mop.get(urlIds.get(k));
             }
             ao.set(k, Math.tanh(sum));
-            results.add(Math.tanh(sum));
         }
-        return results;
+        return ao;
     }
 
     @SuppressWarnings({"UnusedDeclaration"})
@@ -229,14 +225,12 @@ public class BaseNeuralNet implements NeuralNet {
         for (Integer i : wordIds) {
             for (Integer j : hiddenIds) {
                 double d = getStrength(0, i, j);
-                //log.severe("strength of "+0+","+i+","+j+":"+d);
                 wi.save(i, j, d);
             }
         }
         for (Integer i : hiddenIds) {
             for (Integer j : urlIds) {
                 double d = getStrength(1, i, j);
-                //log.severe("strength of "+1+","+i+","+j+":"+d);
                 wo.save(i, j, d);
             }
         }
