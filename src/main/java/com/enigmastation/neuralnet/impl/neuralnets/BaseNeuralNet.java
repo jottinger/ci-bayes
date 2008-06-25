@@ -4,24 +4,20 @@ import com.enigmastation.collections.CollectionsUtil;
 import com.enigmastation.collections.NestedDictionary;
 import com.enigmastation.neuralnet.KeyNotFoundException;
 import com.enigmastation.neuralnet.NeuralNet;
-import com.enigmastation.neuralnet.Resolver;
 import com.enigmastation.neuralnet.NeuralNetDAO;
-import com.enigmastation.neuralnet.impl.resolvers.BaseResolver;
-import com.enigmastation.neuralnet.impl.dao.openspaces.model.Linkage;
+import com.enigmastation.neuralnet.Resolver;
+import com.enigmastation.neuralnet.model.Linkage;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
 import java.util.logging.Logger;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class BaseNeuralNet implements NeuralNet {
     @Autowired
     NeuralNetDAO dao;
     static final int ORIGIN = 0;
     static final int DESTINATION = 1;
-    NestedDictionary wordhidden = new NestedDictionary();
-    NestedDictionary hiddenurl = new NestedDictionary();
-    
+
     List<Double> ai = new ArrayList<Double>();
     List<Double> ah = new ArrayList<Double>();
     List<Double> ao = new ArrayList<Double>();
@@ -65,8 +61,8 @@ public class BaseNeuralNet implements NeuralNet {
 
     private double getStrength(int layer, Integer origin, Integer dest) {
         double value = ((layer == 0) ? -0.2 : 0.0);
-        Linkage linkage=dao.getLinkage(layer, origin, dest);
-        if(linkage==null) {
+        Linkage linkage = dao.getLinkage(layer, origin, dest);
+        if (linkage == null) {
             return value;
         }
         return linkage.getStrength();
@@ -85,12 +81,12 @@ public class BaseNeuralNet implements NeuralNet {
         for (Integer o : originList) {
             ids.addAll(dao.getHiddenIds(0, o));
             //log.severe(dao.getHiddenIds(0,o).toString());
-           }
+        }
         for (Integer o : destinationList) {
             ids.addAll(dao.getHiddenIds(1, o));
             //log.severe(dao.getHiddenIds(0,o).toString());
         }
-        List<Integer> list=new ArrayList<Integer>();
+        List<Integer> list = new ArrayList<Integer>();
         list.addAll(ids);
         return list;
     }
@@ -146,8 +142,9 @@ public class BaseNeuralNet implements NeuralNet {
 
     /**
      * TODO: This method doesn't work.
-     * @param wordIds wordids
-     * @param urlIds urlids
+     *
+     * @param wordIds     wordids
+     * @param urlIds      urlids
      * @param selectedUrl selectedurl
      */
     public void trainquery(String[] wordIds, String[] urlIds, String selectedUrl) {
@@ -169,14 +166,14 @@ public class BaseNeuralNet implements NeuralNet {
 
     private void updateDatabase() {
         log.severe("Updating database");
-        for(int i=0;i<wordIds.size();i++) {
-            for(int j=0;j<hiddenIds.size();j++) {
-                setStrength(0,wordIds.get(i),hiddenIds.get(j),wi.get(wordIds.get(i)).get(hiddenIds.get(j)));
+        for (int i = 0; i < wordIds.size(); i++) {
+            for (int j = 0; j < hiddenIds.size(); j++) {
+                setStrength(0, wordIds.get(i), hiddenIds.get(j), wi.get(wordIds.get(i)).get(hiddenIds.get(j)));
             }
         }
-        for(int j=0;j<hiddenIds.size();j++) {
-            for(int k=0;k<urlIds.size();k++) {
-                setStrength(1,hiddenIds.get(j),urlIds.get(k),wo.get(hiddenIds.get(j)).get(urlIds.get(k)));
+        for (int j = 0; j < hiddenIds.size(); j++) {
+            for (int k = 0; k < urlIds.size(); k++) {
+                setStrength(1, hiddenIds.get(j), urlIds.get(k), wo.get(hiddenIds.get(j)).get(urlIds.get(k)));
             }
         }
     }
@@ -232,16 +229,16 @@ public class BaseNeuralNet implements NeuralNet {
         }
         for (Integer i : wordIds) {
             for (Integer j : hiddenIds) {
-                double d=getStrength(0, i, j);
+                double d = getStrength(0, i, j);
                 //log.severe("strength of "+0+","+i+","+j+":"+d);
                 wi.save(i, j, d);
             }
         }
         for (Integer i : hiddenIds) {
             for (Integer j : urlIds) {
-                double d=getStrength(1,i,j);
+                double d = getStrength(1, i, j);
                 //log.severe("strength of "+1+","+i+","+j+":"+d);
-                wo.save(i, j, getStrength(1, i, j));
+                wo.save(i, j, d);
             }
         }
     }
@@ -254,10 +251,11 @@ public class BaseNeuralNet implements NeuralNet {
         return list;
     }
 
-    Logger log=Logger.getLogger(this.getClass().getName());
+    Logger log = Logger.getLogger(this.getClass().getName());
+
     public void dump(int layer) {
-        Linkage[] linkages=dao.getLinkages(layer);
-        for(Linkage l:linkages) {
+        Linkage[] linkages = dao.getLinkages(layer);
+        for (Linkage l : linkages) {
             log.severe(l.toString());
         }
     }
