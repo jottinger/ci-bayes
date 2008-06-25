@@ -1,24 +1,27 @@
 package com.enigmastation.neuralnet.impl.neuralnets;
 
-import com.enigmastation.neuralnet.NeuralNet;
-import com.enigmastation.neuralnet.Resolver;
-import com.enigmastation.neuralnet.KeyNotFoundError;
-import com.enigmastation.neuralnet.impl.resolvers.BaseResolver;
 import com.enigmastation.collections.CollectionsUtil;
 import com.enigmastation.collections.NestedDictionary;
+import com.enigmastation.neuralnet.KeyNotFoundException;
+import com.enigmastation.neuralnet.NeuralNet;
+import com.enigmastation.neuralnet.Resolver;
+import com.enigmastation.neuralnet.NeuralNetDAO;
+import com.enigmastation.neuralnet.impl.resolvers.BaseResolver;
+import com.enigmastation.neuralnet.impl.dao.openspaces.model.Linkage;
 
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
+import java.util.logging.Logger;
 
-public class BaseNeuralNet<T> implements NeuralNet<T> {
-    Resolver<T> resolver;
+import org.springframework.beans.factory.annotation.Autowired;
+
+public class BaseNeuralNet implements NeuralNet {
+    @Autowired
+    NeuralNetDAO dao;
     static final int ORIGIN = 0;
     static final int DESTINATION = 1;
     NestedDictionary wordhidden = new NestedDictionary();
     NestedDictionary hiddenurl = new NestedDictionary();
-    Resolver<String> hiddenidresolver = new BaseResolver<String>();
+    
     List<Double> ai = new ArrayList<Double>();
     List<Double> ah = new ArrayList<Double>();
     List<Double> ao = new ArrayList<Double>();
@@ -28,22 +31,33 @@ public class BaseNeuralNet<T> implements NeuralNet<T> {
     NestedDictionary wi = new NestedDictionary();
     NestedDictionary wo = new NestedDictionary();
 
-    public BaseNeuralNet(Resolver<T> resolver) {
-        this.resolver = resolver;
+    public BaseNeuralNet(NeuralNetDAO dao) {
+        this.dao = dao;
     }
 
-    public void generateHiddenNode(T[] origins, T[] destinations) {
-        String createKey = CollectionsUtil.join("_", origins);
+    public Resolver getDao() {
+        return dao;
+    }
+
+    public void setDao(NeuralNetDAO dao) {
+        this.dao = dao;
+    }
+
+    public BaseNeuralNet() {
+    }
+
+    public void generateHiddenNode(String[] origins, String[] destinations) {
+        String createKey = CollectionsUtil.join("_", (Object[]) origins);
         try {
-            hiddenidresolver.getId(createKey);
-        } catch (KeyNotFoundError knfe) {
-            Integer hiddenid = hiddenidresolver.addKey(createKey);
-            for (T origin : origins) {
-                Integer oId = resolver.addKey(origin);
+            dao.getId(createKey);
+        } catch (KeyNotFoundException knfe) {
+            Integer hiddenid = dao.addKey(createKey);
+            for (String origin : origins) {
+                Integer oId = dao.addKey(origin);
                 setStrength(ORIGIN, oId, hiddenid, 1.0 / origins.length);
             }
-            for (T destination : destinations) {
-                Integer dId = resolver.addKey(destination);
+            for (String destination : destinations) {
+                Integer dId = dao.addKey(destination);
                 setStrength(DESTINATION, hiddenid, dId, 0.1);
             }
         }
@@ -51,50 +65,37 @@ public class BaseNeuralNet<T> implements NeuralNet<T> {
 
     private double getStrength(int layer, Integer origin, Integer dest) {
         double value = ((layer == 0) ? -0.2 : 0.0);
-        NestedDictionary dict = (layer == 0 ? wordhidden : hiddenurl);
-        Map<Object, Double> nMap = dict.get(origin);
-        if (nMap != null) {
-            Double d = nMap.get(dest);
-            if (d != null) {
-                value = d.doubleValue();
-            }
+        Linkage linkage=dao.getLinkage(layer, origin, dest);
+        if(linkage==null) {
+            return value;
         }
-        return value;
+        return linkage.getStrength();
     }
 
     private void setStrength(int layer, Integer origin, Integer dest, double v) {
-        NestedDictionary dict = (layer == 0 ? wordhidden : hiddenurl);
-        dict.save(origin, dest, v);
+        //log.severe(layer+","+origin+","+dest+","+v);
+        dao.setStrength(layer, origin, dest, v);
     }
 
     List<Integer> getAllHiddenIds(List<Integer> originList, List<Integer> destinationList) {
-        List<Integer> ids = new ArrayList<Integer>();
+        Set<Integer> ids = new TreeSet<Integer>();
         //List<T> originList = Arrays.asList(origins);
         //List<T> destinationList = Arrays.asList(destinations);
+
         for (Integer o : originList) {
-            Map<Object, Double> mop = wordhidden.get(o);
-            if (mop != null) {
-                for (Object p : mop.keySet()) {
-                    if (!ids.contains((Integer) p)) {
-                        ids.add((Integer) p);
-                    }
-                }
-            }
+            ids.addAll(dao.getHiddenIds(0, o));
+            //log.severe(dao.getHiddenIds(0,o).toString());
+           }
+        for (Integer o : destinationList) {
+            ids.addAll(dao.getHiddenIds(1, o));
+            //log.severe(dao.getHiddenIds(0,o).toString());
         }
-        for (Object o : hiddenurl.keySet()) {
-            Map<Object, Double> mop = hiddenurl.get(o);
-            if (mop != null) {
-                for (Object p : mop.keySet()) {
-                    if (destinationList.contains(p)) {
-                        ids.add((Integer) p);
-                    }
-                }
-            }
-        }
-        return ids;
+        List<Integer> list=new ArrayList<Integer>();
+        list.addAll(ids);
+        return list;
     }
 
-    public List<Double> getResult(T[] origins, T[] destinations) {
+    public List<Double> getResult(String[] origins, String[] destinations) {
         ai = new ArrayList<Double>();
         ah = new ArrayList<Double>();
         ao = new ArrayList<Double>();
@@ -119,7 +120,7 @@ public class BaseNeuralNet<T> implements NeuralNet<T> {
 
         for (int k = 0; k < urlIds.size(); k++) {
             double error = targets[k] - ao.get(k);
-            outputDeltas[k] = dtanh(ao.get(k) * error);
+            outputDeltas[k] = dtanh(ao.get(k)) * error;
         }
         for (int j = 0; j < hiddenIds.size(); j++) {
             double error = 0.0;
@@ -132,34 +133,52 @@ public class BaseNeuralNet<T> implements NeuralNet<T> {
         for (int j = 0; j < hiddenIds.size(); j++) {
             for (int k = 0; k < urlIds.size(); k++) {
                 double change = outputDeltas[k] * ah.get(j);
-                wo.save(j, k, wo.get(hiddenIds.get(j)).get(urlIds.get(k)) + N * change);
+                wo.save(hiddenIds.get(j), urlIds.get(k), wo.get(hiddenIds.get(j)).get(urlIds.get(k)) + N * change);
             }
         }
         for (int i = 0; i < wordIds.size(); i++) {
             for (int j = 0; j < hiddenIds.size(); j++) {
                 double change = hiddenDeltas[j] * ai.get(i);
-                wi.save(i, j, wi.get(wordIds.get(i)).get(hiddenIds.get(j)) + N * change);
+                wi.save(wordIds.get(i), hiddenIds.get(j), wi.get(wordIds.get(i)).get(hiddenIds.get(j)) + N * change);
             }
         }
     }
 
     /**
      * TODO: This method doesn't work.
+     * @param wordIds wordids
+     * @param urlIds urlids
+     * @param selectedUrl selectedurl
      */
-    public void trainquery(T[] wordIds, T[] urlIds, T selectedUrl) {
+    public void trainquery(String[] wordIds, String[] urlIds, String selectedUrl) {
         generateHiddenNode(wordIds, urlIds);
         setupNetwork(wordIds, urlIds);
         feedforward();
-        double targets[]=new double[urlIds.length];
-        for(int i=0;i<urlIds.length;i++) {
-            if(urlIds[i].equals(selectedUrl)) {
-                System.out.println("assigned 1.0 to "+i);
-                targets[i]=1.0;
+        double targets[] = new double[urlIds.length];
+        for (int i = 0; i < urlIds.length; i++) {
+            if (urlIds[i].equals(selectedUrl)) {
+                System.out.println("assigned 1.0 to " + i);
+                targets[i] = 1.0;
             } else {
-                targets[i]=0.0;
+                targets[i] = 0.0;
             }
         }
         backPropagate(targets);
+        updateDatabase();
+    }
+
+    private void updateDatabase() {
+        log.severe("Updating database");
+        for(int i=0;i<wordIds.size();i++) {
+            for(int j=0;j<hiddenIds.size();j++) {
+                setStrength(0,wordIds.get(i),hiddenIds.get(j),wi.get(wordIds.get(i)).get(hiddenIds.get(j)));
+            }
+        }
+        for(int j=0;j<hiddenIds.size();j++) {
+            for(int k=0;k<urlIds.size();k++) {
+                setStrength(1,hiddenIds.get(j),urlIds.get(k),wo.get(hiddenIds.get(j)).get(urlIds.get(k)));
+            }
+        }
     }
 
     void backPropagate(double[] targets) {
@@ -194,7 +213,7 @@ public class BaseNeuralNet<T> implements NeuralNet<T> {
         return results;
     }
 
-    private void setupNetwork(T[] origins, T[] destinations) {
+    private void setupNetwork(String[] origins, String[] destinations) {
         wordIds.clear();
         wordIds.addAll(populatedList(origins));
         urlIds.clear();
@@ -213,31 +232,33 @@ public class BaseNeuralNet<T> implements NeuralNet<T> {
         }
         for (Integer i : wordIds) {
             for (Integer j : hiddenIds) {
-                wi.save(i, j, getStrength(0, i, j));
+                double d=getStrength(0, i, j);
+                //log.severe("strength of "+0+","+i+","+j+":"+d);
+                wi.save(i, j, d);
             }
         }
         for (Integer i : hiddenIds) {
             for (Integer j : urlIds) {
+                double d=getStrength(1,i,j);
+                //log.severe("strength of "+1+","+i+","+j+":"+d);
                 wo.save(i, j, getStrength(1, i, j));
             }
         }
     }
 
-    private List<Integer> populatedList(T[] origins) {
+    private List<Integer> populatedList(String[] origins) {
         List<Integer> list = new ArrayList<Integer>();
-        for (T origin : origins) {
-            list.add(resolver.getId(origin));
+        for (String origin : origins) {
+            list.add(dao.getId(origin));
         }
         return list;
     }
 
+    Logger log=Logger.getLogger(this.getClass().getName());
     public void dump(int layer) {
-        NestedDictionary dict = (layer == 0 ? wordhidden : hiddenurl);
-        for (Object o : dict.keySet()) {
-            Map<Object, Double> mop = dict.get(o);
-            for (Object p : mop.keySet()) {
-                System.out.printf("%s, %s, %f%n", o.toString(), p.toString(), mop.get(p));
-            }
+        Linkage[] linkages=dao.getLinkages(layer);
+        for(Linkage l:linkages) {
+            log.severe(l.toString());
         }
     }
 }

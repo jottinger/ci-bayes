@@ -3,12 +3,12 @@ package com.enigmastation.neuralnet.resolvers;
 import org.testng.annotations.Test;
 import static org.testng.Assert.*;
 import com.enigmastation.neuralnet.Resolver;
-import com.enigmastation.neuralnet.impl.resolvers.StringResolver;
+import com.enigmastation.neuralnet.impl.resolvers.BaseResolver;
 
 public class ResolverTest {
-    @Test(groups="normal")
+    @Test(groups="nn")
     public void resolverTest() {
-        Resolver<String> resolver=new StringResolver();
+        Resolver resolver=new BaseResolver();
         resolver.addKey("wWorld",101);
         assertEquals(resolver.getId("wWorld"), 101);
         resolver.addKey("wBank");

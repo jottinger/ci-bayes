@@ -1,19 +1,19 @@
 package com.enigmastation.neuralnet;
 
-public class KeyNotFoundError extends Error{
-    public KeyNotFoundError() {
+public class KeyNotFoundException extends Error {
+    public KeyNotFoundException() {
         super();    //To change body of overridden methods use File | Settings | File Templates.
     }
 
-    public KeyNotFoundError(String message) {
+    public KeyNotFoundException(String message) {
         super(message);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
-    public KeyNotFoundError(String message, Throwable cause) {
+    public KeyNotFoundException(String message, Throwable cause) {
         super(message, cause);    //To change body of overridden methods use File | Settings | File Templates.
     }
 
-    public KeyNotFoundError(Throwable cause) {
+    public KeyNotFoundException(Throwable cause) {
         super(cause);    //To change body of overridden methods use File | Settings | File Templates.
     }
 }

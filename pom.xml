@@ -29,6 +29,12 @@
     </build>
     <dependencies>
         <dependency>
+             <groupId>org.openspaces</groupId>
+             <artifactId>openspaces</artifactId>
+             <version>6.5-rc2</version>
+             <scope>provided</scope>
+         </dependency>        
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
             <version>3.3.2.GA</version>

@@ -7,14 +7,14 @@ package com.enigmastation.neuralnet;
  * Time: 10:47:16 AM
  * To change this template use File | Settings | File Templates.
  */
-public interface Resolver<T> {
+public interface Resolver {
     /**
      * returns true if the id requested is available for key
      * @param id the requested id
      * @param key the key for the id assigned
      * @return success if the key is available and assigned
      */
-    boolean addKey(T key, int id);
+    boolean addKey(String key, int id);
 
     /**
      * Adds a key to the resolver, returning the id for the key. If the
@@ -23,9 +23,9 @@ public interface Resolver<T> {
      * @param key The key to add
      * @return the id for the key
      */
-    int addKey(T key);
+    int addKey(String key);
 
-    int getId(T key);
+    int getId(String key);
 
-    T getKey(int id);
+    String getKey(int id);
 }

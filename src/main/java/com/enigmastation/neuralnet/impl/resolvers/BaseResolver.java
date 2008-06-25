@@ -1,18 +1,18 @@
 package com.enigmastation.neuralnet.impl.resolvers;
 
 import com.enigmastation.neuralnet.Resolver;
-import com.enigmastation.neuralnet.KeyNotFoundError;
+import com.enigmastation.neuralnet.KeyNotFoundException;
 
 import java.util.Map;
 
 import javolution.util.FastMap;
 
-public class BaseResolver<T> implements Resolver<T> {
+public class BaseResolver implements Resolver {
     int nextkey = 1;
-    Map<T, Integer> keyIdMap = new FastMap<T, Integer>();
-    Map<Integer, T> idKeyMap = new FastMap<Integer, T>();
-
-    public boolean addKey(T key, int keyId) {
+    Map<String, Integer> keyIdMap = new FastMap<String, Integer>();
+    Map<Integer, String> idKeyMap = new FastMap<Integer, String>();
+    
+    public boolean addKey(String key, int keyId) {
         if (keyIdMap.containsKey(key) || idKeyMap.containsKey(keyId)) {
             return false;
         }
@@ -23,7 +23,7 @@ public class BaseResolver<T> implements Resolver<T> {
         return true;
     }
     
-    public int addKey(T key) {
+    public int addKey(String key) {
         if (keyIdMap.containsKey(key)) {
             return keyIdMap.get(key);
         }
@@ -33,17 +33,17 @@ public class BaseResolver<T> implements Resolver<T> {
         return keyId;
     }
 
-    public int getId(T key) {
+    public int getId(String key) {
         if(keyIdMap.containsKey(key)) {
             return keyIdMap.get(key);
         }
-        throw new KeyNotFoundError("key not found in resolver: "+String.valueOf(key));
+        throw new KeyNotFoundException("key not found in resolver: "+String.valueOf(key));
     }
 
-    public T getKey(int id) {
+    public String getKey(int id) {
         if(idKeyMap.containsKey(id)) {
             return idKeyMap.get(id);
         }
-        throw new KeyNotFoundError("id not found in resolver: "+String.valueOf(id));
+        throw new KeyNotFoundException("id not found in resolver: "+String.valueOf(id));
     }
 }
