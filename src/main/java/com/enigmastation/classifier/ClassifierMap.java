@@ -17,8 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
  * @version $Revision: 36 $
  */
 
-public final class ClassifierMap extends ConcurrentHashMap<String,Integer> {
-    private long totalCount;
+public class ClassifierMap extends ConcurrentHashMap<String,Integer> {
+    private long totalCount=0;
 
     /**
      * This method increments the category's count. It primarily exists for the benefit of bulk loaders,
@@ -55,6 +55,11 @@ public final class ClassifierMap extends ConcurrentHashMap<String,Integer> {
      * @return The total number of training corpuses
      */
     public double getTotalCount() {
+    if(totalCount==0) {
+    for(Integer i:values()) {
+    totalCount+=i;
+    }
+    }
         return totalCount;
     }
 }

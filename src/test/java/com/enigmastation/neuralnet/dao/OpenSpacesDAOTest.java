@@ -26,7 +26,7 @@ public class OpenSpacesDAOTest {
         assertNotNull(((OpenSpacesNeuralNetDAO) dao).getSpace());
     }
 
-    @Test(groups = "normal")
+    //@Test(groups = "normal")
     public void testResolver() {
         dao.addKey("wWorld", 101);
         assertEquals(dao.getId("wWorld"), 101);

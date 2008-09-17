@@ -18,11 +18,21 @@ public class ClassifierImpl implements Classifier {
     /**
      * In Segaran's book, this is referred to as "fc"
      */
-    private FeatureMap categoryFeatureMap = new FeatureMap();
+    private FeatureMap categoryFeatureMap = createFeatureMap();
+
+    public FeatureMap createFeatureMap() {
+        return new FeatureMap();
+    }
+
     /**
      * In Segaran's book, this is referred to as "cc"
      */
-    private ClassifierMap categoryDocCount = new ClassifierMap();
+    private ClassifierMap categoryDocCount = createClassifierMap();
+
+    public ClassifierMap createClassifierMap() {
+        return new ClassifierMap();
+    }
+
     protected WordLister extractor = null;
     private Set<ClassifierListener> listeners = new FastSet<ClassifierListener>();
     private Set<String> categories = new FastSet<String>();

@@ -24,4 +24,8 @@ public interface Classifier extends Serializable {
     Set<String> getCategories();
 
     void addListener(ClassifierListener listener);
+
+    FeatureMap createFeatureMap();
+
+    ClassifierMap createClassifierMap();
 }

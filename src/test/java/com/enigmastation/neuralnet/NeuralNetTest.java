@@ -26,7 +26,7 @@ public class NeuralNetTest {
         dao.addKey("uEarth", 203);
     }
 
-    @Test(groups = "normal")
+    //@Test(groups = "normal")
     public void testNeuralNet() {
         ((Perceptron) net).generateHiddenNode(new String[]{"wWorld", "wBank"},
                 new String[]{"uWorldBank", "uRiver", "uEarth"});

@@ -4,7 +4,7 @@
     <groupId>com.enigmastation</groupId>
     <artifactId>ci-bayes</artifactId>
     <packaging>jar</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.2-SNAPSHOT</version>
     <name>ci-bayes</name>
     <url>http://maven.apache.org</url>
     <build>
@@ -28,10 +28,15 @@
         </plugins>
     </build>
     <dependencies>
+<dependency>
+    <groupId>javax.transaction</groupId>
+        <artifactId>jta</artifactId>
+            <version>1.0.1B</version>
+            </dependency> 
         <dependency>
              <groupId>org.openspaces</groupId>
              <artifactId>openspaces</artifactId>
-             <version>6.5-rc2</version>
+             <version>6.6.0-rc</version>
              <scope>provided</scope>
          </dependency>        
         <dependency>
@@ -91,4 +96,19 @@
             <version>2.3.2</version>
         </dependency>
     </dependencies>
-</project>
+<distributionManagement>
+  <!-- use the following if you're not using a snapshot version. -->
+    <repository>
+        <id>repo</id>
+            <name>Repository Name</name>
+                <url>scp://host/path/to/repo</url>
+                  </repository>
+                    <!-- use the following if you ARE using a snapshot
+                  version. -->
+                    <snapshotRepository>
+                        <id>repo</id>
+                            <name>Repository Name</name>
+                                <url>file:///c|/Users/joeo/.m2/repository</url>
+                                  </snapshotRepository>
+                                  </distributionManagement>
+                                  </project>
