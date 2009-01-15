@@ -1,9 +1,9 @@
 package com.enigmastation.neuralnet.model;
 
 public interface Linkage {
-    int getLayer();
+    Layer getLayer();
 
-    void setLayer(int layer);
+    void setLayer(Layer layer);
 
     Integer getFromId();
 

@@ -1,13 +1,14 @@
 package com.enigmastation.neuralnet;
 
 import com.enigmastation.neuralnet.impl.neuralnets.Perceptron;
+import com.enigmastation.neuralnet.model.Layer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 
-public class NeuralNetTest {
+public class NeuralNetTestInvalid {
     NeuralNet net;
     ApplicationContext ctx;
     NeuralNetDAO dao;
@@ -26,12 +27,12 @@ public class NeuralNetTest {
         dao.addKey("uEarth", 203);
     }
 
-    //@Test(groups = "normal")
+    @Test(groups = "normal")
     public void testNeuralNet() {
         ((Perceptron) net).generateHiddenNode(new String[]{"wWorld", "wBank"},
                 new String[]{"uWorldBank", "uRiver", "uEarth"});
-        ((Perceptron) net).dump(0);
-        ((Perceptron) net).dump(1);
+        ((Perceptron) net).dump(Layer.TOHIDDEN);
+        ((Perceptron) net).dump(Layer.FROMHIDDEN);
         System.out.println(net.getResult(new String[]{"wWorld", "wBank"},
                 new String[]{"uWorldBank", "uRiver", "uEarth"}));
         net.trainquery(new String[]{"wWorld", "wBank"},

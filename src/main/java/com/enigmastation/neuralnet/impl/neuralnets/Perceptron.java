@@ -7,6 +7,7 @@ import com.enigmastation.neuralnet.NeuralNet;
 import com.enigmastation.neuralnet.NeuralNetDAO;
 import com.enigmastation.neuralnet.Resolver;
 import com.enigmastation.neuralnet.model.Linkage;
+import com.enigmastation.neuralnet.model.Layer;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.*;
@@ -50,17 +51,17 @@ public class Perceptron implements NeuralNet {
             Integer hiddenid = dao.addKey(createKey);
             for (String origin : origins) {
                 Integer oId = dao.addKey(origin);
-                setStrength(ORIGIN, oId, hiddenid, 1.0 / origins.length);
+                setStrength(Layer.TOHIDDEN, oId, hiddenid, 1.0 / origins.length);
             }
             for (String destination : destinations) {
                 Integer dId = dao.addKey(destination);
-                setStrength(DESTINATION, hiddenid, dId, 0.1);
+                setStrength(Layer.FROMHIDDEN, hiddenid, dId, 0.1);
             }
         }
     }
 
-    private double getStrength(int layer, Integer origin, Integer dest) {
-        double value = ((layer == 0) ? -0.2 : 0.0);
+    private double getStrength(Layer layer, Integer origin, Integer dest) {
+        double value = ((layer.equals(Layer.TOHIDDEN)) ? -0.2 : 0.0);
         Linkage linkage = dao.getLinkage(layer, origin, dest);
         if (linkage == null) {
             return value;
@@ -68,7 +69,7 @@ public class Perceptron implements NeuralNet {
         return linkage.getStrength();
     }
 
-    private void setStrength(int layer, Integer origin, Integer dest, double v) {
+    private void setStrength(Layer layer, Integer origin, Integer dest, double v) {
         dao.setStrength(layer, origin, dest, v);
     }
 
@@ -76,10 +77,10 @@ public class Perceptron implements NeuralNet {
         Set<Integer> ids = new TreeSet<Integer>();
 
         for (Integer o : originList) {
-            ids.addAll(dao.getHiddenIds(0, o));
+            ids.addAll(dao.getHiddenIds(Layer.FROMHIDDEN, o));
         }
         for (Integer o : destinationList) {
-            ids.addAll(dao.getHiddenIds(1, o));
+            ids.addAll(dao.getHiddenIds(Layer.TOHIDDEN, o));
         }
         List<Integer> list = new ArrayList<Integer>();
         list.addAll(ids);
@@ -164,12 +165,12 @@ public class Perceptron implements NeuralNet {
     private void updateDatabase() {
         for (Integer i : wordIds) {
             for (Integer j : hiddenIds) {
-                setStrength(0, i, j, wi.get(i).get(j));
+                setStrength(Layer.TOHIDDEN, i, j, wi.get(i).get(j));
             }
         }
         for (Integer j : hiddenIds) {
             for (Integer k : urlIds) {
-                setStrength(1, j, k, wo.get(j).get(k));
+                setStrength(Layer.FROMHIDDEN, j, k, wo.get(j).get(k));
             }
         }
     }
@@ -224,13 +225,13 @@ public class Perceptron implements NeuralNet {
         }
         for (Integer i : wordIds) {
             for (Integer j : hiddenIds) {
-                double d = getStrength(0, i, j);
+                double d = getStrength(Layer.TOHIDDEN, i, j);
                 wi.save(i, j, d);
             }
         }
         for (Integer i : hiddenIds) {
             for (Integer j : urlIds) {
-                double d = getStrength(1, i, j);
+                double d = getStrength(Layer.FROMHIDDEN, i, j);
                 wo.save(i, j, d);
             }
         }
@@ -246,7 +247,8 @@ public class Perceptron implements NeuralNet {
 
     Logger log = Logger.getLogger(this.getClass().getName());
 
-    public void dump(int layer) {
+    public void dump(Layer layer) {
+        log.severe("Dumping layer "+layer);
         Linkage[] linkages = dao.getLinkages(layer);
         for (Linkage l : linkages) {
             log.severe(l.toString());

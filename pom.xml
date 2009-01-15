@@ -4,9 +4,10 @@
     <groupId>com.enigmastation</groupId>
     <artifactId>ci-bayes</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.2-SNAPSHOT</version>
+    <version>1.0.3</version>
     <name>ci-bayes</name>
-    <url>http://maven.apache.org</url>
+    <description>Module for classifying data based on various Bayesian algorithms</description>    
+    <url>https://ci-bayes.dev.java.net</url>
     <build>
         <plugins>
             <plugin>
@@ -28,17 +29,11 @@
         </plugins>
     </build>
     <dependencies>
-<dependency>
-    <groupId>javax.transaction</groupId>
-        <artifactId>jta</artifactId>
-            <version>1.0.1B</version>
-            </dependency> 
         <dependency>
-             <groupId>org.openspaces</groupId>
-             <artifactId>openspaces</artifactId>
-             <version>6.6.0-rc</version>
-             <scope>provided</scope>
-         </dependency>        
+            <groupId>javax.transaction</groupId>
+            <artifactId>jta</artifactId>
+            <version>1.0.1B</version>
+        </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-entitymanager</artifactId>
@@ -56,6 +51,11 @@
             <version>5.8</version>
             <classifier>jdk15</classifier>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-math</groupId>
+            <artifactId>commons-math</artifactId>
+            <version>1.2</version>
         </dependency>
         <dependency>
             <groupId>org.javolution</groupId>
@@ -96,19 +96,4 @@
             <version>2.3.2</version>
         </dependency>
     </dependencies>
-<distributionManagement>
-  <!-- use the following if you're not using a snapshot version. -->
-    <repository>
-        <id>repo</id>
-            <name>Repository Name</name>
-                <url>scp://host/path/to/repo</url>
-                  </repository>
-                    <!-- use the following if you ARE using a snapshot
-                  version. -->
-                    <snapshotRepository>
-                        <id>repo</id>
-                            <name>Repository Name</name>
-                                <url>file:///c|/Users/joeo/.m2/repository</url>
-                                  </snapshotRepository>
-                                  </distributionManagement>
-                                  </project>
+</project>
