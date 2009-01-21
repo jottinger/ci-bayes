@@ -4,10 +4,20 @@
     <groupId>com.enigmastation</groupId>
     <artifactId>ci-bayes</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <name>ci-bayes</name>
-    <description>Module for classifying data based on various Bayesian algorithms</description>    
+    <description>Module for classifying data based on various Bayesian algorithms</description>
     <url>https://ci-bayes.dev.java.net</url>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <scm>
+        <url>https://ci-bayes.dev.java.net/source/browse/ci-bayes/</url>
+    </scm>
     <build>
         <plugins>
             <plugin>
@@ -70,7 +80,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring</artifactId>
-            <version>2.5.4</version>
+            <version>2.5.6</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>

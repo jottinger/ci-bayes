@@ -22,7 +22,10 @@ public interface Classifier extends Serializable {
     ClassifierMap getCategoryDocCount();
 
     Set<String> getCategories();
-
+    /**
+     * Convenience method for loaders.
+     */
+    public void addCategory(String category);
     void addListener(ClassifierListener listener);
 
     FeatureMap createFeatureMap();

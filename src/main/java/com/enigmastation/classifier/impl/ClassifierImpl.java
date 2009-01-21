@@ -41,6 +41,12 @@ public class ClassifierImpl implements Classifier {
         listeners.add(listener);
     }
 
+    /**
+     * Convenience method for loaders.
+     */
+    public void addCategory(String category) {
+        categories.add(category);
+    }
     public ClassifierImpl(WordLister w) {
         extractor = w;
     }
