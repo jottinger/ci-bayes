@@ -21,6 +21,26 @@ purposes (i.e., if you want to be a developer, that's great, but please let
 the <a href="mailto:dev@ci-bayes.dev.java.net">dev mailing list</a> know
 what it is you're trying to do before applying for the role.)</p>
 
+<h2>Maven</h2>
+CI-Bayes 1.0.4 is available from Java.net's Maven2 repository.
+Installation requires two modifications to a pom.xml:
+<pre>&lt;repositories&gt;   
+   &lt;repository&gt;           
+       &lt;id&gt;maven2-repository.dev.java.net&lt;/id&gt;
+       &lt;name&gt;Java.net Repository for Maven&lt;/name&gt;
+       &lt;url&gt;http://download.java.net/maven/2/&lt;/url&gt;
+       &lt;layout&gt;default&lt;/layout&gt;
+   &lt;/repository&gt;
+&lt;/repositories&gt;
+...
+&lt;dependencies&gt;
+   &lt;dependency&gt;
+      &lt;groupId&gt;com.enigmastation&lt;/groupId&gt;
+      &lt;artifactId&gt;ci-bayes&lt;/artifactId&gt;
+      &lt;version&gt;1.0.4&lt;/version&gt;
+   &lt;/dependency&gt;
+&lt;/dependencies&gt;</pre>
+
 <h2>Usage</h2>
 <p>Basically, using ci-bayes is a matter of defining a way to
 extract elements from a body of text (an implementation of the WordLister
