@@ -1,6 +1,6 @@
 package com.enigmastation.recommendations;
 
-import com.enigmastation.collections.NestedDictionary;
+import com.enigmastation.collections.NestedDictionaryStringStringDouble;
 import com.enigmastation.collections.Tuple;
 
 import java.util.List;
@@ -9,12 +9,12 @@ import java.util.List;
  * Recommendation
  */
 public interface Recommendation {
-    double getDistance(NestedDictionary dict, Object k, Object k1);
+    double getDistance(NestedDictionaryStringStringDouble dict, Object k, Object k1);
 
-    List<Tuple> getTopMatches(NestedDictionary dict, Object match);
+    List<Tuple> getTopMatches(NestedDictionaryStringStringDouble dict, Object match);
 
     @SuppressWarnings({"SameParameterValue"})
-    List<Tuple> getTopMatches(NestedDictionary dict, Object match, int matches);
+    List<Tuple> getTopMatches(NestedDictionaryStringStringDouble dict, Object match, int matches);
 
-    List<Tuple> getRecommendations(NestedDictionary dict, Object person);
+    List<Tuple> getRecommendations(NestedDictionaryStringStringDouble dict, Object person);
 }

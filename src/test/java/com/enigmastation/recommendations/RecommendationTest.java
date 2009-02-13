@@ -8,7 +8,7 @@ import com.enigmastation.recommendations.data.Critic;
 import com.enigmastation.recommendations.item.DistanceRecommendationImpl;
 import com.enigmastation.recommendations.item.RecommendationImpl;
 import com.enigmastation.recommendations.item.PearsonCorrelationCoefficientImpl;
-import com.enigmastation.collections.NestedDictionary;
+import com.enigmastation.collections.NestedDictionaryStringStringDouble;
 import com.enigmastation.collections.Tuple;
 
 import java.util.HashMap;
@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class RecommendationTest {
     Map<String, Critic> critics = null;
-    NestedDictionary nd=null;
+    NestedDictionaryStringStringDouble nd = null;
 
     @BeforeTest(groups = {"fulltest", "normal"})
     public void setup() {
@@ -83,7 +83,7 @@ public class RecommendationTest {
     @AfterTest(groups = {"fulltest", "normal"})
     public void tearDown() {
         critics = null;
-        nd=null;
+        nd = null;
     }
 
     @Test(groups = {"fulltest", "normal"})
@@ -99,7 +99,7 @@ public class RecommendationTest {
         RecommendationImpl recommendationImpl = new DistanceRecommendationImpl();
 
         assertEquals(recommendationImpl.getDistance(criticsToDictionary(critics), "Lisa Rose", "Gene Seymour"),
-                0.148148148148,0.0000001);
+                0.148148148148, 0.0000001);
     }
 
     @Test(groups = {"fulltest", "normal"})
@@ -107,35 +107,37 @@ public class RecommendationTest {
         RecommendationImpl recommendationImpl = new PearsonCorrelationCoefficientImpl();
 
         assertEquals(recommendationImpl.getDistance(criticsToDictionary(critics), "Lisa Rose", "Gene Seymour"),
-                0.396059017191,0.0000001);
+                0.396059017191, 0.0000001);
     }
 
-     @Test(groups = {"fulltest", "normal"})
+    @Test(groups = {"fulltest", "normal"})
     public void TestMostSimilar() {
         RecommendationImpl recommendationImpl = new PearsonCorrelationCoefficientImpl();
-         List<Tuple> matches=recommendationImpl.getTopMatches(criticsToDictionary(critics),
-                 "Toby", 3);
-         // should return Lisa - who's most similar to toby
-         // then Mick LaSalle
-         // then Claudia Pulig
-         assertEquals(matches.get(0).getKey(), "Lisa Rose");
-         assertEquals(matches.get(1).getKey(), "Mick LaSalle");
-         assertEquals(matches.get(2).getKey(), "Claudia Pulig");
+        List<Tuple> matches = recommendationImpl.getTopMatches(criticsToDictionary(critics),
+                "Toby", 3);
+        // should return Lisa - who's most similar to toby
+        // then Mick LaSalle
+        // then Claudia Pulig
+        assertEquals(matches.get(0).getKey(), "Lisa Rose");
+        assertEquals(matches.get(1).getKey(), "Mick LaSalle");
+        assertEquals(matches.get(2).getKey(), "Claudia Pulig");
     }
+
     @Test(groups = {"fulltest", "normal"})
-   public void TestGetRecommendation() {
-       RecommendationImpl recommendationImpl = new PearsonCorrelationCoefficientImpl();
-        NestedDictionary nd=criticsToDictionary(critics);
-        List<Tuple> matches=recommendationImpl.getRecommendations(nd, "Toby");
-        assertEquals(matches.get(0).getKey(),"The Night Listener");
-        assertEquals(matches.get(1).getKey(),"Lady in the Water");
-        assertEquals(matches.get(2).getKey(),"Just My Luck");
+    public void TestGetRecommendation() {
+        RecommendationImpl recommendationImpl = new PearsonCorrelationCoefficientImpl();
+        NestedDictionaryStringStringDouble nd = criticsToDictionary(critics);
+        List<Tuple> matches = recommendationImpl.getRecommendations(nd, "Toby");
+        assertEquals(matches.get(0).getKey(), "The Night Listener");
+        assertEquals(matches.get(1).getKey(), "Lady in the Water");
+        assertEquals(matches.get(2).getKey(), "Just My Luck");
 
     }
-    private NestedDictionary criticsToDictionary(Map<String, Critic> critics) {
-        NestedDictionary nd=new NestedDictionary();
-        for(String topKey:critics.keySet()) {
-            for(String movie:critics.get(topKey).getScores().keySet()) {
+
+    private NestedDictionaryStringStringDouble criticsToDictionary(Map<String, Critic> critics) {
+        NestedDictionaryStringStringDouble nd = new NestedDictionaryStringStringDouble();
+        for (String topKey : critics.keySet()) {
+            for (String movie : critics.get(topKey).getScores().keySet()) {
                 nd.save(topKey, movie, critics.get(topKey).getScore(movie));
             }
         }
