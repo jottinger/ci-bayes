@@ -65,7 +65,7 @@ heap usage is ... interesting.</p>
 <p>One of the keys to using the classifier is the provision of a WordLister. A word lister
 returns a set of strings (<code>Set&lt;String&gt;)</code>from an object.</p>
 <p>The default provided WordLister implementation is
-    <code>com.<wbr />enigmastation.<wbr />classifier.<wbr />WordListerImpl</code>.
+    <code>com.<wbr />enigmastation.<wbr />classifier.<wbr />StemmingWordLister</code>.
 When <code>getUniqueWords()</code> is called, it calls <code>toString()</code> on the object passed to it,
     and it then splits the resulting string into individual words. It then strips out all short and long words
 (meaning words less than three letters long and more than twenty letters long), converts them to lowercase,
