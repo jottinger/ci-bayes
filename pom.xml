@@ -4,7 +4,7 @@
     <groupId>com.enigmastation</groupId>
     <artifactId>ci-bayes</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <name>ci-bayes</name>
     <description>Module for classifying data based on various Bayesian algorithms</description>
     <url>https://ci-bayes.dev.java.net</url>
@@ -23,8 +23,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <source>1.6</source>
+                    <target>1.6</target>
                 </configuration>
             </plugin>
             <plugin>
@@ -38,14 +38,19 @@
             </plugin>
         </plugins>
         <extensions>
-              <extension>
-                      <groupId>org.jvnet.wagon-svn</groupId>
-                              <artifactId>wagon-svn</artifactId>
-                                      <version>RELEASE</version>
-                                            </extension>
-                                                </extensions>
+            <extension>
+                <groupId>org.jvnet.wagon-svn</groupId>
+                <artifactId>wagon-svn</artifactId>
+                <version>RELEASE</version>
+            </extension>
+        </extensions>
     </build>
     <dependencies>
+        <dependency>
+            <groupId>commons-math</groupId>
+            <artifactId>commons-math</artifactId>
+            <version>1.2</version>
+        </dependency>
         <dependency>
             <groupId>javax.transaction</groupId>
             <artifactId>jta</artifactId>
@@ -133,10 +138,10 @@
             <layout>default</layout>
         </repository>
     </repositories>
- <distributionManagement>
-     <repository>
-           <id>java.net-m2-repository</id>
-               <url>java-net:/maven2-repository/trunk/www/repository/</url>
-                   </repository>
-                     </distributionManagement>
+    <distributionManagement>
+        <repository>
+            <id>java.net-m2-repository</id>
+            <url>java-net:/maven2-repository/trunk/www/repository/</url>
+        </repository>
+    </distributionManagement>
 </project>
