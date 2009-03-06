@@ -4,6 +4,7 @@ import com.enigmastation.classifier.*;
 import javolution.util.FastSet;
 
 import java.util.Collections;
+import java.util.ServiceLoader;
 import java.util.Set;
 
 /**
@@ -47,12 +48,25 @@ public class ClassifierImpl implements Classifier {
     public void addCategory(String category) {
         categories.add(category);
     }
+
     public ClassifierImpl(WordLister w) {
         extractor = w;
     }
 
     public ClassifierImpl() {
-        this(new StemmingWordLister());
+        WordLister wl = null;
+        try {
+            Class.forName("java.util.ServiceLoader");
+            ServiceLoader<WordLister> wordListerLoader = ServiceLoader.load(WordLister.class);
+            wl = wordListerLoader.iterator().next();
+        } catch (ClassNotFoundException e) {
+            //System.err.println("Either not JDK 6 or something bad wrong happened");
+        }
+
+        if (wl == null) {
+            wl = new StemmingWordLister();
+        }
+        extractor = wl;
     }
 
     /**
@@ -90,6 +104,7 @@ public class ClassifierImpl implements Classifier {
         for (ClassifierListener l : listeners) {
             if (ci == null) {
                 ci = new CategoryIncrement(category, getCategoryDocCount().get(category));
+                ci.setCountDelta(1);
             }
             l.handleCategoryUpdate(ci);
         }
@@ -117,10 +132,7 @@ public class ClassifierImpl implements Classifier {
      * @return the number of items in a category
      */
     double catcount(String category) {
-        //if (getCategoryDocCount().containsKey(category)) {
         return getCategoryDocCount().get(category);
-        //}
-        //return 0.0;
     }
 
     /**
