@@ -34,9 +34,9 @@ public class ClassifierTest {
         c.testWords();
     }
 
-    @Test(groups={"fulltest", "normal"})
+    @Test(groups = {"fulltest", "normal"})
     public void testClassifierProbabilitySort() {
-        ClassifierProbability c1=new ClassifierProbability(), c2=new ClassifierProbability();
+        ClassifierProbability c1 = new ClassifierProbability(), c2 = new ClassifierProbability();
         c1.setCategory("foo");
         c2.setCategory("foo");
         assertEquals(c1.compareTo(c2), 0);
@@ -48,19 +48,19 @@ public class ClassifierTest {
         assertEquals(c1.compareTo(c2), -1);
     }
 
-    @Test(groups={"fulltest", "normal"})
+    @Test(groups = {"fulltest", "normal"})
     public void testWords() {
         WordLister w = new SimpleWordLister();
         assertEquals(w.getUniqueWords("Now is the time - 'now'").size(), 3);
     }
 
-    @Test(groups={"fulltest", "normal"})
+    @Test(groups = {"fulltest", "normal"})
     public void testIncc() {
         ClassifierImpl impl = new ClassifierImpl(new SimpleWordLister());
         impl.incc("foo");
     }
 
-    @Test(groups={"fulltest", "normal"})
+    @Test(groups = {"fulltest", "normal"})
     public void testInternalFeatureCount() {
         ClassifierImpl impl = new ClassifierImpl(new SimpleWordLister());
         impl.train("the quick brown fox jumps over the lazy dog", "good");
@@ -69,7 +69,16 @@ public class ClassifierTest {
         assertEquals(impl.fcount("quick", "bad"), 1.0, 0.1);
     }
 
-    @Test(groups={"fulltest", "normal"})
+    @Test(groups = {"normal"})
+    public void testIssue2() {
+        FisherClassifier fc = new FisherClassifierImpl();
+        fc.train("The quick brown fox jumps over the lazy dog's tail", "good");
+        fc.train("Make money fast!", "bad");
+        String classification = fc.getClassification("money");
+        assertEquals(classification, "bad");
+    }
+
+    @Test(groups = {"fulltest", "normal"})
     public void testWeightedProbabilityByCategory() {
         Classifier cl = getClassifier();
         assertEquals(cl.getFeatureProbability("quick", "good"), 0.666666, 0.000001);
@@ -81,14 +90,14 @@ public class ClassifierTest {
 
     }
 
-    @Test(groups={"fulltest", "normal"})
+    @Test(groups = {"fulltest", "normal"})
     public void testCategoryProbabilities() {
         NaiveClassifier nc = getNaiveClassifier();
         assertEquals(nc.getProbabilityForCategory("quick rabbit", "good"), 0.15624, 0.0001);
         assertEquals(nc.getProbabilityForCategory("quick rabbit", "bad"), 0.05, 0.01);
     }
 
-    
+
     public void testSerializableSave() throws IOException {
         NaiveClassifier cl = new NaiveClassifierImpl();
         Serializer s = new Serializer();
@@ -104,9 +113,9 @@ public class ClassifierTest {
         assertEquals(cl.getProbabilityForCategory("quick rabbit", "bad"), 0.05, 0.01);
     }
 
-    @Test(groups={"fulltest", "normal"})
+    @Test(groups = {"fulltest", "normal"})
     public void testNaiveCategoryAssignment() {
-        NaiveClassifier nc = getNaiveClassifier();       
+        NaiveClassifier nc = getNaiveClassifier();
         if (!nc.getClassification("quick rabbit", "unknown").equals("good")) {
             throw new RuntimeException("failed getting good");
         }
@@ -125,7 +134,7 @@ public class ClassifierTest {
         }
     }
 
-    @Test(groups={"fulltest", "normal"})
+    @Test(groups = {"fulltest", "normal"})
     public void testFisherClassifier() {
         FisherClassifier nc = getFisherClassifier();
         assertEquals(nc.getFeatureProbability("quick", "good"), 0.5714, 0.0001);

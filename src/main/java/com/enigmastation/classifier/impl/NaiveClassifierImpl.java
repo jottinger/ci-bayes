@@ -1,5 +1,6 @@
 package com.enigmastation.classifier.impl;
 
+import com.enigmastation.classifier.ClassifierException;
 import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.NaiveClassifier;
 import com.enigmastation.classifier.WordLister;
@@ -59,10 +60,10 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
     }
 
     public void normalizeProbabilities(ClassifierProbability[] probabilities) {
-        if(probabilities.length>0) {
-            double multiplier=1.0/probabilities[0].getScore();
-            for(ClassifierProbability prob:probabilities) {
-                prob.setScore(prob.getScore()*multiplier);
+        if (probabilities.length > 0) {
+            double multiplier = 1.0 / probabilities[0].getScore();
+            for (ClassifierProbability prob : probabilities) {
+                prob.setScore(prob.getScore() * multiplier);
             }
         }
     }
@@ -86,31 +87,31 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
         return cp.getCategory();
     }
 
-    /*
-        private String getClassificationOld(Object item, String defaultCat) {
-            Map<String, Double> probs = new FastMap<String, Double>();
-
-            double max = 0.0;
-            String category = null;
-            for (String cat : getCategories()) {
-                double p = getProbabilityForCategory(item, cat);
-                probs.put(cat, p);
-                if (p > max) {
-                    max = p;
-                    category = cat;
-                }
-            }
-
-            for (String cat : probs.keySet()) {
-                if (cat.equals(category))
-                    continue;
-                if (probs.get(cat) * getCategoryThreshold(category) > probs.get(category)) {
-                    return defaultCat;
-                }
-            }
-            return category;
+    /**
+     * This is an implementation that ignores thresholds. If there is no data in the classifier,
+     * whooey! You get an exception. This resolves issue #2.
+     *
+     * @param item
+     * @return a meaningful classification.
+     */
+    public String getClassification(Object item) {
+        if (getCategories().size() == 0) {
+            throw new ClassifierException();
         }
-    */
+        ClassifierProbability[] probs = getProbabilities(item);
+        ClassifierProbability cp = probs[0];
+
+        for (ClassifierProbability p : probs) {
+            if (p.getCategory().equals(cp.getCategory())) {
+                continue;
+            }
+            if (p.getScore() > cp.getScore()) {
+                cp = p;
+            }
+        }
+        return cp.getCategory();
+    }
+
     protected double docprob(String item, String category) {
         return getDocumentProbabilityForCategory(item, category);
     }
