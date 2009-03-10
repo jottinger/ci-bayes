@@ -8,6 +8,14 @@ package com.enigmastation.classifier;
 public class CategoryIncrement {
     String category;
     int count;
+    private Integer countDelta;
+        
+    public Integer getCountDelta() {
+       return countDelta;
+    }
+    public void setCountDelta(Integer d) {
+       this.countDelta=d;
+    }  
 
     /**
      * Returns the category for the given increment event.

@@ -34,7 +34,7 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
         thresholds.put(cat, t);
     }
 
-    public double getCategoryThreshold(String cat) {
+    public double getCategoryThreshold(String cat) {           
         if (thresholds.containsKey(cat)) {
             return thresholds.get(cat);
         } else {
