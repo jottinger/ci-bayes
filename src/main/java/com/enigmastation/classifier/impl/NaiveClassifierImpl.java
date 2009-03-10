@@ -34,7 +34,7 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
         thresholds.put(cat, t);
     }
 
-    public double getCategoryThreshold(String cat) {           
+    public double getCategoryThreshold(String cat) {
         if (thresholds.containsKey(cat)) {
             return thresholds.get(cat);
         } else {
@@ -91,7 +91,7 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
      * This is an implementation that ignores thresholds. If there is no data in the classifier,
      * whooey! You get an exception. This resolves issue #2.
      *
-     * @param item
+     * @param item the item to be classified; needs to have meaningful toString()
      * @return a meaningful classification.
      */
     public String getClassification(Object item) {

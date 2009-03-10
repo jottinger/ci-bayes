@@ -36,7 +36,6 @@ public class ClassifierImpl implements Classifier {
 
     protected WordLister extractor = null;
     private Set<ClassifierListener> listeners = new FastSet<ClassifierListener>();
-    private Set<String> categories = new FastSet<String>();
 
     public void addListener(ClassifierListener listener) {
         listeners.add(listener);
@@ -44,9 +43,11 @@ public class ClassifierImpl implements Classifier {
 
     /**
      * Convenience method for loaders.
+     *
+     * @deprecated since 1.0.5
      */
     public void addCategory(String category) {
-        categories.add(category);
+        //throw new NoSuchMethodError("Please don't use ClassifierImpl.addCategory() explicitly any more.");
     }
 
     public ClassifierImpl(WordLister w) {
@@ -150,7 +151,7 @@ public class ClassifierImpl implements Classifier {
      * @return the list of all getCategories
      */
     public final Set<String> getCategories() {
-        return Collections.unmodifiableSet(categories);
+        return Collections.unmodifiableSet(getCategoryDocCount().keySet());
     }
 
     public void train(Object item, String category) {
@@ -160,7 +161,6 @@ public class ClassifierImpl implements Classifier {
             incf(f, category);
         }
         incc(category);
-        categories.add(category);
     }
 
     /**

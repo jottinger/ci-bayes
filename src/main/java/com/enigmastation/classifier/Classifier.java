@@ -22,10 +22,15 @@ public interface Classifier extends Serializable {
     ClassifierMap getCategoryDocCount();
 
     Set<String> getCategories();
+
     /**
-     * Convenience method for loaders.
+     * Convenience method for loaders. Don't use this any more; it shouldn't be necessary.
+     *
+     * @param category category to create explicitly
+     * @deprecated since 1.0.6
      */
     public void addCategory(String category);
+
     void addListener(ClassifierListener listener);
 
     FeatureMap createFeatureMap();
