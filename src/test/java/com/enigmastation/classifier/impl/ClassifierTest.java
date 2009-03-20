@@ -2,6 +2,8 @@ package com.enigmastation.classifier.impl;
 
 import com.enigmastation.classifier.*;
 import com.enigmastation.classifier.persistence.Serializer;
+import com.enigmastation.extractors.WordLister;
+import com.enigmastation.extractors.impl.SimpleWordLister;
 import static org.testng.Assert.assertEquals;
 import org.testng.annotations.Test;
 

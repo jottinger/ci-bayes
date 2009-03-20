@@ -4,7 +4,7 @@ import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.FisherClassifier;
 import com.enigmastation.classifier.testing.MemoryMonitor;
 import com.enigmastation.classifier.impl.FisherClassifierImpl;
-import com.enigmastation.classifier.impl.SimpleWordLister;
+import com.enigmastation.extractors.impl.SimpleWordLister;
 import com.ice.tar.TarArchive;
 import org.apache.tools.bzip2.CBZip2InputStream;
 import org.testng.annotations.BeforeTest;
@@ -59,7 +59,7 @@ public class CorpusTest {
         //emptyFilesystem();
 
         // if this test takes longer than twenty seconds, something's wrong. We're running slow.
-        assert (end-start)<20000L;
+        assert (end - start) < 20000L;
     }
 
     private static void showOutput() {
@@ -195,7 +195,7 @@ public class CorpusTest {
         ThreadGroup g = new ThreadGroup("CORPUS GROUP");
         if (expand) {
             for (final File f : files) {
-                Thread e1 = new Thread(g, "Expando "+f.getName()) {
+                Thread e1 = new Thread(g, "Expando " + f.getName()) {
                     public void run() {
                         try {
                             final File x = new File(f.toString() + ".data");

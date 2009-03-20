@@ -1,6 +1,8 @@
 package com.enigmastation.classifier.impl;
 
 import com.enigmastation.classifier.*;
+import com.enigmastation.extractors.WordLister;
+import com.enigmastation.extractors.impl.StemmingWordLister;
 import javolution.util.FastSet;
 
 import java.util.Collections;

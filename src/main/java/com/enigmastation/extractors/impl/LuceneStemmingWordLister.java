@@ -1,6 +1,5 @@
-package com.enigmastation.classifier.impl;
+package com.enigmastation.extractors.impl;
 
-import com.enigmastation.classifier.WordLister;
 import javolution.util.FastSet;
 import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.TokenFilter;
@@ -11,13 +10,15 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.Set;
 
+import com.enigmastation.extractors.WordLister;
+
 /**
  * This is an implementation of a wordlister that uses Lucene's Snowball
  * stemming implementation. It's... okay. In the training corpus, it was just
  * as accurate as the SimpleWordLister, but almost twice as slow:
- *
+ * <p/>
  * 2146 items, 36 misses: 98.32% accuracy and 6ms/item.
- *
+ * <p/>
  * Yuck. Use this puppy ONLY if you really need Snowball.
  */
 public class LuceneStemmingWordLister implements WordLister {

@@ -3,7 +3,7 @@ package com.enigmastation.classifier.impl;
 import com.enigmastation.classifier.ClassifierException;
 import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.NaiveClassifier;
-import com.enigmastation.classifier.WordLister;
+import com.enigmastation.extractors.WordLister;
 import javolution.util.FastMap;
 
 import java.util.Arrays;

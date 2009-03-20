@@ -1,8 +1,8 @@
 package com.enigmastation.classifier.springframework;
 
-import com.enigmastation.classifier.WordLister;
-import com.enigmastation.classifier.impl.SimpleWordLister;
 import org.springframework.beans.factory.FactoryBean;
+import com.enigmastation.extractors.impl.SimpleWordLister;
+import com.enigmastation.extractors.WordLister;
 
 public final class WordListerFactory implements FactoryBean {
     public Object getObject() throws Exception {
@@ -14,6 +14,6 @@ public final class WordListerFactory implements FactoryBean {
     }
 
     public boolean isSingleton() {
-        return false;  
+        return false;
     }
 }

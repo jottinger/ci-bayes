@@ -2,7 +2,7 @@ package com.enigmastation.classifier.impl;
 
 import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.FisherClassifier;
-import com.enigmastation.classifier.WordLister;
+import com.enigmastation.extractors.WordLister;
 import javolution.util.FastMap;
 
 import java.util.Map;
@@ -92,12 +92,12 @@ public class FisherClassifierImpl extends NaiveClassifierImpl implements FisherC
 
     @Override
     public String getClassification(Object item, String defaultCat) {
-            if(getCategories().size()==0) {
+        if (getCategories().size() == 0) {
             return defaultCat;
         }
-        ClassifierProbability[] probs=getProbabilities(item);
-        for(ClassifierProbability p:probs) {
-            if(p.getScore()>getMinimum(p.getCategory())) {
+        ClassifierProbability[] probs = getProbabilities(item);
+        for (ClassifierProbability p : probs) {
+            if (p.getScore() > getMinimum(p.getCategory())) {
                 return p.getCategory();
             }
         }
