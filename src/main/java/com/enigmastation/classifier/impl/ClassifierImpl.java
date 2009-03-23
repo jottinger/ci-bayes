@@ -59,14 +59,24 @@ public class ClassifierImpl implements Classifier {
     public ClassifierImpl() {
         WordLister wl = null;
         try {
-            Class.forName("java.util.ServiceLoader");
-            ServiceLoader<WordLister> wordListerLoader = ServiceLoader.load(WordLister.class);
-            wl = wordListerLoader.iterator().next();
+            WordListerLocator locator = (WordListerLocator) Class.forName("com.enigmastation.classifier.impl.ServiceLoaderWordListerLocatorImpl")
+                .newInstance();
+            wl = locator.locate();
+        } catch (NoClassDefFoundError e){
+            // this is thrown when the VM can find ServiceLoaderWordListerLocatorImpl but not
+            // java.util.ServiceLoader class
         } catch (ClassNotFoundException e) {
-            //System.err.println("Either not JDK 6 or something bad wrong happened");
+            // this in theory shouldn't happen as ServiceLoaderWordListerLocatorImpl does exist
+        } catch (IllegalAccessException e) {
+            // could be that a security manager has caused this
+        } catch (InstantiationException e) {
+            // just unable to create the object rethrow 
+            if( e.getCause() instanceof RuntimeException )
+              throw (RuntimeException)e.getCause();
+            throw new RuntimeException(e.getCause());
         }
 
-        if (wl == null) {
+      if (wl == null) {
             wl = new StemmingWordLister();
         }
         extractor = wl;
