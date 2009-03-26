@@ -1,12 +1,12 @@
 package com.enigmastation.extractors.impl;
 
+import com.enigmastation.extractors.WordLister;
 import javolution.util.FastSet;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.enigmastation.extractors.WordLister;
 
 /**
  * This is a very simple class to return a list of tokens from a string. It's very simple. It returns all words,
@@ -36,18 +36,34 @@ public class SimpleWordLister implements WordLister {
     public static final int MAX_LENGTH = 20;
     public static final Pattern p = Pattern.compile("\\w++");
 
-    public Set<String> getUniqueWords(Object obj) {
+    /**
+     * This implementation uses very simple pattern matching to get words from a string.
+     *
+     * @param obj        The base object, converted to a string via toString()
+     * @param collection a collection type (List or Set) to hold the generated words
+     */
+    public void addWords(Object obj, Collection<String> collection) {
         String document = obj.toString().toLowerCase();
         //Pattern p= Pattern.compile("\\w++");
         Matcher m = p.matcher(document);
-
-        Set<String> features = new FastSet<String>();
         while (m.find()) {
             String w = m.group();
             if (w.length() > MIN_LENGTH && w.length() < MAX_LENGTH) {
-                features.add(w);
+                collection.add(w);
             }
         }
+    }
+
+    /**
+     * This is a simple method that wraps addWords(), using a Set as the base collection type. This will enforce
+     * uniqueness of the words as they come back from the document.
+     *
+     * @param obj the base object, converted to a String via toString()
+     * @return a Set of unique words
+     */
+    public Set<String> getUniqueWords(Object obj) {
+        Set<String> features = new FastSet<String>();
+        addWords(obj, features);
         return features;
     }
 }

@@ -9,6 +9,7 @@ import org.apache.lucene.analysis.standard.StandardTokenizer;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.Set;
+import java.util.Collection;
 
 import com.enigmastation.extractors.WordLister;
 
@@ -21,11 +22,10 @@ import com.enigmastation.extractors.WordLister;
  * <p/>
  * Yuck. Use this puppy ONLY if you really need Snowball.
  */
-public class LuceneStemmingWordLister implements WordLister {
+public class LuceneStemmingWordLister extends SimpleWordLister {
     static final Set<String> emptySet = new FastSet<String>();
 
-    public Set<String> getUniqueWords(Object obj) {
-        Set<String> features = new FastSet<String>();
+    public void addWords(Object obj, Collection<String> features) {
         String document = obj.toString().toLowerCase();
         StandardTokenizer tokenizer = new StandardTokenizer(new StringReader(document));
         tokenizer.setMaxTokenLength(20);
@@ -43,6 +43,5 @@ public class LuceneStemmingWordLister implements WordLister {
             // should never happen! We're reading a flippin' STRING!
             e.printStackTrace();
         }
-        return features;
     }
 }

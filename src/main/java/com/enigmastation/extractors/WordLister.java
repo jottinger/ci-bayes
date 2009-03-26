@@ -1,6 +1,7 @@
 package com.enigmastation.extractors;
 
 import java.util.Set;
+import java.util.Collection;
 
 /**
  * This is a basic word filter - it exists solely to take a string and pass back a list of tokens.
@@ -10,5 +11,7 @@ import java.util.Set;
  * @see com.enigmastation.extractors.impl.SimpleWordLister
  */
 public interface WordLister {
+    void addWords(Object document, Collection<String> collection);
+
     Set<String> getUniqueWords(Object document);
 }
