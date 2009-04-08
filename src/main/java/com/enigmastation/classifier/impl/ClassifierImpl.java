@@ -60,9 +60,9 @@ public class ClassifierImpl implements Classifier {
         WordLister wl = null;
         try {
             WordListerLocator locator = (WordListerLocator) Class.forName("com.enigmastation.classifier.impl.ServiceLoaderWordListerLocatorImpl")
-                .newInstance();
+                    .newInstance();
             wl = locator.locate();
-        } catch (NoClassDefFoundError e){
+        } catch (NoClassDefFoundError e) {
             // this is thrown when the VM can find ServiceLoaderWordListerLocatorImpl but not
             // java.util.ServiceLoader class
         } catch (ClassNotFoundException e) {
@@ -71,12 +71,12 @@ public class ClassifierImpl implements Classifier {
             // could be that a security manager has caused this
         } catch (InstantiationException e) {
             // just unable to create the object rethrow 
-            if( e.getCause() instanceof RuntimeException )
-              throw (RuntimeException)e.getCause();
+            if (e.getCause() instanceof RuntimeException)
+                throw (RuntimeException) e.getCause();
             throw new RuntimeException(e.getCause());
         }
 
-      if (wl == null) {
+        if (wl == null) {
             wl = new StemmingWordLister();
         }
         extractor = wl;
@@ -157,6 +157,13 @@ public class ClassifierImpl implements Classifier {
         return getCategoryDocCount().getTotalCount();
     }
 
+    double totalcount(String feature) {
+        if (getCategoryFeatureMap().containsKey(feature)) {
+            return getCategoryFeatureMap().get(feature).getTotalCount();
+        }
+        return 0.0;
+    }
+
     /**
      * Direct port from Segaran's book, including method name.
      *
@@ -217,10 +224,7 @@ public class ClassifierImpl implements Classifier {
      */
     public double getWeightedProbability(String feature, String category) {
         double basicprob = getFeatureProbability(feature, category);
-        long totals = 0;
-        for (String cat : getCategories()) {
-            totals += fcount(feature, cat);
-        }
+        double totals = totalcount(feature);
         return ((WEIGHT * ASSUMED_PROBABILITY) + (totals * basicprob)) / (WEIGHT + totals);
     }
 

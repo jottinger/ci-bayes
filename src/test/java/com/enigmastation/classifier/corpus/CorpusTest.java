@@ -14,7 +14,7 @@ import java.io.*;
 import java.util.Date;
 
 public class CorpusTest {
-    @BeforeTest
+    @BeforeTest(alwaysRun = true)
     public void setup() {
         classifier = new FisherClassifierImpl(new SimpleWordLister());
     }
