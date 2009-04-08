@@ -3,8 +3,10 @@ package com.enigmastation.classifier.impl;
 import com.enigmastation.classifier.ClassifierException;
 import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.NaiveClassifier;
+import com.enigmastation.classifier.ClassificationListener;
 import com.enigmastation.extractors.WordLister;
 import javolution.util.FastMap;
+import javolution.util.FastSet;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -48,11 +50,18 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
 
     public ClassifierProbability[] getProbabilities(final Object item) {
         ClassifierProbability[] probabilities = new ClassifierProbability[getCategories().size()];
+        Set<String> features = extractor.getUniqueWords(item);
+        if (classificationListeners.size() > 0) {
+            for (ClassificationListener listener : classificationListeners) {
+                listener.onClassification(this, features);
+            }
+        }
+
         int index = 0;
         for (String cat : getCategories()) {
             probabilities[index] = new ClassifierProbability();
             probabilities[index].setCategory(cat);
-            probabilities[index].setScore(getProbabilityForCategory(item, cat));
+            probabilities[index].setScore(getProbabilityForCategory(features, cat));
             index++;
         }
         Arrays.sort(probabilities);
@@ -117,7 +126,11 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
     }
 
     public double getDocumentProbabilityForCategory(Object item, String category) {
-        Set<String> features = this.extractor.getUniqueWords(item);
+        Set<String> features = extractor.getUniqueWords(item);
+        return getDocumentProbabilityForCategory(features, category);
+    }
+
+    public double getDocumentProbabilityForCategory(Set<String> features, String category) {
         double p = 1.0;
         for (String f : features) {
             p *= getWeightedProbability(f, category);
@@ -136,4 +149,12 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
         dp *= catprob;
         return dp;
     }
+
+    protected Set<ClassificationListener> classificationListeners = new FastSet<ClassificationListener>();
+
+    public void addListener(ClassificationListener listener) {
+        classificationListeners.add(listener);
+    }
+
+
 }

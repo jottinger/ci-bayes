@@ -29,4 +29,6 @@ public interface NaiveClassifier extends Classifier {
     void normalizeProbabilities(ClassifierProbability[] probabilities);
 
     String getClassification(Object o);
+
+    void addListener(ClassificationListener listener);
 }

@@ -38,29 +38,40 @@ Installation requires two modifications to a pom.xml:</p>
    &lt;dependency&gt;
       &lt;groupId&gt;com.enigmastation&lt;/groupId&gt;
       &lt;artifactId&gt;ci-bayes&lt;/artifactId&gt;
-      &lt;version&gt;1.0.4&lt;/version&gt;
+      &lt;version&gt;1.0.8&lt;/version&gt;
    &lt;/dependency&gt;
 &lt;/dependencies&gt;</pre>
 
 <h2>Usage</h2>
 <p>Basically, using ci-bayes is a matter of defining a way to
 extract elements from a body of text (an implementation of the WordLister
-interface), and then constructing a Classifier.   
+interface), and then constructing a Classifier.
+
+<p>There are two interfaces through which a Classifier can be accessed. One is the Classifier, a read-only
+object; there's also a Trainer interface that provides public access to the training mechanism.</p>
 <p>A default naive WordListerImpl is supplied with the library.  </p>
-<p>A simple example of the NaiveClassifier in use might look like this:</p>
+<p>A simple example of the FisherClassifier in use might look like this:</p>
 <pre>FisherClassifier fc=new FisherClassifierImpl();
-fc.train(&quot;The quick brown fox jumps over the lazy dog's tail&quot;,&quot;good&quot;);
-fc.train(&quot;Make money fast!&quot;, &quot;bad&quot;); 
+Trainer t=fc; // FisherClassifier doesn't expose train()
+t.train(&quot;The quick brown fox jumps over the lazy dog's tail&quot;,&quot;good&quot;);
+t.train(&quot;Make money fast!&quot;, &quot;bad&quot;);
 String classification=fc.getClassification(&quot;money&quot;); // should be &quot;bad&quot;</pre>
 
-<p>There's also a Serializer class provided, which shows
-how a given Classifier can be persisted (through Java Serialization, even.)
-The class shows how any given classifier can be persisted.  
-<p>Other storage mechanisms - like JDBC, JPA, XML, etc. - can be built as
-well.</p>
+<p>There are two event types supported by the API: Classification events and feature increments.
+
+    <p>Feature
+increments occur when training occurs. The interface for this is ClassifierListener; it has to handle two
+event types (FeatureIncrement and CategoryIncrement), both of which are issued during training events.</p>
+
+<p>Classification events occur when a classification is requested. A classification event receives the set
+    of elements being classified as well as the classifier itself; this is designed so that you can lazily load
+only the words being classified.</p>
+
 <p>Note that classification tends to rely on <em>huge</em> datasets - so be prepared to add
     heap memory to a JVM. This is tuneable, but finding the right balance of speed and concurrency and
-heap usage is ... interesting.</p>
+heap usage is ... interesting. (This is why the ClassifiactionListener was added, to lessen the number
+    of words a dataset has to be composed of in memory.)</p>
+
 <h2>WordLister Usage</h2>
 <p>One of the keys to using the classifier is the provision of a WordLister. A word lister
 returns a set of strings (<code>Set&lt;String&gt;)</code>from an object.</p>

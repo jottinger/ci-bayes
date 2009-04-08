@@ -6,7 +6,6 @@ import com.enigmastation.extractors.impl.StemmingWordLister;
 import javolution.util.FastSet;
 
 import java.util.Collections;
-import java.util.ServiceLoader;
 import java.util.Set;
 
 /**
@@ -17,7 +16,7 @@ import java.util.Set;
  * @author <a href="mailto:joeo@enigmastation.com">Joseph B. Ottinger</a>
  * @version $Revision: 36 $
  */
-public class ClassifierImpl implements Classifier {
+public class ClassifierImpl implements Classifier, Trainer {
     /**
      * In Segaran's book, this is referred to as "fc"
      */
@@ -37,19 +36,10 @@ public class ClassifierImpl implements Classifier {
     }
 
     protected WordLister extractor = null;
-    private Set<ClassifierListener> listeners = new FastSet<ClassifierListener>();
+    private Set<ClassifierListener> trainingListeners = new FastSet<ClassifierListener>();
 
     public void addListener(ClassifierListener listener) {
-        listeners.add(listener);
-    }
-
-    /**
-     * Convenience method for loaders.
-     *
-     * @deprecated since 1.0.5
-     */
-    public void addCategory(String category) {
-        //throw new NoSuchMethodError("Please don't use ClassifierImpl.addCategory() explicitly any more.");
+        trainingListeners.add(listener);
     }
 
     public ClassifierImpl(WordLister w) {
@@ -95,7 +85,7 @@ public class ClassifierImpl implements Classifier {
         fm.incrementCategory(category);
 
         FeatureIncrement fi = null;
-        for (ClassifierListener l : listeners) {
+        for (ClassifierListener l : trainingListeners) {
             if (fi == null) {
                 fi = new FeatureIncrement(feature, category, fm.get(category));
             }
@@ -114,7 +104,7 @@ public class ClassifierImpl implements Classifier {
         getCategoryDocCount().incrementCategory(category);
 
         CategoryIncrement ci = null;
-        for (ClassifierListener l : listeners) {
+        for (ClassifierListener l : trainingListeners) {
             if (ci == null) {
                 ci = new CategoryIncrement(category, getCategoryDocCount().get(category));
                 ci.setCountDelta(1);

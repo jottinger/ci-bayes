@@ -1,9 +1,6 @@
 package com.enigmastation.classifier.spring;
 
-import com.enigmastation.classifier.CategoryIncrement;
-import com.enigmastation.classifier.Classifier;
-import com.enigmastation.classifier.ClassifierListener;
-import com.enigmastation.classifier.FeatureIncrement;
+import com.enigmastation.classifier.*;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.testng.annotations.Test;
@@ -29,7 +26,7 @@ public class SpringTest {
     @Test(groups={"fulltest", "normal"})
     public void testCatCount() {
         assertEquals(c.getCategories().size(),0);
-        c.train("this is but a test!", "test");
+        ((Trainer)c).train("this is but a test!", "test");
         assertEquals(c.getCategories().size(),1);
         c.getWeightedProbability("test", "test");
     }
@@ -50,11 +47,11 @@ public class SpringTest {
                 //System.out.println(user+":"+fi);
             }
         });
-        c.train("the dog hopped over the log", "dog");
-        c.train("a brown dog has fleas", "dog");
-        c.train("a rotten dog is a spotted mule", "dog");
-        c.train("the cat slept in the couch", "cat");
-        c.train("the horse ran and jumped over the log", "horse");
+        ((Trainer)c).train("the dog hopped over the log", "dog");
+        ((Trainer)c).train("a brown dog has fleas", "dog");
+        ((Trainer)c).train("a rotten dog is a spotted mule", "dog");
+        ((Trainer)c).train("the cat slept in the couch", "cat");
+        ((Trainer)c).train("the horse ran and jumped over the log", "horse");
         //System.out.println(fucount[0]+","+cucount[0]);
         assertEquals(fucount[0],24);
         assertEquals(cucount[0],5);

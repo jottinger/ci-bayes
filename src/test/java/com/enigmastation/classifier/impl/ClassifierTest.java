@@ -74,8 +74,8 @@ public class ClassifierTest {
     @Test(groups = {"normal"})
     public void testIssue2() {
         FisherClassifier fc = new FisherClassifierImpl();
-        fc.train("The quick brown fox jumps over the lazy dog's tail", "good");
-        fc.train("Make money fast!", "bad");
+        ((Trainer)fc).train("The quick brown fox jumps over the lazy dog's tail", "good");
+        ((Trainer)fc).train("Make money fast!", "bad");
         String classification = fc.getClassification("money");
         assertEquals(classification, "bad");
     }
@@ -171,10 +171,10 @@ public class ClassifierTest {
     }
 
     private void sampleTrain(Classifier cl) {
-        cl.train("Nobody owns the water.", "good");
-        cl.train("the quick rabbit jumps fences", "good");
-        cl.train("buy pharmaceuticals now", "bad");
-        cl.train("make quick money in the online casino", "bad");
-        cl.train("the quick brown fox jumps", "good");
+        ((Trainer)cl).train("Nobody owns the water.", "good");
+        ((Trainer)cl).train("the quick rabbit jumps fences", "good");
+        ((Trainer)cl).train("buy pharmaceuticals now", "bad");
+        ((Trainer)cl).train("make quick money in the online casino", "bad");
+        ((Trainer)cl).train("the quick brown fox jumps", "good");
     }
 }

@@ -2,6 +2,7 @@ package com.enigmastation.classifier.corpus;
 
 import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.FisherClassifier;
+import com.enigmastation.classifier.Trainer;
 import com.enigmastation.classifier.testing.MemoryMonitor;
 import com.enigmastation.classifier.impl.FisherClassifierImpl;
 import com.enigmastation.extractors.impl.SimpleWordLister;
@@ -166,7 +167,7 @@ public class CorpusTest {
             }
 
             public void execute(String s, String type) {
-                classifier.train(s, type);
+                ((Trainer)classifier).train(s, type);
             }
         }, new Selector() {
             public boolean accept(int i) {

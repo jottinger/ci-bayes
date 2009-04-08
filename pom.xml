@@ -4,7 +4,7 @@
     <groupId>com.enigmastation</groupId>
     <artifactId>ci-bayes</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <name>ci-bayes</name>
     <description>Module for classifying data based on various Bayesian algorithms</description>
     <url>https://ci-bayes.dev.java.net</url>
@@ -33,7 +33,7 @@
                 <configuration>
                     <!--<forkMode>pertest</forkMode>-->
                     <argLine>-Xmx512m</argLine>
-                    <groups>normal</groups>
+                    <groups>normal,fulltest</groups>
                 </configuration>
             </plugin>
             <plugin>
@@ -140,7 +140,6 @@
             <groupId>nekohtml</groupId>
             <artifactId>nekohtml</artifactId>
             <version>1.9.6.2</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <repositories>
