@@ -105,7 +105,8 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
      */
     public String getClassification(Object item) {
         if (getCategories().size() == 0) {
-            throw new ClassifierException();
+            throw new ClassifierException( "No categories; please train before classification"
+                                          +" or provide default category.");
         }
         ClassifierProbability[] probs = getProbabilities(item);
         ClassifierProbability cp = probs[0];
