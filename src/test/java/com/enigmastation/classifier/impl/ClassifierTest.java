@@ -1,8 +1,12 @@
 package com.enigmastation.classifier.impl;
 
-import com.enigmastation.classifier.*;
+import com.enigmastation.classifier.Classifier;
+import com.enigmastation.classifier.ClassifierProbability;
+import com.enigmastation.classifier.FisherClassifier;
+import com.enigmastation.classifier.NaiveClassifier;
 import com.enigmastation.classifier.persistence.Serializer;
 import com.enigmastation.extractors.WordLister;
+import com.enigmastation.extractors.WordListerFactory;
 import com.enigmastation.extractors.impl.SimpleWordLister;
 import static org.testng.Assert.assertEquals;
 import org.testng.annotations.Test;
@@ -58,13 +62,23 @@ public class ClassifierTest {
 
     @Test(groups = {"fulltest", "normal"})
     public void testIncc() {
-        ClassifierImpl impl = new ClassifierImpl(new SimpleWordLister());
+        ClassifierImpl impl = new ClassifierImpl();
+        impl.setWordListerFactory(new WordListerFactory() {
+            public WordLister build() {
+                return new SimpleWordLister();
+            }
+        });
         impl.incc("foo");
     }
 
     @Test(groups = {"fulltest", "normal"})
     public void testInternalFeatureCount() {
-        ClassifierImpl impl = new ClassifierImpl(new SimpleWordLister());
+        ClassifierImpl impl = new ClassifierImpl();
+        impl.setWordListerFactory(new WordListerFactory() {
+            public WordLister build() {
+                return new SimpleWordLister();
+            }
+        });
         impl.train("the quick brown fox jumps over the lazy dog", "good");
         impl.train("make quick money in the online casino", "bad");
         assertEquals(impl.fcount("quick", "good"), 1.0, 0.1);
@@ -74,8 +88,8 @@ public class ClassifierTest {
     @Test(groups = {"normal"})
     public void testIssue2() {
         FisherClassifier fc = new FisherClassifierImpl();
-        ((Trainer)fc).train("The quick brown fox jumps over the lazy dog's tail", "good");
-        ((Trainer)fc).train("Make money fast!", "bad");
+        fc.train("The quick brown fox jumps over the lazy dog's tail", "good");
+        fc.train("Make money fast!", "bad");
         String classification = fc.getClassification("money");
         assertEquals(classification, "bad");
     }
@@ -153,28 +167,46 @@ public class ClassifierTest {
     }
 
     Classifier getClassifier() {
-        Classifier cl = new ClassifierImpl(new SimpleWordLister());
+        Classifier cl = new ClassifierImpl();
+        cl.setWordListerFactory(new WordListerFactory() {
+            public WordLister build() {
+                return new SimpleWordLister();
+            }
+        });
+
         sampleTrain(cl);
         return cl;
     }
 
     NaiveClassifier getNaiveClassifier() {
-        NaiveClassifier nc = new NaiveClassifierImpl(new SimpleWordLister());
+        NaiveClassifier nc = new NaiveClassifierImpl();
+        nc.setWordListerFactory(new WordListerFactory() {
+            public WordLister build() {
+                return new SimpleWordLister();
+            }
+        });
+
         sampleTrain(nc);
         return nc;
     }
 
     FisherClassifier getFisherClassifier() {
-        FisherClassifier nc = new FisherClassifierImpl(new SimpleWordLister());
+        FisherClassifier nc = new FisherClassifierImpl();
+        nc.setWordListerFactory(new WordListerFactory() {
+            public WordLister build() {
+                return new SimpleWordLister();
+            }
+        });
+
         sampleTrain(nc);
         return nc;
     }
 
     private void sampleTrain(Classifier cl) {
-        ((Trainer)cl).train("Nobody owns the water.", "good");
-        ((Trainer)cl).train("the quick rabbit jumps fences", "good");
-        ((Trainer)cl).train("buy pharmaceuticals now", "bad");
-        ((Trainer)cl).train("make quick money in the online casino", "bad");
-        ((Trainer)cl).train("the quick brown fox jumps", "good");
+        cl.train("Nobody owns the water.", "good");
+        cl.train("the quick rabbit jumps fences", "good");
+        cl.train("buy pharmaceuticals now", "bad");
+        cl.train("make quick money in the online casino", "bad");
+        cl.train("the quick brown fox jumps", "good");
     }
 }

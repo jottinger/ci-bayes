@@ -2,9 +2,10 @@ package com.enigmastation.classifier.corpus;
 
 import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.FisherClassifier;
-import com.enigmastation.classifier.Trainer;
-import com.enigmastation.classifier.testing.MemoryMonitor;
 import com.enigmastation.classifier.impl.FisherClassifierImpl;
+import com.enigmastation.classifier.testing.MemoryMonitor;
+import com.enigmastation.extractors.WordLister;
+import com.enigmastation.extractors.WordListerFactory;
 import com.enigmastation.extractors.impl.SimpleWordLister;
 import com.ice.tar.TarArchive;
 import org.apache.tools.bzip2.CBZip2InputStream;
@@ -17,7 +18,12 @@ import java.util.Date;
 public class CorpusTest {
     @BeforeTest(alwaysRun = true)
     public void setup() {
-        classifier = new FisherClassifierImpl(new SimpleWordLister());
+        classifier = new FisherClassifierImpl();
+        classifier.setWordListerFactory(new WordListerFactory() {
+            public WordLister build() {
+                return new SimpleWordLister();
+            }
+        });
     }
 
     FisherClassifier classifier;
@@ -167,7 +173,7 @@ public class CorpusTest {
             }
 
             public void execute(String s, String type) {
-                ((Trainer)classifier).train(s, type);
+                classifier.train(s, type);
             }
         }, new Selector() {
             public boolean accept(int i) {

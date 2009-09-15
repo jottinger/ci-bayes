@@ -2,7 +2,6 @@ package com.enigmastation.classifier.impl;
 
 import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.FisherClassifier;
-import com.enigmastation.extractors.WordLister;
 import javolution.util.FastMap;
 
 import java.util.Map;
@@ -65,14 +64,6 @@ public class FisherClassifierImpl extends NaiveClassifierImpl implements FisherC
             sum += term;
         }
         return Math.min(sum, 1.0);
-    }
-
-    public FisherClassifierImpl(WordLister w) {
-        super(w);
-    }
-
-    public FisherClassifierImpl() {
-        super();
     }
 
     /*

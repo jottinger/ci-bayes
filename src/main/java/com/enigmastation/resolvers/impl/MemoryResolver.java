@@ -3,6 +3,7 @@ package com.enigmastation.resolvers.impl;
 import com.enigmastation.resolvers.Resolver;
 import javolution.util.FastMap;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -21,6 +22,17 @@ public class MemoryResolver implements Resolver {
     Map<String, Integer> keys = new FastMap<String, Integer>();
     Map<Integer, String> ids = new FastMap<Integer, String>();
     int lastId = 0;
+
+    protected MemoryResolver() {
+    }
+
+    public Map<String, Integer> getKeys() {
+        return Collections.unmodifiableMap(keys);
+    }
+
+    public Map<Integer, String> getIds() {
+        return Collections.unmodifiableMap(ids);
+    }
 
     public boolean addKey(String key, int id) {
         if (ids.containsKey(id)) {
@@ -45,8 +57,15 @@ public class MemoryResolver implements Resolver {
         return -1;
     }
 
+    public int getIdForKey(String key) {
+        if (getId(key) == -1) {
+            return addKey(key);
+        }
+        return getId(key);
+    }
+
     public String getKey(int id) {
-        if (ids.containsValue(id)) {
+        if (ids.containsKey(id)) {
             return ids.get(id);
         }
         return null;

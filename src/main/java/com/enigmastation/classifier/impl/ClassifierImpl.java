@@ -2,7 +2,8 @@ package com.enigmastation.classifier.impl;
 
 import com.enigmastation.classifier.*;
 import com.enigmastation.extractors.WordLister;
-import com.enigmastation.extractors.impl.StemmingWordLister;
+import com.enigmastation.extractors.WordListerFactory;
+import com.enigmastation.extractors.impl.StemmingWordListerFactory;
 import javolution.util.FastSet;
 
 import java.util.Collections;
@@ -16,60 +17,73 @@ import java.util.Set;
  * @author <a href="mailto:joeo@enigmastation.com">Joseph B. Ottinger</a>
  * @version $Revision: 36 $
  */
-public class ClassifierImpl implements Classifier, Trainer {
+public class ClassifierImpl implements Classifier {
     /**
      * In Segaran's book, this is referred to as "fc"
      */
-    private FeatureMap categoryFeatureMap = createFeatureMap();
-
-    public FeatureMap createFeatureMap() {
-        return new FeatureMap();
-    }
+    private FeatureMap categoryFeatureMap;
 
     /**
      * In Segaran's book, this is referred to as "cc"
      */
-    private ClassifierMap categoryDocCount = createClassifierMap();
-
-    public ClassifierMap createClassifierMap() {
-        return new ClassifierMap();
-    }
-
+    private ClassifierMap categoryDocCount;
     protected WordLister extractor = null;
     private Set<ClassifierListener> trainingListeners = new FastSet<ClassifierListener>();
+    private ClassifierDataModelFactory modelFactory;
+    private WordListerFactory wordListerFactory;
+    private boolean initialized = false;
+
+    public synchronized void init() {
+        if (!initialized) {
+            if (getModelFactory() == null) {
+                setModelFactory(new BasicClassifierDataModelFactory());
+            }
+            categoryDocCount = createClassifierMap();
+            categoryFeatureMap = createFeatureMap();
+
+            if (getWordListerFactory() == null) {
+                setWordListerFactory(new StemmingWordListerFactory());
+            }
+            extractor = wordListerFactory.build();
+
+            initialized = true;
+        }
+    }
+
+    public WordListerFactory getWordListerFactory() {
+        return wordListerFactory;
+    }
+
+    public void setWordListerFactory(WordListerFactory wordListerFactory) {
+        if (getWordListerFactory() != null) {
+            throw new IllegalStateException("Cannot set WordListerFactory twice; old type is "
+                    + getWordListerFactory().getClass().getName());
+        }
+        this.wordListerFactory = wordListerFactory;
+    }
+
+    public ClassifierDataModelFactory getModelFactory() {
+        return modelFactory;
+    }
+
+    public void setModelFactory(ClassifierDataModelFactory modelFactory) {
+        if (getModelFactory() != null) {
+            throw new IllegalStateException("Cannot set ModelFactory twice; old type is "
+                    + getModelFactory().getClass().getName());
+        }
+        this.modelFactory = modelFactory;
+    }
+
+    public FeatureMap createFeatureMap() {
+        return modelFactory.buildFeatureMap();
+    }
+
+    public ClassifierMap createClassifierMap() {
+        return modelFactory.buildClassifierMap();
+    }
 
     public void addListener(ClassifierListener listener) {
         trainingListeners.add(listener);
-    }
-
-    public ClassifierImpl(WordLister w) {
-        extractor = w;
-    }
-
-    public ClassifierImpl() {
-        WordLister wl = null;
-        try {
-            WordListerLocator locator = (WordListerLocator) Class.forName("com.enigmastation.classifier.impl.ServiceLoaderWordListerLocatorImpl")
-                    .newInstance();
-            wl = locator.locate();
-        } catch (NoClassDefFoundError e) {
-            // this is thrown when the VM can find ServiceLoaderWordListerLocatorImpl but not
-            // java.util.ServiceLoader class
-        } catch (ClassNotFoundException e) {
-            // this in theory shouldn't happen as ServiceLoaderWordListerLocatorImpl does exist
-        } catch (IllegalAccessException e) {
-            // could be that a security manager has caused this
-        } catch (InstantiationException e) {
-            // just unable to create the object rethrow 
-            if (e.getCause() instanceof RuntimeException)
-                throw (RuntimeException) e.getCause();
-            throw new RuntimeException(e.getCause());
-        }
-
-        if (wl == null) {
-            wl = new StemmingWordLister();
-        }
-        extractor = wl;
     }
 
     /**
@@ -147,11 +161,12 @@ public class ClassifierImpl implements Classifier, Trainer {
         return getCategoryDocCount().getTotalCount();
     }
 
-    double totalcount(String feature) {
-        if (getCategoryFeatureMap().containsKey(feature)) {
-            return getCategoryFeatureMap().get(feature).getTotalCount();
+    double getTotalFeatureCount(String feature) {
+        ClassifierMap map = getCategoryFeatureMap().get(feature);
+        if (map == null) {
+            return 0.0;
         }
-        return 0.0;
+        return map.getTotalCount();
     }
 
     /**
@@ -214,15 +229,17 @@ public class ClassifierImpl implements Classifier, Trainer {
      */
     public double getWeightedProbability(String feature, String category) {
         double basicprob = getFeatureProbability(feature, category);
-        double totals = totalcount(feature);
+        double totals = getTotalFeatureCount(feature);
         return ((WEIGHT * ASSUMED_PROBABILITY) + (totals * basicprob)) / (WEIGHT + totals);
     }
 
     public final FeatureMap getCategoryFeatureMap() {
+        init();
         return categoryFeatureMap;
     }
 
     public final ClassifierMap getCategoryDocCount() {
+        init();
         return categoryDocCount;
     }
 }

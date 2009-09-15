@@ -1,12 +1,5 @@
 package com.enigmastation.resolvers;
 
-/**
- * Created by IntelliJ IDEA.
- * User: joeo
- * Date: Jun 21, 2008
- * Time: 10:47:16 AM
- * To change this template use File | Settings | File Templates.
- */
 public interface Resolver {
     /**
      * returns true if the id requested is available for key
@@ -30,4 +23,6 @@ public interface Resolver {
     int getId(String key);
 
     String getKey(int id);
+
+    int getIdForKey(String key);
 }

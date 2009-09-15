@@ -1,10 +1,9 @@
 package com.enigmastation.classifier.impl;
 
+import com.enigmastation.classifier.ClassificationListener;
 import com.enigmastation.classifier.ClassifierException;
 import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.NaiveClassifier;
-import com.enigmastation.classifier.ClassificationListener;
-import com.enigmastation.extractors.WordLister;
 import javolution.util.FastMap;
 import javolution.util.FastSet;
 
@@ -23,14 +22,6 @@ import java.util.Set;
  */
 public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifier {
     private final transient Map<String, Double> thresholds = new FastMap<String, Double>();
-
-    public NaiveClassifierImpl(WordLister w) {
-        super(w);
-    }
-
-    public NaiveClassifierImpl() {
-        super();
-    }
 
     public void setCategoryThreshold(String cat, double t) {
         thresholds.put(cat, t);
@@ -105,8 +96,8 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
      */
     public String getClassification(Object item) {
         if (getCategories().size() == 0) {
-            throw new ClassifierException( "No categories; please train before classification"
-                                          +" or provide default category.");
+            throw new ClassifierException("No categories; please train before classification"
+                    + " or provide default category.");
         }
         ClassifierProbability[] probs = getProbabilities(item);
         ClassifierProbability cp = probs[0];

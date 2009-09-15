@@ -1,5 +1,7 @@
 package com.enigmastation.classifier;
 
+import com.enigmastation.extractors.WordListerFactory;
+
 import java.io.Serializable;
 import java.util.Set;
 
@@ -26,4 +28,14 @@ public interface Classifier extends Serializable {
     FeatureMap createFeatureMap();
 
     ClassifierMap createClassifierMap();
+
+    ClassifierDataModelFactory getModelFactory();
+
+    void setModelFactory(ClassifierDataModelFactory modelFactory);
+
+    WordListerFactory getWordListerFactory();
+
+    void setWordListerFactory(WordListerFactory wordListerFactory);
+
+    void train(Object item, String category);
 }
