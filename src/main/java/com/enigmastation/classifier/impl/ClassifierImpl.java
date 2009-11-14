@@ -56,6 +56,16 @@ public class ClassifierImpl implements Classifier {
         this.classifierDataModelFactory = classifierDataModelFactory;
     }
 
+    public WordLister getWordLister()
+    {
+        return wordLister;
+    }
+
+    public void setWordLister(WordLister wordLister)
+    {
+        this.wordLister = wordLister;
+    }
+
     public void addListener(ClassifierListener listener)
     {
         if(trainingListeners == null)

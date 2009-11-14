@@ -19,11 +19,7 @@ public class CorpusTest {
     @BeforeTest(alwaysRun = true)
     public void setup() {
         FisherClassifierImpl classifier = new FisherClassifierImpl();
-        classifier.setWordListerFactory(new WordListerFactory() {
-            public WordLister build() {
-                return new SimpleWordLister();
-            }
-        });
+        classifier.setWordLister(new SimpleWordLister());        
         classifier.init();
         this.classifier = classifier;
     }
