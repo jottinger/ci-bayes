@@ -39,7 +39,7 @@ public class FisherClassifierImpl extends NaiveClassifierImpl implements FisherC
 
     double fisherprob(Object item, String cat) {
         double p = 1.0;
-        Set<String> features = extractor.getUniqueWords(item);
+        Set<String> features = wordLister.getUniqueWords(item);
         for (String f : features) {
             p *= getWeightedProbability(f, cat);
         }

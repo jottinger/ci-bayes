@@ -41,7 +41,7 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
 
     public ClassifierProbability[] getProbabilities(final Object item) {
         ClassifierProbability[] probabilities = new ClassifierProbability[getCategories().size()];
-        Set<String> features = extractor.getUniqueWords(item);
+        Set<String> features = wordLister.getUniqueWords(item);
         if (classificationListeners.size() > 0) {
             for (ClassificationListener listener : classificationListeners) {
                 listener.onClassification(this, features);
@@ -118,7 +118,7 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
     }
 
     public double getDocumentProbabilityForCategory(Object item, String category) {
-        Set<String> features = extractor.getUniqueWords(item);
+        Set<String> features = wordLister.getUniqueWords(item);
         return getDocumentProbabilityForCategory(features, category);
     }
 

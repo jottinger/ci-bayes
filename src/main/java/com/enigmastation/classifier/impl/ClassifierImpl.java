@@ -4,6 +4,7 @@ import com.enigmastation.classifier.*;
 import com.enigmastation.extractors.WordLister;
 import com.enigmastation.extractors.WordListerFactory;
 import com.enigmastation.extractors.impl.StemmingWordListerFactory;
+import com.enigmastation.extractors.impl.StemmingWordLister;
 import javolution.util.FastSet;
 
 import java.util.Collections;
@@ -19,60 +20,40 @@ import java.util.Map;
  * @version $Revision: 36 $
  */
 public class ClassifierImpl implements Classifier {
-    /**
-     * In Segaran's book, this is referred to as "fc"
-     */
-    //private Map<String, Map<String, Integer>> categoryFeatureMap;
 
-    /**
-     * In Segaran's book, this is referred to as "cc"
-     */
-    //private Map<String,Integer> categoryDocCount;
-    protected WordLister extractor = null;
-    private Set<ClassifierListener> trainingListeners;// = new FastSet<ClassifierListener>();
-    private ClassifierDataModelFactory modelFactory;
-    private WordListerFactory wordListerFactory;
+    protected WordLister wordLister = null;
+    private Set<ClassifierListener> trainingListeners;
+    private ClassifierDataModelFactory classifierDataModelFactory;
     private boolean initialized = false;
 
-    public synchronized void init() {
-        if (!initialized) {
-            if (getModelFactory() == null) {
-                setModelFactory(new BasicClassifierDataModelFactory());
+    public synchronized void init()
+    {
+        if (!initialized)
+        {
+            if (getClassifierDataModelFactory() == null)
+            {
+                setClassifierDataModelFactory(new BasicClassifierDataModelFactory());
             }
-            //categoryDocCount = modelFactory.getFeatureMap();
-            //categoryFeatureMap = createFeatureMap();
 
-            if (getWordListerFactory() == null) {
-                setWordListerFactory(new StemmingWordListerFactory());
+            if(wordLister == null)
+            {
+                wordLister = new StemmingWordLister();
             }
-            extractor = wordListerFactory.build();
 
             initialized = true;
         }
     }
 
-    public WordListerFactory getWordListerFactory() {
-        return wordListerFactory;
+    public ClassifierDataModelFactory getClassifierDataModelFactory() {
+        return classifierDataModelFactory;
     }
 
-    public void setWordListerFactory(WordListerFactory wordListerFactory) {
-        if (getWordListerFactory() != null) {
-            throw new IllegalStateException("Cannot set WordListerFactory twice; old type is "
-                    + getWordListerFactory().getClass().getName());
-        }
-        this.wordListerFactory = wordListerFactory;
-    }
-
-    public ClassifierDataModelFactory getModelFactory() {
-        return modelFactory;
-    }
-
-    public void setModelFactory(ClassifierDataModelFactory modelFactory) {
-        if (getModelFactory() != null) {
+    public void setClassifierDataModelFactory(ClassifierDataModelFactory classifierDataModelFactory) {
+        if (getClassifierDataModelFactory() != null) {
             throw new IllegalStateException("Cannot set ModelFactory twice; old type is "
-                    + getModelFactory().getClass().getName());
+                    + getClassifierDataModelFactory().getClass().getName());
         }
-        this.modelFactory = modelFactory;
+        this.classifierDataModelFactory = classifierDataModelFactory;
     }
 
     public void addListener(ClassifierListener listener)
@@ -96,7 +77,7 @@ public class ClassifierImpl implements Classifier {
 
         //Map<String,Map<String,Integer>> featureMap = this.categoryFeatureMap;
         //Map<String,Integer> fm = featureMap.get(feature);
-        Map<String,Integer> fm = this.modelFactory.getFeatureMap(feature);
+        Map<String,Integer> fm = this.classifierDataModelFactory.getFeatureMap(feature);
         if(fm == null)
         {
             //throw new IllegalStateException("You must either supply all classifiers in a map or supply a factory");
@@ -151,7 +132,7 @@ public class ClassifierImpl implements Classifier {
      */
     double fcount(String feature, String category)
     {
-        Map<String,Integer> fm = this.modelFactory.getFeatureMap(feature);
+        Map<String,Integer> fm = this.classifierDataModelFactory.getFeatureMap(feature);
         if(fm != null)
         {
             Integer count = fm.get(category);
@@ -186,7 +167,7 @@ public class ClassifierImpl implements Classifier {
 
     double totalcount(String feature)
     {
-        Map<String,Integer> classifierMap = this.modelFactory.getFeatureMap(feature);
+        Map<String,Integer> classifierMap = this.classifierDataModelFactory.getFeatureMap(feature);
         if (classifierMap != null)
         {
             return getTotalCount(classifierMap);
@@ -195,7 +176,7 @@ public class ClassifierImpl implements Classifier {
     }
 
     double getTotalFeatureCount(String feature) {
-        Map<String,Integer> classifierMap = this.modelFactory.getFeatureMap(feature);
+        Map<String,Integer> classifierMap = this.classifierDataModelFactory.getFeatureMap(feature);
         if (classifierMap != null)
         {
             return getTotalCount(classifierMap);
@@ -213,7 +194,7 @@ public class ClassifierImpl implements Classifier {
     }
 
     public void train(Object item, String category) {
-        Set<String> features = extractor.getUniqueWords(item);
+        Set<String> features = wordLister.getUniqueWords(item);
 
         for (String f : features) {
             incf(f, category);
@@ -269,7 +250,7 @@ public class ClassifierImpl implements Classifier {
 
     public final Map<String,Integer> getCategoryDocCount()
     {
-        return modelFactory.getCategoryCountMap();
+        return classifierDataModelFactory.getCategoryCountMap();
     }
 
     private double getTotalCount(Map<String, Integer> map)
