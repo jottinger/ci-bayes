@@ -16,6 +16,7 @@ import java.io.IOException;
 public class ClassifierTest {
     public static void main(String[] args) {
         ClassifierTest c = new ClassifierTest();
+
         c.testCategoryProbabilities();
         c.testFisherClassifier();
         c.testIncc();
@@ -68,6 +69,7 @@ public class ClassifierTest {
                 return new SimpleWordLister();
             }
         });
+        impl.init();
         impl.incc("foo");
     }
 
@@ -79,6 +81,7 @@ public class ClassifierTest {
                 return new SimpleWordLister();
             }
         });
+        impl.init();
         impl.train("the quick brown fox jumps over the lazy dog", "good");
         impl.train("make quick money in the online casino", "bad");
         assertEquals(impl.fcount("quick", "good"), 1.0, 0.1);
@@ -87,7 +90,8 @@ public class ClassifierTest {
 
     @Test(groups = {"normal"})
     public void testIssue2() {
-        FisherClassifier fc = new FisherClassifierImpl();
+        FisherClassifierImpl fc = new FisherClassifierImpl();
+        fc.init();
         fc.train("The quick brown fox jumps over the lazy dog's tail", "good");
         fc.train("Make money fast!", "bad");
         String classification = fc.getClassification("money");
@@ -167,37 +171,37 @@ public class ClassifierTest {
     }
 
     Classifier getClassifier() {
-        Classifier cl = new ClassifierImpl();
+        ClassifierImpl cl = new ClassifierImpl();
         cl.setWordListerFactory(new WordListerFactory() {
             public WordLister build() {
                 return new SimpleWordLister();
             }
         });
-
+        cl.init();
         sampleTrain(cl);
         return cl;
     }
 
     NaiveClassifier getNaiveClassifier() {
-        NaiveClassifier nc = new NaiveClassifierImpl();
+        NaiveClassifierImpl nc = new NaiveClassifierImpl();
         nc.setWordListerFactory(new WordListerFactory() {
             public WordLister build() {
                 return new SimpleWordLister();
             }
         });
-
+        nc.init();
         sampleTrain(nc);
         return nc;
     }
 
     FisherClassifier getFisherClassifier() {
-        FisherClassifier nc = new FisherClassifierImpl();
+        FisherClassifierImpl nc = new FisherClassifierImpl();
         nc.setWordListerFactory(new WordListerFactory() {
             public WordLister build() {
                 return new SimpleWordLister();
             }
         });
-
+        nc.init();
         sampleTrain(nc);
         return nc;
     }

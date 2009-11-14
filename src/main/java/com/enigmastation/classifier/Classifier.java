@@ -4,6 +4,7 @@ import com.enigmastation.extractors.WordListerFactory;
 
 import java.io.Serializable;
 import java.util.Set;
+import java.util.Map;
 
 /**
  * This is the basic classifier interface.
@@ -17,25 +18,13 @@ public interface Classifier extends Serializable {
 
     double getWeightedProbability(String feature, String category);
 
-    FeatureMap getCategoryFeatureMap();
+    //Map<String, Map<String, Integer>> getCategoryFeatureMap();
 
-    ClassifierMap getCategoryDocCount();
+    //Map<String,Integer> getCategoryDocCount();
 
     Set<String> getCategories();
 
     void addListener(ClassifierListener listener);
-
-    FeatureMap createFeatureMap();
-
-    ClassifierMap createClassifierMap();
-
-    ClassifierDataModelFactory getModelFactory();
-
-    void setModelFactory(ClassifierDataModelFactory modelFactory);
-
-    WordListerFactory getWordListerFactory();
-
-    void setWordListerFactory(WordListerFactory wordListerFactory);
 
     void train(Object item, String category);
 }

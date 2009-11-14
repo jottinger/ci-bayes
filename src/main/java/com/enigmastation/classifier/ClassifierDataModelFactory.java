@@ -1,7 +1,8 @@
 package com.enigmastation.classifier;
 
-public interface ClassifierDataModelFactory {
-    FeatureMap buildFeatureMap();
+import java.util.Map;
 
-    ClassifierMap buildClassifierMap();
+public interface ClassifierDataModelFactory {
+    public Map<String,Integer> getCategoryCountMap();
+    public Map<String,Integer> getFeatureMap(String feature);
 }

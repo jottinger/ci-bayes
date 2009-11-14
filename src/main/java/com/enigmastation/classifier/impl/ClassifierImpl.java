@@ -8,6 +8,7 @@ import javolution.util.FastSet;
 
 import java.util.Collections;
 import java.util.Set;
+import java.util.Map;
 
 /**
  * This is a simple Bayesian calculation class. It was ported from Python contained in the book
@@ -21,14 +22,14 @@ public class ClassifierImpl implements Classifier {
     /**
      * In Segaran's book, this is referred to as "fc"
      */
-    private FeatureMap categoryFeatureMap;
+    //private Map<String, Map<String, Integer>> categoryFeatureMap;
 
     /**
      * In Segaran's book, this is referred to as "cc"
      */
-    private ClassifierMap categoryDocCount;
+    //private Map<String,Integer> categoryDocCount;
     protected WordLister extractor = null;
-    private Set<ClassifierListener> trainingListeners = new FastSet<ClassifierListener>();
+    private Set<ClassifierListener> trainingListeners;// = new FastSet<ClassifierListener>();
     private ClassifierDataModelFactory modelFactory;
     private WordListerFactory wordListerFactory;
     private boolean initialized = false;
@@ -38,8 +39,8 @@ public class ClassifierImpl implements Classifier {
             if (getModelFactory() == null) {
                 setModelFactory(new BasicClassifierDataModelFactory());
             }
-            categoryDocCount = createClassifierMap();
-            categoryFeatureMap = createFeatureMap();
+            //categoryDocCount = modelFactory.getFeatureMap();
+            //categoryFeatureMap = createFeatureMap();
 
             if (getWordListerFactory() == null) {
                 setWordListerFactory(new StemmingWordListerFactory());
@@ -74,15 +75,10 @@ public class ClassifierImpl implements Classifier {
         this.modelFactory = modelFactory;
     }
 
-    public FeatureMap createFeatureMap() {
-        return modelFactory.buildFeatureMap();
-    }
-
-    public ClassifierMap createClassifierMap() {
-        return modelFactory.buildClassifierMap();
-    }
-
-    public void addListener(ClassifierListener listener) {
+    public void addListener(ClassifierListener listener)
+    {
+        if(trainingListeners == null)
+            trainingListeners = new FastSet<ClassifierListener>();
         trainingListeners.add(listener);
     }
 
@@ -94,16 +90,30 @@ public class ClassifierImpl implements Classifier {
      * @param feature  the feature (the 'word')
      * @param category the category
      */
+
+
     void incf(String feature, String category) {
-        ClassifierMap fm = getCategoryFeatureMap().getFeature(feature);
-        fm.incrementCategory(category);
+
+        //Map<String,Map<String,Integer>> featureMap = this.categoryFeatureMap;
+        //Map<String,Integer> fm = featureMap.get(feature);
+        Map<String,Integer> fm = this.modelFactory.getFeatureMap(feature);
+        if(fm == null)
+        {
+            //throw new IllegalStateException("You must either supply all classifiers in a map or supply a factory");
+            throw new IllegalStateException("You must be able to create a feature map");
+        }
+
+        incrementCategory(fm, category);
 
         FeatureIncrement fi = null;
-        for (ClassifierListener l : trainingListeners) {
-            if (fi == null) {
-                fi = new FeatureIncrement(feature, category, fm.get(category));
+        if(trainingListeners != null)
+        {
+            for (ClassifierListener l : trainingListeners) {
+                if (fi == null) {
+                    fi = new FeatureIncrement(feature, category, fm.get(category));
+                }
+                l.handleFeatureUpdate(fi);
             }
-            l.handleFeatureUpdate(fi);
         }
 
     }
@@ -115,15 +125,19 @@ public class ClassifierImpl implements Classifier {
      * @param category the category to increment
      */
     void incc(String category) {
-        getCategoryDocCount().incrementCategory(category);
+
+        incrementCategory(getCategoryDocCount(), category);
 
         CategoryIncrement ci = null;
-        for (ClassifierListener l : trainingListeners) {
-            if (ci == null) {
-                ci = new CategoryIncrement(category, getCategoryDocCount().get(category));
-                ci.setCountDelta(1);
+        if(trainingListeners != null)
+        {
+            for (ClassifierListener l : trainingListeners) {
+                if (ci == null) {
+                    ci = new CategoryIncrement(category, getCategoryDocCount().get(category));
+                    ci.setCountDelta(1);
+                }
+                l.handleCategoryUpdate(ci);
             }
-            l.handleCategoryUpdate(ci);
         }
 
     }
@@ -135,10 +149,18 @@ public class ClassifierImpl implements Classifier {
      * @param category the category to query
      * @return the number of times a feature has appeared in a category
      */
-    double fcount(String feature, String category) {
-        if (getCategoryFeatureMap().containsKey(feature) && getCategoryFeatureMap().get(feature).containsKey(category)) {
-            return getCategoryFeatureMap().get(feature).get(category);
+    double fcount(String feature, String category)
+    {
+        Map<String,Integer> fm = this.modelFactory.getFeatureMap(feature);
+        if(fm != null)
+        {
+            Integer count = fm.get(category);
+            if(count != null)
+            {
+                return count;
+            }
         }
+
         return 0.0;
     }
 
@@ -158,15 +180,27 @@ public class ClassifierImpl implements Classifier {
      * @return the total number of items
      */
     double totalcount() {
-        return getCategoryDocCount().getTotalCount();
+        Map<String,Integer> map = getCategoryDocCount();
+        return getTotalCount(map);
+    }
+
+    double totalcount(String feature)
+    {
+        Map<String,Integer> classifierMap = this.modelFactory.getFeatureMap(feature);
+        if (classifierMap != null)
+        {
+            return getTotalCount(classifierMap);
+        }
+        return 0.0;
     }
 
     double getTotalFeatureCount(String feature) {
-        ClassifierMap map = getCategoryFeatureMap().get(feature);
-        if (map == null) {
-            return 0.0;
+        Map<String,Integer> classifierMap = this.modelFactory.getFeatureMap(feature);
+        if (classifierMap != null)
+        {
+            return getTotalCount(classifierMap);
         }
-        return map.getTotalCount();
+        return 0.0;
     }
 
     /**
@@ -233,13 +267,30 @@ public class ClassifierImpl implements Classifier {
         return ((WEIGHT * ASSUMED_PROBABILITY) + (totals * basicprob)) / (WEIGHT + totals);
     }
 
-    public final FeatureMap getCategoryFeatureMap() {
-        init();
-        return categoryFeatureMap;
+    public final Map<String,Integer> getCategoryDocCount()
+    {
+        return modelFactory.getCategoryCountMap();
     }
 
-    public final ClassifierMap getCategoryDocCount() {
-        init();
-        return categoryDocCount;
+    private double getTotalCount(Map<String, Integer> map)
+    {
+        int totalCount = 0;
+        for(Integer i:map.values()) {
+            totalCount+=i;
+        }
+        return totalCount;
+    }
+
+    private void incrementCategory(Map<String,Integer> map, String category)
+    {
+        Integer val = map.get(category);
+        if (val != null)
+        {
+            map.put(category, val+1);
+        }
+        else
+        {
+            map.put(category, 1);
+        }
     }
 }

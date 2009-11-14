@@ -33,10 +33,10 @@ public class Serializer {
         FeatureMap fc= (FeatureMap) oos.readObject();
 
         //classifier.getCategoryDocCount().clear();
-        classifier.getCategoryFeatureMap().clear();
+        /*classifier.getCategoryFeatureMap().clear();
 
         classifier.getCategoryDocCount().putAll(cc);
-        classifier.getCategoryFeatureMap().putAll(fc);
+        classifier.getCategoryFeatureMap().putAll(fc);*/
 
         oos.close();
         fos.close();
@@ -46,8 +46,8 @@ public class Serializer {
     public void save(Classifier classifier) throws IOException {
         FileOutputStream fos=new FileOutputStream(filename);
         ObjectOutputStream oos=new ObjectOutputStream(fos);
-        oos.writeObject(classifier.getCategoryDocCount());
-        oos.writeObject(classifier.getCategoryFeatureMap());
+        /*oos.writeObject(classifier.getCategoryDocCount());
+        oos.writeObject(classifier.getCategoryFeatureMap());*/
         oos.flush();
         oos.close();
         fos.close();

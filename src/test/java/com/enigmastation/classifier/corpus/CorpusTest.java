@@ -18,12 +18,14 @@ import java.util.Date;
 public class CorpusTest {
     @BeforeTest(alwaysRun = true)
     public void setup() {
-        classifier = new FisherClassifierImpl();
+        FisherClassifierImpl classifier = new FisherClassifierImpl();
         classifier.setWordListerFactory(new WordListerFactory() {
             public WordLister build() {
                 return new SimpleWordLister();
             }
         });
+        classifier.init();
+        this.classifier = classifier;
     }
 
     FisherClassifier classifier;
