@@ -24,7 +24,7 @@ public class BasicClassifierDataModelFactory implements ClassifierDataModelFacto
 
     public void init()
     {
-        if(persistentFile != null)
+        if(persistentFile != null && new File(persistentFile).exists())
         {
 
             FileInputStream fos = null;

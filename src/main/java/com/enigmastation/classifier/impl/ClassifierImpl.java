@@ -161,8 +161,14 @@ public class ClassifierImpl implements Classifier {
      * @param category the category to count items for
      * @return the number of items in a category
      */
-    double catcount(String category) {
-        return getCategoryDocCount().get(category);
+    double catcount(String category)
+    {
+        Integer count = getCategoryDocCount().get(category);
+        if(count == null)
+        {
+            return 0.0;
+        }
+        return count.doubleValue();
     }
 
     /**
