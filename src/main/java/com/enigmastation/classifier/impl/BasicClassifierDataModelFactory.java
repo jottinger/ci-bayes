@@ -44,16 +44,26 @@ public class BasicClassifierDataModelFactory implements ClassifierDataModelFacto
             {
                 try
                 {
-                    oos.close();
-                    fos.close();
+                    if(oos != null)
+                        oos.close();
+
                 }
-                catch (IOException e)
+                catch (Exception e)
+                {
+
+                }
+
+                try
+                {
+                    if(fos != null)
+                        fos.close();
+
+                }
+                catch (Exception e)
                 {
 
                 }
             }
-
-
         }
     }
 

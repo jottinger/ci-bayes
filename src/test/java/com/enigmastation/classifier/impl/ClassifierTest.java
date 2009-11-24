@@ -13,7 +13,10 @@ import org.testng.annotations.Test;
 
 import java.io.IOException;
 
-public class ClassifierTest {
+import junit.framework.TestCase;
+
+public class ClassifierTest extends TestCase
+{
     public static void main(String[] args) {
         ClassifierTest c = new ClassifierTest();
 
@@ -192,5 +195,25 @@ public class ClassifierTest {
         cl.train("buy pharmaceuticals now", "bad");
         cl.train("make quick money in the online casino", "bad");
         cl.train("the quick brown fox jumps", "good");
+    }
+
+    public void testClassificationPerformance()
+    {
+        Classifier nc = new FisherClassifierImpl();
+        sampleTrain(nc);
+        double it = 1000000;
+        double prob = nc.getFeatureProbability("quick", "good");
+        for(int j = 0;j < 10; j++)
+        {
+            double start = System.currentTimeMillis();
+
+            for(int i = 0; i < it; i++)
+            {
+                double fprob = nc.getFeatureProbability("quick", "good");
+            }
+
+            double stop = System.currentTimeMillis();
+            System.out.println((stop-start));
+        }
     }
 }
