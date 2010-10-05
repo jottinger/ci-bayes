@@ -26,7 +26,6 @@ public final class ClassifierProbability implements Comparable<ClassifierProbabi
         this.score = score;
     }
 
-    @Override
     public int compareTo(ClassifierProbability o) {
         if(getCategory().equals(o.getCategory())) {
             return 0;

@@ -1,10 +1,7 @@
 package com.enigmastation.classifier;
 
-import com.enigmastation.extractors.WordListerFactory;
-
 import java.io.Serializable;
 import java.util.Set;
-import java.util.Map;
 
 /**
  * This is the basic classifier interface.

@@ -1,7 +1,7 @@
 package com.enigmastation.resolvers.impl;
 
 import com.enigmastation.resolvers.Resolver;
-import javolution.util.FastMap;
+import com.google.common.collect.MapMaker;
 
 import java.util.Collections;
 import java.util.Map;
@@ -19,8 +19,8 @@ import java.util.Map;
  * this class, I'm sorry, but it's not my fault. I warned you.
  */
 public class MemoryResolver implements Resolver {
-    Map<String, Integer> keys = new FastMap<String, Integer>();
-    Map<Integer, String> ids = new FastMap<Integer, String>();
+    Map<String, Integer> keys = new MapMaker().makeMap();
+    Map<Integer, String> ids = new MapMaker().makeMap();
     int lastId = 0;
 
     protected MemoryResolver() {

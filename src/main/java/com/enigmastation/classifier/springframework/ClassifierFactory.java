@@ -9,7 +9,7 @@ public final class ClassifierFactory implements FactoryBean {
         return new ClassifierImpl();
     }
 
-    public Class getObjectType() {
+    public Class<?> getObjectType() {
         return Classifier.class;
     }
 

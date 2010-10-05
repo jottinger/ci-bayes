@@ -1,17 +1,16 @@
 package com.enigmastation.extractors.impl;
 
-import javolution.util.FastSet;
-import org.apache.lucene.analysis.Token;
-import org.apache.lucene.analysis.TokenFilter;
-import org.apache.lucene.analysis.snowball.SnowballFilter;
-import org.apache.lucene.analysis.standard.StandardTokenizer;
-
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.Set;
 import java.util.Collection;
+import java.util.Set;
 
-import com.enigmastation.extractors.WordLister;
+import org.apache.lucene.analysis.Token;
+import org.apache.lucene.analysis.snowball.SnowballFilter;
+import org.apache.lucene.analysis.standard.StandardTokenizer;
+import org.apache.lucene.util.Version;
+
+import com.google.common.collect.Sets;
 
 /**
  * This is an implementation of a wordlister that uses Lucene's Snowball
@@ -23,13 +22,17 @@ import com.enigmastation.extractors.WordLister;
  * Yuck. Use this puppy ONLY if you really need Snowball.
  */
 public class LuceneStemmingWordLister extends SimpleWordLister {
-    static final Set<String> emptySet = new FastSet<String>();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -2079281327726910236L;
+	static final Set<String> emptySet = Sets.newHashSet();
 
     public void addWords(Object obj, Collection<String> features) {
         String document = obj.toString().toLowerCase();
-        StandardTokenizer tokenizer = new StandardTokenizer(new StringReader(document));
+        StandardTokenizer tokenizer = new StandardTokenizer(Version.LUCENE_30,new StringReader(document));
         tokenizer.setMaxTokenLength(20);
-        TokenFilter psf = new SnowballFilter(tokenizer, "English");
+        SnowballFilter psf = new SnowballFilter(tokenizer, "English");
         Token t;
         StringBuilder sb = new StringBuilder();
         try {

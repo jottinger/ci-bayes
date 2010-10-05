@@ -1,14 +1,18 @@
 package com.enigmastation.classifier.impl;
 
-import com.enigmastation.classifier.ClassifierProbability;
-import com.enigmastation.classifier.FisherClassifier;
-import javolution.util.FastMap;
-
 import java.util.Map;
 import java.util.Set;
 
+import com.enigmastation.classifier.ClassifierProbability;
+import com.enigmastation.classifier.FisherClassifier;
+import com.google.common.collect.MapMaker;
+
 public class FisherClassifierImpl extends NaiveClassifierImpl implements FisherClassifier {
-    private Map<String, Double> minimums = new FastMap<String, Double>();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5492366632949643784L;
+	private Map<String, Double> minimums = new MapMaker().makeMap();
 
     public void setMinimum(String category, double minimum) {
         minimums.put(category, minimum);

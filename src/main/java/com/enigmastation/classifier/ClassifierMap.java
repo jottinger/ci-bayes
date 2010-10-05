@@ -1,8 +1,7 @@
 package com.enigmastation.classifier;
 
-import javolution.util.FastMap;
-
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This class serves as the basic container for the classifiers. It's based currently on ConcurrentHashMap.
@@ -19,8 +18,12 @@ import java.util.Map;
  * @version $Revision: 36 $
  */
 
-public class ClassifierMap extends FastMap<String, Integer> implements Map<String, Integer> {
-    private long totalCount = 0;
+public class ClassifierMap extends ConcurrentHashMap<String, Integer> implements Map<String, Integer> {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7636863402117170884L;
+	private long totalCount = 0;
 
     /**
      * This method increments the category's count. It primarily exists for the benefit of bulk loaders,

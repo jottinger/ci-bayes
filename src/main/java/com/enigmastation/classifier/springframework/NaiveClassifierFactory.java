@@ -9,7 +9,7 @@ public final class NaiveClassifierFactory implements FactoryBean {
         return new NaiveClassifierImpl();
     }
 
-    public Class getObjectType() {
+    public Class<?> getObjectType() {
         return NaiveClassifier.class;
     }
 

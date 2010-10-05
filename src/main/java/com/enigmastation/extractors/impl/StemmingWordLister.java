@@ -1,13 +1,8 @@
 package com.enigmastation.extractors.impl;
 
-import javolution.util.FastSet;
-
-import java.util.Set;
 import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.enigmastation.extractors.WordLister;
 
 /**
  * This implementation of a stemming word lister comes from Kevin Burton.
@@ -21,6 +16,11 @@ import com.enigmastation.extractors.WordLister;
 public class StemmingWordLister extends SimpleWordLister {
 
     /**
+	 * 
+	 */
+	private static final long serialVersionUID = 7436679032120324462L;
+
+	/**
      * Minimum length for terms.
      */
     public static int MIN_LENGTH = 2;

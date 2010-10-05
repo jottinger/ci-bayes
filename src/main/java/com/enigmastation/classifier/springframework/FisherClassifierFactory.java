@@ -9,7 +9,7 @@ public final class FisherClassifierFactory implements FactoryBean {
         return new FisherClassifierImpl();
     }
 
-    public Class getObjectType() {
+    public Class<?> getObjectType() {
         return FisherClassifier.class;
     }
 

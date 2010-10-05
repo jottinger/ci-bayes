@@ -4,27 +4,37 @@ import com.enigmastation.classifier.CategoryIncrement;
 import com.enigmastation.classifier.Classifier;
 import com.enigmastation.classifier.ClassifierListener;
 import com.enigmastation.classifier.FeatureIncrement;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
+
 import static org.testng.Assert.assertEquals;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-public class SpringTest {
-    ApplicationContext ctx;
+@ContextConfiguration(locations="/spring.xml")
+public class SpringTest extends AbstractTestNGSpringContextTests {
+	@Autowired
     Classifier c;
 
+	/*
     @BeforeTest(groups = {"fulltest", "normal"})
     public void setup() {
         ApplicationContext ctx = new ClassPathXmlApplicationContext("/spring.xml");
         c = (Classifier) ctx.getBean("classifier");
     }
+    */
 
+    /*
     @AfterTest(groups = {"fulltest", "normal"})
     public void tearDown() {
         c = null;
     }
+    */
 
     @Test(groups = {"fulltest", "normal"})
     public void testCatCount() {
@@ -34,7 +44,7 @@ public class SpringTest {
         c.getWeightedProbability("test", "test");
     }
 
-    @Test(groups = {"fulltest", "normal"}, dependsOnMethods = {"testCatCount"})
+    //@Test(groups = {"fulltest", "normal"}, dependsOnMethods = {"testCatCount"})
     public void testSpringFactories() {
         //final String user="foobaricus";
         final int[] fucount = new int[]{0};

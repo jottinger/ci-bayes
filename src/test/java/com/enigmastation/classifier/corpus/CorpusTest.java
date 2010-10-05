@@ -1,19 +1,26 @@
 package com.enigmastation.classifier.corpus;
 
-import com.enigmastation.classifier.ClassifierProbability;
-import com.enigmastation.classifier.FisherClassifier;
-import com.enigmastation.classifier.impl.FisherClassifierImpl;
-import com.enigmastation.classifier.testing.MemoryMonitor;
-import com.enigmastation.extractors.WordLister;
-import com.enigmastation.extractors.WordListerFactory;
-import com.enigmastation.extractors.impl.SimpleWordLister;
-import com.ice.tar.TarArchive;
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileReader;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.Date;
+
 import org.apache.tools.bzip2.CBZip2InputStream;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
-import java.io.*;
-import java.util.Date;
+import com.enigmastation.classifier.ClassifierProbability;
+import com.enigmastation.classifier.FisherClassifier;
+import com.enigmastation.classifier.impl.FisherClassifierImpl;
+import com.enigmastation.classifier.testing.MemoryMonitor;
+import com.enigmastation.extractors.impl.SimpleWordLister;
+import com.ice.tar.TarArchive;
 
 public class CorpusTest {
     @BeforeTest(alwaysRun = true)
@@ -71,7 +78,8 @@ public class CorpusTest {
         System.err.println(sw.getBuffer().toString());
     }
 
-    private void emptyFilesystem() throws IOException {
+    @SuppressWarnings("unused")
+	private void emptyFilesystem() throws IOException {
         processFiles(new Manager() {
             public void handleFile(Command c, String type, File corpus) throws IOException {
                 corpus.delete();

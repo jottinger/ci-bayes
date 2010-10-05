@@ -9,7 +9,7 @@ public final class WordListerFactory implements FactoryBean {
         return new SimpleWordLister();
     }
 
-    public Class getObjectType() {
+    public Class<?> getObjectType() {
         return WordLister.class;
     }
 

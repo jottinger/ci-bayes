@@ -1,15 +1,20 @@
 package com.enigmastation.classifier.impl;
 
-import com.enigmastation.classifier.ClassifierDataModelFactory;
-
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.Map;
-import java.util.HashMap;
-import java.io.*;
+import java.util.concurrent.ConcurrentHashMap;
+
+import com.enigmastation.classifier.ClassifierDataModelFactory;
 
 public class BasicClassifierDataModelFactory implements ClassifierDataModelFactory
 {
-    protected Map<String, Integer> categoryCountMap = new HashMap();
-    protected Map<String, Map<String,Integer>> featureMap = new HashMap();
+    protected Map<String, Integer> categoryCountMap = new ConcurrentHashMap<String, Integer>();
+    protected Map<String, Map<String,Integer>> featureMap = new ConcurrentHashMap<String, Map<String, Integer>>();
     protected String persistentFile;
 
     public String getPersistentFile()
@@ -22,7 +27,8 @@ public class BasicClassifierDataModelFactory implements ClassifierDataModelFacto
         this.persistentFile = persistentFile;
     }
 
-    public void init()
+    @SuppressWarnings("unchecked")
+	public void init()
     {
         if(persistentFile != null && new File(persistentFile).exists())
         {
@@ -33,8 +39,8 @@ public class BasicClassifierDataModelFactory implements ClassifierDataModelFacto
             {
                 fos = new FileInputStream(persistentFile);
                 oos = new ObjectInputStream(fos);
-                categoryCountMap = (Map) oos.readObject();
-                this.featureMap = (Map) oos.readObject();
+                categoryCountMap = (Map<String, Integer>) oos.readObject();
+                this.featureMap = (Map<String, Map<String, Integer>>) oos.readObject();
             }
             catch (Exception e)
             {
@@ -111,7 +117,7 @@ public class BasicClassifierDataModelFactory implements ClassifierDataModelFacto
         Map<String, Integer> fm = featureMap.get(feature);
         if(fm == null)
         {
-            fm = new HashMap();
+            fm = new ConcurrentHashMap<String, Integer>();
             featureMap.put(feature, fm);
         }
         return fm;

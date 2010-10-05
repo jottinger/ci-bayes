@@ -1,12 +1,12 @@
 package com.enigmastation.extractors.impl;
 
-import com.enigmastation.extractors.WordLister;
-import javolution.util.FastSet;
-
 import java.util.Collection;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.enigmastation.extractors.WordLister;
+import com.google.common.collect.Sets;
 
 /**
  * This is a very simple class to return a list of tokens from a string. It's very simple. It returns all words,
@@ -32,7 +32,11 @@ import java.util.regex.Pattern;
  * @version $Revision: 36 $
  */
 public class SimpleWordLister implements WordLister {
-    public static final int MIN_LENGTH = 2;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4783343243779865623L;
+	public static final int MIN_LENGTH = 2;
     public static final int MAX_LENGTH = 20;
     public static final Pattern p = Pattern.compile("\\w++");
 
@@ -62,7 +66,7 @@ public class SimpleWordLister implements WordLister {
      * @return a Set of unique words
      */
     public Set<String> getUniqueWords(Object obj) {
-        Set<String> features = new FastSet<String>();
+        Set<String> features = Sets.newHashSet();
         addWords(obj, features);
         return features;
     }

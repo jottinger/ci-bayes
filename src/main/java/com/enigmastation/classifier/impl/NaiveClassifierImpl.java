@@ -1,15 +1,15 @@
 package com.enigmastation.classifier.impl;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
+
 import com.enigmastation.classifier.ClassificationListener;
 import com.enigmastation.classifier.ClassifierException;
 import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.NaiveClassifier;
-import javolution.util.FastMap;
-import javolution.util.FastSet;
-
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
+import com.google.common.collect.MapMaker;
+import com.google.common.collect.Sets;
 
 /**
  * This is a naive bayesian classifier.
@@ -21,7 +21,11 @@ import java.util.Set;
  * @version $Revision: 38 $
  */
 public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifier {
-    private final transient Map<String, Double> thresholds = new FastMap<String, Double>();
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -3694360766223901139L;
+	private final transient Map<String, Double> thresholds = new MapMaker().makeMap();
 
     public void setCategoryThreshold(String cat, double t) {
         thresholds.put(cat, t);
@@ -142,7 +146,7 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
         return dp;
     }
 
-    protected Set<ClassificationListener> classificationListeners = new FastSet<ClassificationListener>();
+    protected Set<ClassificationListener> classificationListeners = Sets.newHashSet();
 
     public void addListener(ClassificationListener listener) {
         classificationListeners.add(listener);

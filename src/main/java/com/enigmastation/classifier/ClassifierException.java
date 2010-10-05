@@ -13,7 +13,12 @@ package com.enigmastation.classifier;
  * this class, I'm sorry, but it's not my fault. I warned you.
  */
 public class ClassifierException extends Error {
-    public ClassifierException() {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 6041857463765015700L;
+
+	public ClassifierException() {
     }
 
     public ClassifierException(String message) {
