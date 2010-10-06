@@ -6,14 +6,10 @@ import com.enigmastation.classifier.ClassifierListener;
 import com.enigmastation.classifier.FeatureIncrement;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
 
 import static org.testng.Assert.assertEquals;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 @ContextConfiguration(locations="/spring.xml")

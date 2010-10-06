@@ -1,29 +1,38 @@
+<!doctype html>
 <html>
 <head>
-<title>ci-bayes: Collective Intelligence' bayes ported to Java</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <title>ci-bayes: Collective Intelligence' bayes ported to Java</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
 <body bgcolor="#FFFFFF" text="#000000">
 
-<h1>Bayesian Classifiers for Java</h1>  
-<p>This project contains two bayesian classifiers for Java: a Naive
-implementation and a Fishers implementation. It's merely a port from Toby
-Segaran's <a href="classifier.py">python code for Bayesian analysis</a> from his book &quot;Programming Collective
-Intelligence.&quot;</p>
- 
- <p>The only requirement for this library is <a
-href="http://javolution.org">javolution</a>. </p>
- 
-<p>It's licensed under the Artistic License. If you'd like to join the
-project, please do, but note: the Developer role is granted only for known
-purposes (i.e., if you want to be a developer, that's great, but please let
-the <a href="mailto:dev@ci-bayes.dev.java.net">dev mailing list</a> know
-what it is you're trying to do before applying for the role.)</p>
+<h1>Bayesian Classifiers for Java</h1>
+
+<p>
+    This project contains two bayesian classifiers for Java: a Naive implementation and a Fishers implementation. It's
+    merely a port from Toby Segaran's <a href="classifier.py">python code for Bayesian analysis</a> from his book &quot;Programming
+    Collective Intelligence.&quot;
+</p>
+
+<p>
+    The only absolute requirement for this library is <a href="http://code.google.com/p/guava-libraries/">guava</a>.
+    Earlier versions (1.0.x) required Javolution.
+</p>
+
+<p>
+    It's licensed under the Artistic License. If you'd like to join the project, please do, but note: the Developer role
+    is granted only for known purposes (i.e., if you want to be a developer, that's great, but please let the <a
+        href="mailto:dev@ci-bayes.dev.java.net">dev mailing list</a> know what it is you're trying to do before applying
+    for the role.)
+</p>
 
 <h2>Maven</h2>
-<p>CI-Bayes 1.0.4 is available from Java.net's Maven2 repository.
-Installation requires two modifications to a pom.xml:</p>
+
+<p>
+    CI-Bayes 2.0.0.RELEASE is available from Java.net's Maven2 repository. Installation requires two modifications to a
+    pom.xml:
+</p>
 
 <pre>&lt;repositories&gt;   
    &lt;repository&gt;           
@@ -38,84 +47,129 @@ Installation requires two modifications to a pom.xml:</p>
    &lt;dependency&gt;
       &lt;groupId&gt;com.enigmastation&lt;/groupId&gt;
       &lt;artifactId&gt;ci-bayes&lt;/artifactId&gt;
-      &lt;version&gt;1.0.8&lt;/version&gt;
+      &lt;version&gt;2.0.0.RELEASE&lt;/version&gt;
    &lt;/dependency&gt;
 &lt;/dependencies&gt;</pre>
 
 <h2>Usage</h2>
-<p>Basically, using ci-bayes is a matter of defining a way to
-extract elements from a body of text (an implementation of the WordLister
-interface), and then constructing a Classifier.
 
-<p>There are two interfaces through which a Classifier can be accessed. One is the Classifier, a read-only
-object; there's also a Trainer interface that provides public access to the training mechanism.</p>
-<p>A default naive WordListerImpl is supplied with the library.  </p>
-<p>A simple example of the FisherClassifier in use might look like this:</p>
+<p>
+    Basically, using ci-bayes is a matter of defining a way to extract elements from a body of text (an implementation
+    of the WordLister interface), and then constructing a Classifier.
+</p>
+
+<p>
+    A Classifier can be created directly. Eventually, a builder mechanism might be added, but not yet. (The problem is
+    that it's normal to customize a classifier - to add user-specific data, for example.)
+</p>
+
+<p>
+    A default naive WordListerImpl is supplied with the library.
+</p>
+
+<p>
+    A simple example of the FisherClassifier in use might look like this:
+</p>
+
 <pre>FisherClassifier fc=new FisherClassifierImpl();
-Trainer t=fc; // FisherClassifier doesn't expose train()
-t.train(&quot;The quick brown fox jumps over the lazy dog's tail&quot;,&quot;good&quot;);
-t.train(&quot;Make money fast!&quot;, &quot;bad&quot;);
+
+fc.train(&quot;The quick brown fox jumps over the lazy dog's tail&quot;,&quot;good&quot;);
+fc.train(&quot;Make money fast!&quot;, &quot;bad&quot;);
 String classification=fc.getClassification(&quot;money&quot;); // should be &quot;bad&quot;</pre>
 
-<p>There are two event types supported by the API: Classification events and feature increments.
+<p>
+    There are two event types supported by the API: Classification events and feature increments.
+</p>
 
-    <p>Feature
-increments occur when training occurs. The interface for this is ClassifierListener; it has to handle two
-event types (FeatureIncrement and CategoryIncrement), both of which are issued during training events.</p>
+<p>
+    Feature increments occur when training occurs. The interface for this is ClassifierListener; it has to handle
+    two event types (FeatureIncrement and CategoryIncrement), both of which are issued during training events.
+</p>
 
-<p>Classification events occur when a classification is requested. A classification event receives the set
+<p>
+    Classification events occur when a classification is requested. A classification event receives the set
     of elements being classified as well as the classifier itself; this is designed so that you can lazily load
-only the words being classified.</p>
+    only the words being classified.
+</p>
 
-<p>Note that classification tends to rely on <em>huge</em> datasets - so be prepared to add
-    heap memory to a JVM. This is tuneable, but finding the right balance of speed and concurrency and
-heap usage is ... interesting. (This is why the ClassifiactionListener was added, to lessen the number
-    of words a dataset has to be composed of in memory.)</p>
+<p>
+    Note that classification tends to rely on <em>huge</em> datasets - so be prepared to add heap memory to a JVM. This
+    is tuneable, but finding the right balance of speed and concurrency and heap usage is ... interesting. (This is why
+    the ClassificationListener was added, to lessen the number of words a dataset has to be composed of in memory.)
+</p>
 
 <h2>WordLister Usage</h2>
-<p>One of the keys to using the classifier is the provision of a WordLister. A word lister
-returns a set of strings (<code>Set&lt;String&gt;)</code>from an object.</p>
-<p>The default provided WordLister implementation is
-    <code>com.<wbr />enigmastation.<wbr />classifier.<wbr />StemmingWordLister</code>.
-When <code>getUniqueWords()</code> is called, it calls <code>toString()</code> on the object passed to it,
-    and it then splits the resulting string into individual words. It then strips out all short and long words
-(meaning words less than three letters long and more than twenty letters long), converts them to lowercase,
-then returns a set containing those words.</p>
+
 <p>
-    Any custom version of <code>WordLister</code> needs to follow the same process. However, since
-    <code>WordLister.getUniqueWords</code> takes an <code>Object</code>, you can pass any custom datatype
-    in that you like, parsing the string representation of the data type however you like.
+    One of the keys to using the classifier is the provision of a WordLister. A word lister
+    returns a set of strings (<code>Set&lt;String&gt;)</code>from an object.
 </p>
+
+<p>The default provided WordLister implementation is
+    <code>com.
+        <wbr/>
+        enigmastation.
+        <wbr/>
+        classifier.
+        <wbr/>
+        StemmingWordLister</code>.
+    When <code>getUniqueWords()</code> is called, it calls <code>toString()</code> on the object passed to it,
+    and it then splits the resulting string into individual words. It then strips out all short and long words
+    (meaning words less than three letters long and more than twenty letters long), converts them to lowercase,
+    then returns a set containing those words.
+</p>
+
+<p>
+    Any custom version of <code>WordLister</code> needs to follow the same process. However, since <code>WordLister.getUniqueWords</code>
+    takes an <code>Object</code>, you can pass any custom datatype in that you like, parsing the string representation
+    of the data type however you like.
+</p>
+
 <h2>Persisting The Classifiers</h2>
-<p>It's not much use, having a bayesian classifier, if it can't use the dataset for more than one
-classification. For this reason, the Classifier interface defines getCategoryFeatureMap and
-    getCategoryDocCount, which provide low-level access to the underlying datastructures.</p>
-    <p>It's expected that any persistence mechanism would use these functions to
-        store the data structures. Remember that the data structures can (and probably will) become
-    <b>very very large</b>, especially as they grow more useful (assuming the classic use of bayesian
-    classification), so be aware that walking through the data structures, storing tuples, is likely to be
-    unworkable.</p>
+
+<p>
+    It's not much use, having a bayesian classifier, if it can't use the dataset for more than one
+    classification. For this reason, the Classifier interface defines getCategoryFeatureMap and
+    getCategoryDocCount, which provide low-level access to the underlying datastructures.
+</p>
+
+<p>
+    It's expected that any persistence mechanism would use these functions to store the data structures. Remember that
+    the data structures can (and probably will) become <b>very very large</b>, especially as they grow more useful
+    (assuming the classic use of bayesian classification), so be aware that walking through the data structures, storing
+    tuples, is likely to be unworkable.
+</p>
 
 <h2>Listeners</h2>
-<p>A classifier can have a ClassifierListener added to it, to receive events as the classifier processes them.
-This is useful for cases where you might not want to manage the entire Classifier dataset as a monolithic
-block of data (since a trained classifier can be many megabytes in size).
 
-<p>There are currently two types of events that a ClassifierListener can handle: a feature update and a category
-update. One might use this information to update a JDBC row, for example, that represents a piece of classifier
-data. As yet, updates can not be vetoed. (If anyone can think of a reason you'd want to veto a feature or
-category update, please chime in and it'll be added.)</p>
+<p>
+    A classifier can have a ClassifierListener added to it, to receive events as the classifier processes them.
+    This is useful for cases where you might not want to manage the entire Classifier dataset as a monolithic
+    block of data (since a trained classifier can be many megabytes in size).
+</p>
+
+<p>
+    There are currently two types of events that a ClassifierListener can handle: a feature update and a category
+    update. One might use this information to update a JDBC row, for example, that represents a piece of classifier
+    data. As yet, updates can not be vetoed. (If anyone can think of a reason you'd want to veto a feature or
+    category update, please chime in and it'll be added.)
+</p>
 
 <h2>Tests</h2>
-<p>The classifier includes a corpus test, using the corpus from SpamAssassin as training and testing corpora.
-As it stands right now, it has a 98% accuracy (compared to SpamAssassin) and runs the entire test in
-11 seconds or so.
 
-<p>Differences in accuracy really aren't as horrible as they might seem. For one thing, ci-bayes
-    uses a different algorithm than SpamAssassin - in that it can manage multiple classifications
-    (not just "ham" or "spam" as SA does) and it also uses Naive and Fishers algorithms - I'm not
-sure exactly which algorithms SpamAssassin uses. So: differences are okay, as long as they're not
-HUGE differences.</p>
+<p>
+    The classifier includes a corpus test, using the corpus from SpamAssassin as training and testing corpora.
+    As it stands right now, it has a 98% accuracy (compared to SpamAssassin) and runs the entire test in
+    11 seconds or so.
+</p>
+
+<p>
+    Differences in accuracy really aren't as horrible as they might seem. For one thing, ci-bayes uses a different
+    algorithm than SpamAssassin - in that it can manage multiple classifications (not just "ham" or "spam" as SA does)
+    and it also uses Naive and Fishers algorithms - I'm not sure exactly which algorithms SpamAssassin uses. (Answer: a
+    multilevel perceptron, not bayes at all, any more.) So: differences are okay, as long as they're not HUGE
+    differences.
+</p>
 </body>
 </html>
 
