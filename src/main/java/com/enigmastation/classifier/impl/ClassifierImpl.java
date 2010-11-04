@@ -57,12 +57,13 @@ public class ClassifierImpl implements Classifier {
 
 	public void setClassifierDataModelFactory(
 			ClassifierDataModelFactory classifierDataModelFactory) {
+		/*Sorry but this is stupid
 		if (getClassifierDataModelFactory() != null) {
 			throw new IllegalStateException(
 					"Cannot set ModelFactory twice; old type is "
 							+ getClassifierDataModelFactory().getClass()
 									.getName());
-		}
+		}*/
 		this.classifierDataModelFactory = classifierDataModelFactory;
 	}
 
@@ -101,7 +102,7 @@ public class ClassifierImpl implements Classifier {
 			// throw new
 			// IllegalStateException("You must either supply all classifiers in a map or supply a factory");
 			throw new IllegalStateException(
-					"You must be able to create a feature map");
+					"You must be able to create a feature map for feature '"+feature+"'");
 		}
 
 		incrementCategory(fm, category);
