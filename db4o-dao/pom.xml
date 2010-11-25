@@ -24,14 +24,38 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.enigmastation.dao</groupId>
-            <artifactId>interfaces</artifactId>
+            <groupId>com.enigmastation</groupId>
+            <artifactId>model</artifactId>
             <version>3.0.0-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.db4o</groupId>
             <artifactId>db4o-full-java5</artifactId>
             <version>[7.0-SNAPSHOT,)</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${springVersion}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${springVersion}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${springVersion}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>[1.5.4,)</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>

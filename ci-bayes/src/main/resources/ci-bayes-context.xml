@@ -4,11 +4,10 @@
        xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
-
+    <import resource="classpath:/interfaces-context.xml"/>
     <context:annotation-config/>
     <context:spring-configured/>
 
-    <context:component-scan base-package="com.enigmastation.dao">
-        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
-    </context:component-scan>
+    <bean id="wordlister" class="com.enigmastation.extractors.impl.StemmingWordLister"/>
+    <bean id="classifier" class="com.enigmastation.classifier.impl.FisherClassifierImpl"/>
 </beans>

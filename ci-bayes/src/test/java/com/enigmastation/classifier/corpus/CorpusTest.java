@@ -1,34 +1,37 @@
 package com.enigmastation.classifier.corpus;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileReader;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Date;
-
-import org.apache.tools.bzip2.CBZip2InputStream;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
-
+import com.db4o.Db4oEmbedded;
+import com.db4o.ObjectContainer;
+import com.db4o.ObjectSet;
 import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.FisherClassifier;
 import com.enigmastation.classifier.impl.FisherClassifierImpl;
 import com.enigmastation.classifier.testing.MemoryMonitor;
 import com.enigmastation.extractors.impl.SimpleWordLister;
 import com.ice.tar.TarArchive;
+import org.apache.tools.bzip2.CBZip2InputStream;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
+
+import java.io.*;
+import java.util.Date;
 
 public class CorpusTest {
     @BeforeTest(alwaysRun = true)
     public void setup() {
         FisherClassifierImpl classifier = new FisherClassifierImpl();
-        classifier.setWordLister(new SimpleWordLister());        
+        classifier.setWordLister(new SimpleWordLister());
         classifier.init();
         this.classifier = classifier;
+
+        ObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded
+                .newConfiguration(), "dbFile");
+        ObjectSet set = db.queryByExample(new Object());
+        for (Object o : set) {
+            System.out.println("deleting object " + o + " from database");
+            db.delete(o);
+        }
+        db.close();
     }
 
     FisherClassifier classifier;
@@ -79,7 +82,7 @@ public class CorpusTest {
     }
 
     @SuppressWarnings("unused")
-	private void emptyFilesystem() throws IOException {
+    private void emptyFilesystem() throws IOException {
         processFiles(new Manager() {
             public void handleFile(Command c, String type, File corpus) throws IOException {
                 corpus.delete();

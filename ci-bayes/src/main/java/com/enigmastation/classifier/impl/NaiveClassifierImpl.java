@@ -1,15 +1,15 @@
 package com.enigmastation.classifier.impl;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Set;
-
 import com.enigmastation.classifier.ClassificationListener;
 import com.enigmastation.classifier.ClassifierException;
 import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.NaiveClassifier;
 import com.google.common.collect.MapMaker;
 import com.google.common.collect.Sets;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * This is a naive bayesian classifier.
@@ -39,9 +39,11 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
         }
     }
 
+    /*
     protected String classify(String item, String defaultCat) {
         return getClassification(item, defaultCat);
     }
+    */
 
     public ClassifierProbability[] getProbabilities(final Object item) {
         ClassifierProbability[] probabilities = new ClassifierProbability[getCategories().size()];
@@ -117,9 +119,11 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
         return cp.getCategory();
     }
 
-    protected double docprob(String item, String category) {
+    /*
+    protected double docProbability(String item, String category) {
         return getDocumentProbabilityForCategory(item, category);
     }
+    */
 
     public double getDocumentProbabilityForCategory(Object item, String category) {
         Set<String> features = wordLister.getUniqueWords(item);
@@ -134,9 +138,11 @@ public class NaiveClassifierImpl extends ClassifierImpl implements NaiveClassifi
         return p;
     }
 
+    /*
     protected double prob(String item, String category) {
         return getProbabilityForCategory(item, category);
     }
+    */
 
     public double getProbabilityForCategory(Object item, String category) {
         double catprob = catcount(category);

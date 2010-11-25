@@ -1,5 +1,7 @@
 package com.enigmastation.dao;
 
+import com.enigmastation.dao.model.Category;
+
 /**
  * User: joeo
  * Date: 11/23/10
@@ -7,5 +9,5 @@ package com.enigmastation.dao;
  * <p/>
  * Copyright
  */
-public class CategoryDAO {
+public interface CategoryDAO extends DAO<Category> {
 }

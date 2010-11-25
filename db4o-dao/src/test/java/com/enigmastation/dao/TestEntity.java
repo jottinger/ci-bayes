@@ -1,8 +1,6 @@
 package com.enigmastation.dao;
 
-import com.enigmastation.dao.db4o.Db4OBaseEntity;
-
-public class TestEntity extends Db4OBaseEntity{
+public class TestEntity extends BaseEntity{
     String text;
 
     public String getText() {

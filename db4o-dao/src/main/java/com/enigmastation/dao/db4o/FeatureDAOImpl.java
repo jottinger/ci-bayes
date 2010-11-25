@@ -1,7 +1,8 @@
 package com.enigmastation.dao.db4o;
 
-import com.enigmastation.dao.CategoryDAO;
-import com.enigmastation.dao.model.Category;
+import com.enigmastation.dao.FeatureDAO;
+import com.enigmastation.dao.model.Feature;
+import org.springframework.stereotype.Repository;
 
 /**
  * User: joeo
@@ -10,5 +11,6 @@ import com.enigmastation.dao.model.Category;
  * <p/>
  * Copyright
  */
-public class FeatureDAOImpl extends Db4OBaseDAO<Category> implements CategoryDAO {
+@Repository
+public class FeatureDAOImpl extends Db4OBaseDAO<Feature> implements FeatureDAO {
 }

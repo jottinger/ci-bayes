@@ -2,7 +2,7 @@ package com.enigmastation.dao;
 
 import java.util.List;
 
-public interface DAO<T extends BaseEntity<?>> {
+public interface DAO<T extends BaseEntity> {
     T read(T template);
     T write(T object);
     T take(T template);

@@ -5,7 +5,7 @@ import com.enigmastation.dao.DAO;
 
 import java.lang.reflect.ParameterizedType;
 
-public abstract class AbstractBaseDAO<T extends BaseEntity<?>> implements DAO<T> {
+public abstract class AbstractBaseDAO<T extends BaseEntity> implements DAO<T> {
     Class<?> persistentClass = null;
 
     @SuppressWarnings({"unchecked"})

@@ -3,13 +3,15 @@ package com.enigmastation.dao.db4o;
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
 import com.db4o.ObjectSet;
+import com.enigmastation.dao.BaseEntity;
 import com.enigmastation.dao.impl.AbstractBaseDAO;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class Db4OBaseDAO<T extends Db4OBaseEntity> extends AbstractBaseDAO<T> {
+public class Db4OBaseDAO<T extends BaseEntity> extends AbstractBaseDAO<T> {
     String dbFilename = "dbFile";
 
     static ObjectContainer db;
@@ -41,7 +43,10 @@ public class Db4OBaseDAO<T extends Db4OBaseEntity> extends AbstractBaseDAO<T> {
 
     public T read(T template) {
         ObjectSet<T> existingObjects = db.queryByExample(template);
-        return existingObjects.next();
+        if (existingObjects.hasNext()) {
+            return existingObjects.next();
+        }
+        return null;
     }
 
     public T write(T object) {
@@ -82,7 +87,8 @@ public class Db4OBaseDAO<T extends Db4OBaseEntity> extends AbstractBaseDAO<T> {
     }
 
     public List<T> readMultiple(T template) {
-        return null;
+        ObjectSet<T> existingObjects = db.queryByExample(template);
+        return new ArrayList<T>(existingObjects);
     }
 
     public List<T> takeMultiple(T template) {

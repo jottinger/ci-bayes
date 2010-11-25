@@ -21,7 +21,5 @@ public interface Classifier extends Serializable {
 
     Set<String> getCategories();
 
-    void addListener(ClassifierListener listener);
-
     void train(Object item, String category);
 }

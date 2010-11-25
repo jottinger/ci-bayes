@@ -6,12 +6,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd
        http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context-2.5.xsd
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
        http://www.springframework.org/schema/aop
-       http://www.springframework.org/schema/aop/spring-aop-2.5.xsd">
+       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
     <context:annotation-config/>
+    <context:component-scan base-package="com.enigmastation.classifier" />
     <aop:aspectj-autoproxy/>
-
-    <bean id="classifier" class="com.enigmastation.classifier.springframework.ClassifierFactory" />
-
+    <import resource="classpath:/ci-bayes-context.xml"/>
 </beans>
