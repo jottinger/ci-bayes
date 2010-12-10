@@ -1,5 +1,8 @@
 package com.enigmastation.classifier;
 
+import com.enigmastation.dao.CategoryDAO;
+import com.enigmastation.dao.FeatureDAO;
+
 import java.io.Serializable;
 import java.util.Set;
 
@@ -22,4 +25,12 @@ public interface Classifier extends Serializable {
     Set<String> getCategories();
 
     void train(Object item, String category);
+
+    CategoryDAO getCategoryDAO();
+
+    void setCategoryDAO(CategoryDAO categoryDAO);
+
+    FeatureDAO getFeatureDAO();
+
+    void setFeatureDAO(FeatureDAO featureDAO);
 }

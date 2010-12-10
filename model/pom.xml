@@ -8,7 +8,7 @@
         <version>3.0.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.enigmastation</groupId>
+    <groupId>com.enigmastation.ci-bayes</groupId>
     <artifactId>model</artifactId>
     <version>3.0.0-SNAPSHOT</version>
     <dependencies>

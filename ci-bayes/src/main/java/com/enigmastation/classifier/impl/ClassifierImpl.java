@@ -29,6 +29,23 @@ public class ClassifierImpl implements Classifier {
     CategoryDAO categoryDAO;
     @Autowired
     FeatureDAO featureDAO;
+
+    public CategoryDAO getCategoryDAO() {
+        return categoryDAO;
+    }
+
+    public void setCategoryDAO(CategoryDAO categoryDAO) {
+        this.categoryDAO = categoryDAO;
+    }
+
+    public FeatureDAO getFeatureDAO() {
+        return featureDAO;
+    }
+
+    public void setFeatureDAO(FeatureDAO featureDAO) {
+        this.featureDAO = featureDAO;
+    }
+
     /**
      *
      */
@@ -52,6 +69,9 @@ public class ClassifierImpl implements Classifier {
      */
 
     void incf(String feature, String category) {
+        if(featureDAO==null) {
+            throw new Error("Configuration error: no featureDAO");
+        }
         Feature template = new Feature();
         template.setFeature(feature);
         template.setCategory(category);

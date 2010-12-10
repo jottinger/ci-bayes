@@ -23,6 +23,7 @@
         <module>interfaces</module>
         <module>model</module>
         <module>db4o-dao</module>
+        <module>jdbc-dao</module>
         <module>ci-bayes</module>
     </modules>
     <scm>
@@ -85,4 +86,17 @@
             <url>java-net:/maven2-repository/trunk/repository/</url>
         </repository>
     </distributionManagement>
+    <profiles>
+        <profile>
+            <id>gigaspaces</id>
+            <modules>
+                <module>interfaces</module>
+                <module>model</module>
+                <module>db4o-dao</module>
+                <module>jdbc-dao</module>
+                <module>ci-bayes</module>
+                <module>gigaspaces-dao</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>

@@ -7,6 +7,10 @@ import com.enigmastation.classifier.ClassifierProbability;
 import com.enigmastation.classifier.FisherClassifier;
 import com.enigmastation.classifier.impl.FisherClassifierImpl;
 import com.enigmastation.classifier.testing.MemoryMonitor;
+import com.enigmastation.dao.CategoryDAO;
+import com.enigmastation.dao.FeatureDAO;
+import com.enigmastation.dao.jdbc.CategoryDAOImpl;
+import com.enigmastation.dao.jdbc.FeatureDAOImpl;
 import com.enigmastation.extractors.impl.SimpleWordLister;
 import com.ice.tar.TarArchive;
 import org.apache.tools.bzip2.CBZip2InputStream;
@@ -18,10 +22,16 @@ import java.util.Date;
 
 public class CorpusTest {
     @BeforeTest(alwaysRun = true)
-    public void setup() {
+    public void setup() throws Throwable {
+        try {
         FisherClassifierImpl classifier = new FisherClassifierImpl();
         classifier.setWordLister(new SimpleWordLister());
+        FeatureDAO fdao=new FeatureDAOImpl();
+        CategoryDAO cdao=new CategoryDAOImpl();
+        classifier.setFeatureDAO(fdao);
+        classifier.setCategoryDAO(cdao);
         classifier.init();
+
         this.classifier = classifier;
 
         ObjectContainer db = Db4oEmbedded.openFile(Db4oEmbedded
@@ -32,6 +42,10 @@ public class CorpusTest {
             db.delete(o);
         }
         db.close();
+        } catch(Throwable t) {
+            t.printStackTrace();
+            throw t;
+        }
     }
 
     FisherClassifier classifier;

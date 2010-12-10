@@ -1,4 +1,4 @@
-package com.enigmastation.dao.db4o;
+package com.enigmastation.dao.jdbc;
 
 import com.enigmastation.dao.CategoryDAO;
 import com.enigmastation.dao.model.Category;

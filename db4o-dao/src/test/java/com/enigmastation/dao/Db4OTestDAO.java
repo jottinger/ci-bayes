@@ -1,6 +1,6 @@
 package com.enigmastation.dao;
 
-import com.enigmastation.dao.db4o.Db4OBaseDAO;
+import com.enigmastation.dao.jdbc.Db4OBaseDAO;
 import org.springframework.stereotype.Repository;
 
 @Repository
