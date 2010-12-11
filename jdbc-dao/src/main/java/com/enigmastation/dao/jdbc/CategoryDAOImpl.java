@@ -119,6 +119,6 @@ public class CategoryDAOImpl extends AbstractBaseDAO<Category> implements Catego
     @Transactional
     private void remove(final Category category) {
         //noinspection unchecked
-        this.template.update("delete from category where id=?",category.getId());
+        this.template.update("delete from category where id=?", category.getId());
     }
 }

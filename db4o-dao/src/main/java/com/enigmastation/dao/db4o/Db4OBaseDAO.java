@@ -1,4 +1,4 @@
-package com.enigmastation.dao.jdbc;
+package com.enigmastation.dao.db4o;
 
 import com.db4o.Db4oEmbedded;
 import com.db4o.ObjectContainer;
