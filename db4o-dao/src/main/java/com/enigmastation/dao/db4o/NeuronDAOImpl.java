@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
  * Copyright
  */
 @Repository
-public class NeuronDAOImpl extends GigaspacesBaseDAO<Neuron> implements NeuronDAO {
+public class NeuronDAOImpl extends Db4OBaseDAO<Neuron> implements NeuronDAO {
 }

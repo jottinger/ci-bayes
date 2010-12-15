@@ -1,5 +1,7 @@
 package com.enigmastation.dao.model;
 
+import com.enigmastation.dao.BaseEntity;
+
 public class Neuron extends BaseEntity {
     String payload;
     Visibility visibility;

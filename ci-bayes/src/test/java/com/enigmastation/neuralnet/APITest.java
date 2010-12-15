@@ -1,12 +1,13 @@
 package com.enigmastation.neuralnet;
 
-import com.enigmastation.neuralnet.dao.NeuronDAO;
-import com.enigmastation.neuralnet.dao.SynapseDAO;
-import com.enigmastation.neuralnet.model.Neuron;
+import com.enigmastation.dao.NeuronDAO;
+import com.enigmastation.dao.SynapseDAO;
+import com.enigmastation.dao.model.Neuron;
+import com.enigmastation.dao.model.Pair;
+import com.enigmastation.neuralnet.impl.Perceptron;
 import com.enigmastation.neuralnet.service.NeuralNetService;
 import com.enigmastation.resolvers.Resolver;
-import com.enigmastation.resolvers.impl.MemoryResolverFactory;
-import com.gigaspaces.simpledao.dao.Pair;
+import com.enigmastation.resolvers.impl.MemoryResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -23,7 +24,7 @@ import java.util.List;
  * <p/>
  * Copyright
  */
-@ContextConfiguration(locations = {"/neuralnet.xml", "classpath:/com/gigaspaces/simpledao/dao-context.xml", "classpath:/com/gigaspaces/simpledao/gigaspaces-context.xml"})
+@ContextConfiguration(locations = {"/ci-bayes-context.xml"})
 public class APITest extends AbstractTestNGSpringContextTests {
     @Autowired
     NeuralNetService service;
@@ -33,7 +34,7 @@ public class APITest extends AbstractTestNGSpringContextTests {
     NeuronDAO neuronDAO;
     @Autowired
     Perceptron neuralNetwork;
-    Resolver resolver = new MemoryResolverFactory().build();
+    Resolver resolver = new MemoryResolver();
 
     @BeforeMethod
     public void resetNetwork() {

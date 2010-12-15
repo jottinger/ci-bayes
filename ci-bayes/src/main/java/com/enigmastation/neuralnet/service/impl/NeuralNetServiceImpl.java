@@ -1,10 +1,10 @@
 package com.enigmastation.neuralnet.service.impl;
 
-import com.enigmastation.neuralnet.dao.NeuronDAO;
-import com.enigmastation.neuralnet.dao.SynapseDAO;
-import com.enigmastation.neuralnet.model.Neuron;
-import com.enigmastation.neuralnet.model.Synapse;
-import com.enigmastation.neuralnet.model.Visibility;
+import com.enigmastation.dao.NeuronDAO;
+import com.enigmastation.dao.SynapseDAO;
+import com.enigmastation.dao.model.Neuron;
+import com.enigmastation.dao.model.Synapse;
+import com.enigmastation.dao.model.Visibility;
 import com.enigmastation.neuralnet.service.NeuralNetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -21,17 +22,16 @@ public class NeuralNetServiceImpl implements NeuralNetService {
     @Autowired
     SynapseDAO synapseDAO;
 
-    @Override
     public Neuron getNeuronById(String id) {
-        return neuronDAO.readById(id);
+        Neuron template=new Neuron();
+        template.setId(id);
+        return neuronDAO.read(template);
     }
 
-    @Override
     public Neuron getNeuron(String payload, Visibility visibility) {
         return getNeuron(payload, visibility, false);
     }
 
-    @Override
     @Transactional
     public void setStrength(Neuron from, Neuron to, double strength) {
         Synapse template = new Synapse();
@@ -42,7 +42,6 @@ public class NeuralNetServiceImpl implements NeuralNetService {
         synapseDAO.write(template);
     }
 
-    @Override
     public Set<Synapse> getSynapsesFrom(Neuron neuron) {
         if (neuron == null) {
             return new HashSet<Synapse>(0);
@@ -51,14 +50,13 @@ public class NeuralNetServiceImpl implements NeuralNetService {
         Set<Synapse> synapses = new HashSet<Synapse>();
         Synapse template = new Synapse();
         template.setFrom(neuron.getId());
-        Synapse[] synapseArray = synapseDAO.readMultiple(template);
+        List<Synapse> synapseList = synapseDAO.readMultiple(template);
 
-        synapses.addAll(Arrays.asList(synapseArray));
+        synapses.addAll(synapseList);
 
         return synapses;
     }
 
-    @Override
     public double getStrength(Neuron from, Neuron to, Visibility visibility) {
         Synapse template = new Synapse();
         template.setFrom(from.getId());
@@ -70,13 +68,11 @@ public class NeuralNetServiceImpl implements NeuralNetService {
         return r.getStrength();
     }
 
-    @Override
     public void reset() {
         synapseDAO.takeMultiple(new Synapse());
         neuronDAO.takeMultiple(new Neuron());
     }
 
-    @Override
     @Transactional
     public Neuron getNeuron(String payload, Visibility visibility, boolean createIfNecessary) {
         Neuron template = new Neuron();

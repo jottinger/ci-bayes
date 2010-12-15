@@ -1,15 +1,16 @@
 package com.enigmastation.neuralnet;
 
+import com.enigmastation.dao.NeuronDAO;
+import com.enigmastation.dao.SynapseDAO;
+import com.enigmastation.dao.model.Neuron;
+import com.enigmastation.dao.model.Pair;
+import com.enigmastation.dao.model.Synapse;
 import com.enigmastation.extractors.WordLister;
 import com.enigmastation.extractors.impl.StemmingWordLister;
-import com.enigmastation.neuralnet.dao.NeuronDAO;
-import com.enigmastation.neuralnet.dao.SynapseDAO;
-import com.enigmastation.neuralnet.model.Neuron;
-import com.enigmastation.neuralnet.model.Synapse;
+import com.enigmastation.neuralnet.impl.Perceptron;
 import com.enigmastation.neuralnet.service.NeuralNetService;
 import com.enigmastation.resolvers.Resolver;
-import com.enigmastation.resolvers.impl.MemoryResolverFactory;
-import com.gigaspaces.simpledao.dao.Pair;
+import com.enigmastation.resolvers.impl.MemoryResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTestNGSpringContextTests;
@@ -20,14 +21,7 @@ import java.util.List;
 
 import static org.testng.Assert.assertNotNull;
 
-/**
- * Created by IntelliJ IDEA.
- * User: joeo
- * Date: 11/3/10
- * Time: 10:25 AM
- * To change this template use File | Settings | File Templates.
- */
-@ContextConfiguration(locations = {"/neuralnet.xml", "classpath:/com/gigaspaces/simpledao/dao-context.xml", "classpath:/com/gigaspaces/simpledao/gigaspaces-context.xml"})
+@ContextConfiguration(locations = {"/ci-bayes-context.xml"})
 public class NeuralNetTest extends AbstractTestNGSpringContextTests {
     @Autowired
     NeuralNetService service;
@@ -41,7 +35,7 @@ public class NeuralNetTest extends AbstractTestNGSpringContextTests {
     @Test
     public void testConversion() {
         WordLister wordLister = new StemmingWordLister();
-        Resolver resolver = new MemoryResolverFactory().build();
+        Resolver resolver = new MemoryResolver();
         System.out.println(wordLister.getUniqueWords("stem stemming stemmed"));
         resolver.getIdForKey("stem");
     }
@@ -58,9 +52,9 @@ public class NeuralNetTest extends AbstractTestNGSpringContextTests {
 
         neuralNetwork.trainNaive("wWorld wBank", "uWorldBank uRiver uEarth");
         System.out.println("neurons: ");
-        showArray(neuronDAO.readMultiple(new Neuron()));
+        this.showCollection(neuronDAO.readMultiple(new Neuron()));
         System.out.println("synapses: ");
-        showArray(synapseDAO.readMultiple(new Synapse()));
+        this.showCollection(synapseDAO.readMultiple(new Synapse()));
         System.out.println("neurons connected to wBank: ");
         showCollection(neuralNetwork.getHiddenNeuronsForInput("wBank"));
         neuralNetwork.trainNaive("wRiver wBank", "uRiver");
@@ -68,7 +62,7 @@ public class NeuralNetTest extends AbstractTestNGSpringContextTests {
         showCollection(neuralNetwork.getHiddenNeuronsForInput("wBank"));
         System.out.println("outputs:");
         showCollection(neuralNetwork.getOutputs("wWorld wBank", new Actor() {
-            void handle(List<Pair<Neuron, Double>> list, Neuron n, double weight) {
+            public void handle(List<Pair<Neuron, Double>> list, Neuron n, double weight) {
                 list.add(new Pair<Neuron, Double>(n, weight));
             }
         }));
@@ -84,9 +78,9 @@ public class NeuralNetTest extends AbstractTestNGSpringContextTests {
 
     private void dumpNetwork() {
         System.out.println("neurons: ");
-        showArray(neuronDAO.readMultiple(new Neuron()));
+        this.showCollection(neuronDAO.readMultiple(new Neuron()));
         System.out.println("synapses: ");
-        showArray(synapseDAO.readMultiple(new Synapse()));
+        this.showCollection(synapseDAO.readMultiple(new Synapse()));
     }
 
     @Test
@@ -95,9 +89,9 @@ public class NeuralNetTest extends AbstractTestNGSpringContextTests {
         neuralNetwork.trainNaive("wWorld wBank", "uWorldBank uRiver uEarth");
         System.out.println("--------");
         System.out.println("neurons: ");
-        showArray(neuronDAO.readMultiple(new Neuron()));
+        this.showCollection(neuronDAO.readMultiple(new Neuron()));
         System.out.println("synapses: ");
-        showArray(synapseDAO.readMultiple(new Synapse()));
+        this.showCollection(synapseDAO.readMultiple(new Synapse()));
         for (String s : new String[]{"a", "b", "c", "d", "e"}) {
             neuralNetwork.train("wWorld wBank", "uWorldBank");
             neuralNetwork.train("wRiver wBank", "uRiver");
@@ -105,9 +99,9 @@ public class NeuralNetTest extends AbstractTestNGSpringContextTests {
         }
 
         System.out.println("neurons: ");
-        showArray(neuronDAO.readMultiple(new Neuron()));
+        this.showCollection(neuronDAO.readMultiple(new Neuron()));
         System.out.println("synapses: ");
-        showArray(synapseDAO.readMultiple(new Synapse()));
+        this.showCollection(synapseDAO.readMultiple(new Synapse()));
 
         System.out.println("OUTPUT of wWorld wBank");
         showCollection(neuralNetwork.getOutputs("wWorld wBank"));
@@ -130,7 +124,7 @@ public class NeuralNetTest extends AbstractTestNGSpringContextTests {
         }
     }
 
-    private void showArray(Object[] objects) {
+    private void showCollection(Object[] objects) {
         if (objects == null) {
             System.out.println("null");
             return;

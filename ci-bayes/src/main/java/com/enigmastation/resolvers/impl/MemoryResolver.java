@@ -23,7 +23,7 @@ public class MemoryResolver implements Resolver {
     Map<Integer, String> ids = new MapMaker().makeMap();
     int lastId = 0;
 
-    protected MemoryResolver() {
+    public MemoryResolver() {
     }
 
     public Map<String, Integer> getKeys() {

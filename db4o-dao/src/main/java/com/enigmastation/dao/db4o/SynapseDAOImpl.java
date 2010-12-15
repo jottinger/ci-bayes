@@ -12,5 +12,5 @@ import org.springframework.stereotype.Repository;
  * Copyright
  */
 @Repository
-public class SynapseDAOImpl extends GigaspacesBaseDAO<Synapse> implements SynapseDAO {
+public class SynapseDAOImpl extends Db4OBaseDAO<Synapse> implements SynapseDAO {
 }

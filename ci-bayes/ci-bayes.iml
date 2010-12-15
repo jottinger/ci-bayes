@@ -31,7 +31,7 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.ant:ant:1.7.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: org.apache.ant:ant-launcher:1.7.0" level="project" />
     <orderEntry type="module" module-name="model" />
-    <orderEntry type="module" module-name="interfaces" />
+    <orderEntry type="library" name="Maven: com.enigmastation.dao:interfaces:3.0.0-SNAPSHOT" level="project" />
     <orderEntry type="module" module-name="db4o-dao" scope="TEST" />
     <orderEntry type="library" scope="TEST" name="Maven: com.db4o:db4o-full-java5:8.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: commons-math:commons-math:1.2" level="project" />
@@ -58,8 +58,8 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: com.beust:jcommander:1.10" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:r07" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-analyzers:3.0.2" level="project" />
-    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-core:3.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-analyzers:3.0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.lucene:lucene-core:3.0.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-context:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-aop:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-asm:3.0.4.RELEASE" level="project" />

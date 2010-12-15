@@ -1,7 +1,7 @@
 package com.enigmastation.neuralnet;
 
-import com.enigmastation.neuralnet.model.Neuron;
-import com.gigaspaces.simpledao.dao.Pair;
+import com.enigmastation.dao.model.Neuron;
+import com.enigmastation.dao.model.Pair;
 
 import java.util.List;
 

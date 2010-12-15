@@ -1,5 +1,7 @@
 package com.enigmastation.dao.model;
 
+import com.enigmastation.dao.BaseEntity;
+
 public class Synapse extends BaseEntity {
     String from;
     String to;

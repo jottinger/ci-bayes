@@ -1,8 +1,8 @@
 package com.enigmastation.neuralnet.service;
 
-import com.enigmastation.neuralnet.model.Neuron;
-import com.enigmastation.neuralnet.model.Synapse;
-import com.enigmastation.neuralnet.model.Visibility;
+import com.enigmastation.dao.model.Neuron;
+import com.enigmastation.dao.model.Synapse;
+import com.enigmastation.dao.model.Visibility;
 
 import java.util.Set;
 

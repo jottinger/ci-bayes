@@ -1,14 +1,14 @@
 package com.enigmastation.neuralnet.impl;
 
+import com.enigmastation.dao.model.Neuron;
+import com.enigmastation.dao.model.Pair;
+import com.enigmastation.dao.model.Synapse;
+import com.enigmastation.dao.model.Visibility;
 import com.enigmastation.extractors.WordLister;
 import com.enigmastation.extractors.impl.StemmingWordLister;
 import com.enigmastation.neuralnet.Actor;
 import com.enigmastation.neuralnet.NeuralNetwork;
-import com.enigmastation.neuralnet.model.Neuron;
-import com.enigmastation.neuralnet.model.Synapse;
-import com.enigmastation.neuralnet.model.Visibility;
 import com.enigmastation.neuralnet.service.NeuralNetService;
-import com.gigaspaces.simpledao.dao.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +23,6 @@ public class Perceptron implements NeuralNetwork {
     }};
     String[] ignoredWords = {"the", "a", "an", "and",};
 
-    @Override
     public void trainNaive(String inputs, String output) {
         List<String> sortedWords = new ArrayList<String>(getWords(inputs));
         List<Neuron> outputNeurons = new ArrayList<Neuron>();
@@ -66,10 +65,8 @@ public class Perceptron implements NeuralNetwork {
 
 
     static Comparator<Pair<Neuron, Double>> pairComparator = new Comparator<Pair<Neuron, Double>>() {
-        @Override
         public int compare(Pair<Neuron, Double> o1, Pair<Neuron, Double> o2) {
             return o2.getV().compareTo(o1.getV());
-
         }
     };
 
@@ -87,10 +84,9 @@ public class Perceptron implements NeuralNetwork {
         return results;
     }
 
-    @Override
     public List<Pair<Neuron, Double>> getOutputs(String corpus) {
         return getOutputs(corpus, new Actor() {
-            void handle(List<Pair<Neuron, Double>> list, Neuron n, double weight) {
+            public void handle(List<Pair<Neuron, Double>> list, Neuron n, double weight) {
                 list.add(new Pair<Neuron, Double>(n, weight));
             }
         });
@@ -230,7 +226,6 @@ public class Perceptron implements NeuralNetwork {
         neuralNetService.reset();
     }
 
-    @Override
     public void train(String corpus, String result) {
         trainNaive(corpus, result);
         backPropagate(corpus, result);
