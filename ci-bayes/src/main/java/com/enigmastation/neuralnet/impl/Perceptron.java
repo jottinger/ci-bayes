@@ -11,6 +11,7 @@ import com.enigmastation.neuralnet.NeuralNetwork;
 import com.enigmastation.neuralnet.service.NeuralNetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -23,8 +24,10 @@ public class Perceptron implements NeuralNetwork {
     }};
     String[] ignoredWords = {"the", "a", "an", "and",};
 
+    @Transactional
     public void trainNaive(String inputs, String output) {
         List<String> sortedWords = new ArrayList<String>(getWords(inputs));
+
         List<Neuron> outputNeurons = new ArrayList<Neuron>();
         Collections.sort(sortedWords);
         List<Neuron> inputNeurons = new ArrayList<Neuron>();
@@ -107,9 +110,9 @@ public class Perceptron implements NeuralNetwork {
         //System.out.println("bp target: " + target);
         Actor actor = new Actor(); // we discard these results...
         Set<String> targetSequence = getWords(target);
-        //System.out.println("Target Sequence: " + targetSequence);
+        System.out.println("Target Sequence: " + targetSequence);
         target = getWords(target).toArray(new String[targetSequence.size()])[0];
-        //System.out.println("backpropagating with " + target);
+        System.out.println("backpropagating with " + target);
 
         trainNaive(corpus, target);
 
@@ -119,7 +122,9 @@ public class Perceptron implements NeuralNetwork {
         setupNeuronLists(corpus, inputNeurons, hiddenNeurons, outputNeurons);
 
         Neuron targetNeuron = neuralNetService.getNeuron(target, Visibility.VISIBLE);
-
+        System.out.println(inputNeurons);
+        System.out.println(hiddenNeurons);
+        System.out.println(outputNeurons);
         WeightsMatrix weightsMatrix = new WeightsMatrix(inputNeurons, hiddenNeurons, outputNeurons, actor, null).invoke();
         double[] targets = new double[outputNeurons.size()];
         double[] outputDeltas = new double[outputNeurons.size()];
@@ -191,6 +196,10 @@ public class Perceptron implements NeuralNetwork {
             Set<Synapse> synapses = neuralNetService.getSynapsesFrom(inputNeuron);
             for (Synapse synapse : synapses) {
                 Neuron hiddenNeuron = neuralNetService.getNeuronById(synapse.getTo());
+                if (hiddenNeuron == null) {
+                    showSynapseLookupError(synapse.getTo());
+                    throw new Error("Neuron with id " + synapse.getTo() + " doesn't exist.. but should!");
+                }
                 if (!hiddenNeurons.contains(hiddenNeuron)) {
                     hiddenNeurons.add(hiddenNeuron);
                 }
@@ -199,11 +208,30 @@ public class Perceptron implements NeuralNetwork {
                 Set<Synapse> outputSynapses = neuralNetService.getSynapsesFrom(hiddenNeuron);
                 for (Synapse outputSynapse : outputSynapses) {
                     Neuron outputNeuron = neuralNetService.getNeuronById(outputSynapse.getTo());
+                    if (outputNeuron == null) {
+                        throw new Error("Neuron with id " + outputSynapse.getTo() + " doesn't exist.. but should!");
+                    }
                     if (!outputNeurons.contains(outputNeuron)) {
                         outputNeurons.add(outputNeuron);
                     }
                 }
             }
+        }
+    }
+
+    private void showSynapseLookupError(String to) {
+        System.out.printf("Couldn't find neuron with id %s%n", to);
+        System.out.println("Neurons----------------------");
+        Neuron n=new Neuron();
+        List<Neuron> neurons=neuralNetService.getNeuronDAO().readMultiple(n);
+        for(Neuron ns:neurons) {
+            System.out.println(ns);
+        }
+        System.out.println("Synapses---------------------");
+        Synapse t=new Synapse();
+        List<Synapse> synapses=this.neuralNetService.getSynapseDAO().readMultiple(t);
+        for(Synapse s:synapses) {
+            System.out.println(s);
         }
     }
 

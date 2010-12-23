@@ -3,9 +3,14 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>ci-bayes-parent</artifactId>
+        <groupId>com.enigmastation.ci-bayes</groupId>
+        <version>3.0.1-SNAPSHOT</version>
+    </parent>
     <groupId>com.enigmastation.ci-bayes.dao</groupId>
     <artifactId>gigaspaces-dao</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>gigaspaces-dao</name>
     <url>http://maven.apache.org</url>
     <properties>
@@ -17,7 +22,7 @@
         <dependency>
             <groupId>com.enigmastation.ci-bayes</groupId>
             <artifactId>model</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.gigaspaces</groupId>
@@ -51,7 +56,7 @@
             <artifactId>ci-bayes</artifactId>
             <version>3.0.0-SNAPSHOT</version>
         </dependency>
-          <dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
             <version>${springVersion}</version>

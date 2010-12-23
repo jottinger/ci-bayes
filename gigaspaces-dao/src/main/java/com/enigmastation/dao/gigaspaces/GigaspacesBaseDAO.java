@@ -32,6 +32,7 @@ public class GigaspacesBaseDAO<T extends BaseEntity> extends AbstractBaseDAO<T> 
         return space.read(template);
     }
 
+    @SuppressWarnings({"unchecked"})
     public T readById(String id) {
         return (T) space.readById(persistentClass, id);
     }
@@ -59,6 +60,7 @@ public class GigaspacesBaseDAO<T extends BaseEntity> extends AbstractBaseDAO<T> 
         return space.take(template);
     }
 
+    @SuppressWarnings({"unchecked"})
     public T takeById(String id) {
         return (T) space.takeById(persistentClass, id);
     }

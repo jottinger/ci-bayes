@@ -1,5 +1,7 @@
 package com.enigmastation.neuralnet.service;
 
+import com.enigmastation.dao.NeuronDAO;
+import com.enigmastation.dao.SynapseDAO;
 import com.enigmastation.dao.model.Neuron;
 import com.enigmastation.dao.model.Synapse;
 import com.enigmastation.dao.model.Visibility;
@@ -20,4 +22,8 @@ public interface NeuralNetService {
     double getStrength(Neuron from, Neuron to, Visibility v);
 
     void reset();
+
+    SynapseDAO getSynapseDAO();
+
+    NeuronDAO getNeuronDAO();
 }

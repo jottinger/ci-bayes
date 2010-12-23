@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,9 +22,10 @@ public class NeuralNetServiceImpl implements NeuralNetService {
     SynapseDAO synapseDAO;
 
     public Neuron getNeuronById(String id) {
-        Neuron template=new Neuron();
-        template.setId(id);
-        return neuronDAO.read(template);
+        if(id==null) {
+            throw new IllegalArgumentException();
+        }
+        return neuronDAO.readById(id);
     }
 
     public Neuron getNeuron(String payload, Visibility visibility) {
@@ -34,6 +34,7 @@ public class NeuralNetServiceImpl implements NeuralNetService {
 
     @Transactional
     public void setStrength(Neuron from, Neuron to, double strength) {
+        checkArguments(from, to, Visibility.VISIBLE);
         Synapse template = new Synapse();
         template.setFrom(from.getId());
         template.setTo(to.getId());
@@ -57,7 +58,9 @@ public class NeuralNetServiceImpl implements NeuralNetService {
         return synapses;
     }
 
+    @Transactional
     public double getStrength(Neuron from, Neuron to, Visibility visibility) {
+        checkArguments(from, to, visibility);
         Synapse template = new Synapse();
         template.setFrom(from.getId());
         template.setTo(to.getId());
@@ -68,9 +71,23 @@ public class NeuralNetServiceImpl implements NeuralNetService {
         return r.getStrength();
     }
 
+    private void checkArguments(Neuron from, Neuron to, Visibility visibility) {
+        if(to==null || from==null || visibility==null) {
+            throw new IllegalArgumentException(from+","+to+","+visibility);
+        }
+    }
+
     public void reset() {
         synapseDAO.takeMultiple(new Synapse());
         neuronDAO.takeMultiple(new Neuron());
+    }
+
+    public SynapseDAO getSynapseDAO() {
+        return synapseDAO;
+    }
+
+    public NeuronDAO getNeuronDAO() {
+        return neuronDAO;
     }
 
     @Transactional

@@ -5,12 +5,12 @@
     <parent>
         <groupId>com.enigmastation.ci-bayes</groupId>
         <artifactId>ci-bayes-parent</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.enigmastation.ci-bayes</groupId>
     <artifactId>model</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.1-SNAPSHOT</version>
     <dependencies>
         <dependency>
             <groupId>com.enigmastation.ci-bayes.dao</groupId>

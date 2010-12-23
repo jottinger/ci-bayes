@@ -46,14 +46,29 @@ public class GigaspacesTest extends AbstractTestNGSpringContextTests {
     }
 
     @Test
-    public void testCategoryDAO() {
-        Category c=new Category();
+    public void testFindById() {
+        Category c = new Category();
         c.setCategory("test");
         c.setCount(10L);
         categoryDAO.write(c);
-        Category t=new Category();
+        assertNotNull(c.getId());
+        Category template = new Category();
+        template.setId(c.getId());
+        Category o = categoryDAO.read(template);
+        assertNotNull(o);
+        assertEquals(o.getId(), c.getId());
+        assertEquals(o.getCategory(), c.getCategory());
+    }
+
+    @Test
+    public void testCategoryDAO() {
+        Category c = new Category();
+        c.setCategory("test");
+        c.setCount(10L);
+        categoryDAO.write(c);
+        Category t = new Category();
         t.setCategory("test");
-        Category t2=categoryDAO.read(t);
+        Category t2 = categoryDAO.read(t);
         assertEquals(t2.getCount(), c.getCount());
         assertEquals(t2.getId(), c.getId());
     }
@@ -66,8 +81,8 @@ public class GigaspacesTest extends AbstractTestNGSpringContextTests {
     }
 
     private void dumpSpace() {
-        Object[] objects=space.readMultiple(new Object(), Integer.MAX_VALUE);
-        for(Object o:objects) {
+        Object[] objects = space.readMultiple(new Object(), Integer.MAX_VALUE);
+        for (Object o : objects) {
             System.out.println(o);
         }
     }
