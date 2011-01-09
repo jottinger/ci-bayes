@@ -16,7 +16,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <springVersion>3.0.4.RELEASE</springVersion>
-        <gsVersion>7.1.2</gsVersion>
+        <gsVersion>7.1.3</gsVersion>
     </properties>
     <dependencies>
         <dependency>
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.gigaspaces</groupId>
             <artifactId>gs-openspaces</artifactId>
-            <version>7.1.2</version>
+            <version>${gsVersion}</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.springframework</groupId>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>com.enigmastation.ci-bayes</groupId>
             <artifactId>ci-bayes</artifactId>
-            <version>3.0.0-SNAPSHOT</version>
+            <version>3.0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

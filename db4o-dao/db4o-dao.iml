@@ -10,13 +10,17 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.testng:testng:5.14.4" level="project" />
-    <orderEntry type="library" name="Maven: com.enigmastation.ci-bayes:model:3.0.0-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.enigmastation.ci-bayes.dao:interfaces:3.0.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.testng:testng:5.14.6" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:3.8.1" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.beanshell:bsh:2.0b4" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.google.inject:guice:2.0" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: aopalliance:aopalliance:1.0" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: com.beust:jcommander:1.12" level="project" />
+    <orderEntry type="module" module-name="model" />
+    <orderEntry type="module" module-name="interfaces" />
     <orderEntry type="library" name="Maven: com.db4o:db4o-full-java5:8.0-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-context:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-aop:3.0.4.RELEASE" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: aopalliance:aopalliance:1.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-asm:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-beans:3.0.4.RELEASE" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.springframework:spring-core:3.0.4.RELEASE" level="project" />
