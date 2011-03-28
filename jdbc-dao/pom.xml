@@ -6,11 +6,11 @@
     <parent>
         <artifactId>ci-bayes-parent</artifactId>
         <groupId>com.enigmastation.ci-bayes</groupId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.0.2</version>
     </parent>
     <groupId>com.enigmastation.ci-bayes.dao</groupId>
     <artifactId>jdbc-dao</artifactId>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.2</version>
     <name>jdbc-dao</name>
     <url>http://maven.apache.org</url>
     <properties>
@@ -26,7 +26,7 @@
         <dependency>
             <groupId>com.enigmastation.ci-bayes</groupId>
             <artifactId>model</artifactId>
-            <version>3.0.1-SNAPSHOT</version>
+            <version>3.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.hsqldb</groupId>

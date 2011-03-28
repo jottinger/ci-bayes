@@ -110,9 +110,9 @@ public class Perceptron implements NeuralNetwork {
         //System.out.println("bp target: " + target);
         Actor actor = new Actor(); // we discard these results...
         Set<String> targetSequence = getWords(target);
-        System.out.println("Target Sequence: " + targetSequence);
+        //System.out.println("Target Sequence: " + targetSequence);
         target = getWords(target).toArray(new String[targetSequence.size()])[0];
-        System.out.println("backpropagating with " + target);
+        //System.out.println("backpropagating with " + target);
 
         trainNaive(corpus, target);
 
@@ -122,9 +122,9 @@ public class Perceptron implements NeuralNetwork {
         setupNeuronLists(corpus, inputNeurons, hiddenNeurons, outputNeurons);
 
         Neuron targetNeuron = neuralNetService.getNeuron(target, Visibility.VISIBLE);
-        System.out.println(inputNeurons);
-        System.out.println(hiddenNeurons);
-        System.out.println(outputNeurons);
+        //System.out.println(inputNeurons);
+        //System.out.println(hiddenNeurons);
+        //System.out.println(outputNeurons);
         WeightsMatrix weightsMatrix = new WeightsMatrix(inputNeurons, hiddenNeurons, outputNeurons, actor, null).invoke();
         double[] targets = new double[outputNeurons.size()];
         double[] outputDeltas = new double[outputNeurons.size()];

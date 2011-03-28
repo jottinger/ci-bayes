@@ -6,7 +6,7 @@
     <parent>
         <artifactId>ci-bayes-parent</artifactId>
         <groupId>com.enigmastation.ci-bayes</groupId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.0.2</version>
     </parent>
     <groupId>com.enigmastation.ci-bayes.dao</groupId>
     <artifactId>gigaspaces-dao</artifactId>
@@ -15,14 +15,14 @@
     <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <springVersion>3.0.4.RELEASE</springVersion>
-        <gsVersion>7.1.3</gsVersion>
+        <springVersion>3.0.5.RELEASE</springVersion>
+        <gsVersion>8.0.0</gsVersion>
     </properties>
     <dependencies>
         <dependency>
             <groupId>com.enigmastation.ci-bayes</groupId>
             <artifactId>model</artifactId>
-            <version>3.0.1-SNAPSHOT</version>
+            <version>3.0.2</version>
         </dependency>
         <dependency>
             <groupId>com.gigaspaces</groupId>
@@ -54,7 +54,7 @@
         <dependency>
             <groupId>com.enigmastation.ci-bayes</groupId>
             <artifactId>ci-bayes</artifactId>
-            <version>3.0.1-SNAPSHOT</version>
+            <version>3.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>

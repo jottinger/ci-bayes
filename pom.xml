@@ -5,12 +5,12 @@
     <groupId>com.enigmastation.ci-bayes</groupId>
     <artifactId>ci-bayes-parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.0.1-SNAPSHOT</version>
+    <version>3.0.2</version>
     <name>ci-bayes-parent</name>
     <description>Module for classifying data based on various Bayesian algorithms</description>
     <url>https://ci-bayes.dev.java.net</url>
     <properties>
-        <springVersion>3.0.4.RELEASE</springVersion>
+        <springVersion>3.0.5.RELEASE</springVersion>
     </properties>
     <licenses>
         <license>
