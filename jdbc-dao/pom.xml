@@ -36,7 +36,7 @@
         <dependency>
             <groupId>commons-dbcp</groupId>
             <artifactId>commons-dbcp</artifactId>
-            <version>[1.4,)</version>
+            <version>1.4</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -65,7 +65,7 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
-            <version>[1.5.4,)</version>
+            <version>1.6.10</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -81,10 +81,4 @@
             </plugin>
         </plugins>
     </build>
-    <repositories>
-        <repository>
-            <id>db4o</id>
-            <url>https://source.db4o.com/maven</url>
-        </repository>
-    </repositories>
 </project>
