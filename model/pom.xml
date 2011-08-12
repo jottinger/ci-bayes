@@ -12,6 +12,9 @@
     <artifactId>model</artifactId>
     <version>3.0.2</version>
     <name>model</name>
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.enigmastation.ci-bayes.dao</groupId>

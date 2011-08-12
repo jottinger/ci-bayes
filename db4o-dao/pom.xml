@@ -20,7 +20,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.0.1</version>
+            <version>6.1.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -73,7 +73,9 @@
     <repositories>
         <repository>
             <id>db4o</id>
-            <url>https://source.db4o.com/maven</url>
+            <name>db4o maven repository</name>
+            <url>http://source.db4o.com/maven/</url>
+            <layout>default</layout>
         </repository>
     </repositories>
 </project>

@@ -9,6 +9,8 @@ import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.snowball.SnowballFilter;
 import org.apache.lucene.analysis.standard.StandardTokenizer;
 import org.apache.lucene.util.Version;
+import org.apache.lucene.analysis.tokenattributes.TermAttribute;
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 
 import com.google.common.collect.Sets;
 
@@ -33,18 +35,14 @@ public class LuceneStemmingWordLister extends SimpleWordLister {
         StandardTokenizer tokenizer = new StandardTokenizer(Version.LUCENE_30,new StringReader(document));
         tokenizer.setMaxTokenLength(20);
         SnowballFilter psf = new SnowballFilter(tokenizer, "English");
-        Token t;
-        StringBuilder sb = new StringBuilder();
+        OffsetAttribute offsetAttribute = tokenizer.getAttribute(OffsetAttribute.class);
+        TermAttribute termAttribute = tokenizer.getAttribute(TermAttribute.class);
         try {
-            while ((t = psf.next()) != null) {
-                sb.setLength(0);
-                sb.append(t.termBuffer(), 0, t.termLength());
-                //System.out.println(sb.toString());
-                features.add(sb.toString());
+            while(tokenizer.incrementToken()) {
+               features.add(termAttribute.term());
             }
-        } catch (IOException e) {
-            // should never happen! We're reading a flippin' STRING!
-            e.printStackTrace();
+        } catch(IOException e) {
+            throw new Error("IOException where no IOException should be", e);
         }
     }
 }
