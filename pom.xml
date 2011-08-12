@@ -92,6 +92,12 @@
             <url>http://download.java.net/maven/2/</url>
             <layout>default</layout>
         </repository>
+        <repository>
+            <id>OpenSpaces</id>
+            <name>OpenSpaces public maven repository</name>
+            <url>http://openspaces-maven-repository.googlecode.com/svn/maven-repository/</url>
+            <layout>default</layout>
+        </repository>
     </repositories>
     <distributionManagement>
         <repository>
