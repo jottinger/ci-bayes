@@ -1,11 +1,11 @@
-package com.enigmastation.classifier.corpus;
+package com.enigmastation.dao.objectify;
 
 /**
  * Created by IntelliJ IDEA.
  * User: joeo
- * Date: 1/23/12
- * Time: 4:05 PM
+ * Date: 1/19/12
+ * Time: 9:00 AM
  * To change this template use File | Settings | File Templates.
  */
-public class CorpusTest {
+public class CategoryDAOImpl {
 }

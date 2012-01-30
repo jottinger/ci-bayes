@@ -1,0 +1,16 @@
+package com.enigmastation.dao.objectify;
+
+import com.enigmastation.dao.NeuronDAO;
+import com.enigmastation.dao.model.Neuron;
+import org.springframework.stereotype.Repository;
+
+/**
+ * User: joeo
+ * Date: 11/5/10
+ * Time: 7:03 AM
+ * <p/>
+ * Copyright
+ */
+@Repository
+public class NeuronDAOImpl extends Db4OBaseDAO<Neuron> implements NeuronDAO {
+}
