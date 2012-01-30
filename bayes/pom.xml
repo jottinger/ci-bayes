@@ -29,7 +29,7 @@
             <version>3.4.0</version>
         </dependency>
         <dependency>
-            <groupId>${parent.groupId}</groupId>
+            <groupId>com.enigmastation.ml</groupId>
             <artifactId>common</artifactId>
             <version>${project.version}</version>
         </dependency>
