@@ -21,7 +21,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.3.1</version>
+            <version>${testngVersion}</version>
             <scope>test</scope>
         </dependency>
         <!-- I like javatar's tar archive much better than commons-compress' -->
@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-analyzers</artifactId>
-            <version>3.4.0</version>
+            <version>${luceneVersion}</version>
         </dependency>
         <dependency>
             <groupId>${parent.groupId}</groupId>

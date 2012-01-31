@@ -10,11 +10,14 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <testngVersion>6.3.1</testngVersion>
+        <luceneVersion>3.4.0</luceneVersion>
     </properties>
 
     <modules>
         <module>common</module>
         <module>bayes</module>
+        <module>cassandra-persistence</module>
     </modules>
 
     <build>
