@@ -4,14 +4,22 @@ import java.util.Iterator;
 import java.util.Map;
 
 public abstract class MapDataStore<K, V> {
-  public void persist(Map updates) {
-    Iterator it = updates.entrySet().iterator();
-    while (it.hasNext()) {
-      Map.Entry pair = (Map.Entry) it.next();
-      persistEntry(pair);
-      it.remove();
+    final synchronized public void persist(Map updates) {
+        startBlock();
+        Iterator it = updates.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry pair = (Map.Entry) it.next();
+            persistEntry(pair);
+            it.remove();
+        }
+        endBlock();
     }
-  }
 
-  protected abstract void persistEntry(Map.Entry pair);
+    protected void startBlock() {
+    }
+
+    protected void endBlock() {
+    }
+
+    protected abstract void persistEntry(Map.Entry pair);
 }
