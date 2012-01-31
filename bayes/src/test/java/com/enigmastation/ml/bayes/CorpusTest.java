@@ -19,7 +19,7 @@ public class CorpusTest {
     int misses;
     int tests;
 
-    @Test
+    @Test(groups = {"fulltest"})
     public void testCorpus() throws URISyntaxException, IOException, InterruptedException {
         final Classifier classifier = new FisherClassifier();
         ExecutorService service = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
