@@ -31,6 +31,11 @@ public class MapTest {
                                   }
                                   return sb.toString();
                                 }
+
+                                @Override
+                                public Map<String, String> load() {
+                                  return null;
+                                }
                               }).build();
     map.put("bar", "baz");
     assertEquals(map.get("foo"), "oof");

@@ -3,11 +3,11 @@ package com.enigmastation.ml.common.collections;
 import java.util.Map;
 
 public class MapBuilder {
-  private ValueProvider valueProvider=null;
+  private ValueProvider valueProvider = null;
   private int syncBlockSize = -1;
-  private MapDataStore<?, ?> dataStore=null;
+  private MapDataStore<?, ?> dataStore = null;
 
-  public <K, V> MapBuilder dataStore(MapDataStore<K,V> dataStore) {
+  public <K, V> MapBuilder dataStore(MapDataStore<K, V> dataStore) {
     if (this.dataStore != null) {
       throw new IllegalStateException("dataStore already set");
     }
@@ -55,6 +55,7 @@ public class MapBuilder {
     }
     //noinspection unchecked
     map.setDataStore((MapDataStore<K, V>) dataStore);
+    map.init();
     return map;
   }
 }

@@ -11,6 +11,13 @@ extends NonBlockingHashMap<K, V> {
   int syncBlockSize = 0;
   MapDataStore<K, V> dataStore;
 
+  public void init() {
+    Map<K, V> load = valueProvider.load();
+    if (load != null) {
+      this.putAll(load);
+    }
+  }
+
   public int getSyncBlockSize() {
     return syncBlockSize;
   }
@@ -59,6 +66,11 @@ extends NonBlockingHashMap<K, V> {
   }
 
   public void synchronize() {
-    dataStore.persist(updates);
+    if (!dataStore.persistAll(this)) {
+      dataStore.persist(updates);
+    } else {
+      // since persistAll() says it saved everything, just empty the journal
+      updates.clear();
+    }
   }
 }
