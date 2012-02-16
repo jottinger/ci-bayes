@@ -9,9 +9,9 @@
         <version>4.0-SNAPSHOT</version>
     </parent>
     <groupId>com.enigmastation.ml</groupId>
-    <artifactId>infinispan-persistence</artifactId>
+    <artifactId>corpus-test</artifactId>
     <version>4.0-SNAPSHOT</version>
-    <name>infinispan-persistence</name>
+    <name>corpus-test</name>
     <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,11 +23,21 @@
             <version>${testngVersion}</version>
             <scope>test</scope>
         </dependency>
+        <!-- I like javatar's tar archive much better than commons-compress' -->
         <dependency>
-            <groupId>org.infinispan</groupId>
-            <artifactId>infinispan-core</artifactId>
-            <version>${infinispanVersion}</version>
+            <groupId>javatar</groupId>
+            <artifactId>javatar</artifactId>
+            <version>[2.5,)</version>
+            <scope>test</scope>
         </dependency>
+        <!-- however, commons-compress has a much more clear BZip2 inputstream than ant does-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.2</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>common</artifactId>
@@ -36,6 +46,11 @@
         <dependency>
             <groupId>${project.parent.groupId}</groupId>
             <artifactId>bayes</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.parent.groupId}</groupId>
+            <artifactId>infinispan-persistence</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -53,6 +68,32 @@
                     <showWarnings>true</showWarnings>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <groups>normal</groups>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>fulltest</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <version>2.9</version>
+                        <configuration>
+                            <groups>normal, fulltest</groups>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
