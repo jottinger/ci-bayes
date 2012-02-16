@@ -12,12 +12,14 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <testngVersion>6.3.1</testngVersion>
         <luceneVersion>3.4.0</luceneVersion>
+        <infinispanVersion>5.1.0-SNAPSHOT</infinispanVersion>
     </properties>
 
     <modules>
         <module>common</module>
         <module>bayes</module>
-        <module>cassandra-persistence</module>
+        <!--<module>cassandra-persistence</module>-->
+        <module>infinispan-persistence</module>
     </modules>
 
     <build>
@@ -35,4 +37,35 @@
             </plugin>
         </plugins>
     </build>
+
+    <repositories>
+        <repository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Maven Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Maven Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>never</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+                <updatePolicy>never</updatePolicy>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 </project>
