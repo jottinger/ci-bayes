@@ -2,33 +2,27 @@ package com.enigmastation.ml.bayes.impl;
 
 import com.enigmastation.ml.bayes.ClassifierDataFactory;
 import com.enigmastation.ml.bayes.Feature;
-import com.enigmastation.ml.common.collections.MapBuilder;
-import com.enigmastation.ml.common.collections.ValueProvider;
+import org.infinispan.Cache;
+import org.infinispan.manager.DefaultCacheManager;
 
-import java.util.Map;
+import java.io.IOException;
 
 public class DefaultClassifierDataFactory implements ClassifierDataFactory {
     @Override
-    public Map<Object, Integer> buildCategories() {
-        return new MapBuilder().defaultValue(0).build();
+    public Cache<Object, Integer> buildCategories() {
+        return getCache("categories");
+    }
+
+    private <K, V> Cache<K, V> getCache(String name) {
+        try {
+            return new DefaultCacheManager("bayes-cache.xml").getCache(name, true);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public Map<Object, Feature> buildFeatures() {
-        return new MapBuilder().valueProvider(new ValueProvider<Object, Feature>() {
-
-            @Override
-            public Feature getDefault(Object k) {
-                Feature f = new Feature();
-                f.setFeature(k);
-                f.setCategories(new MapBuilder().defaultValue(0).<Object, Integer>build());
-                return f;
-            }
-
-            @Override
-            public Map<Object, Feature> load() {
-                return null;
-            }
-        }).build();
+    public Cache<Object, Feature> buildFeatures() {
+        return getCache("features");
     }
 }

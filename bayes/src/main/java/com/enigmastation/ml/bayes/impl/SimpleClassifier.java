@@ -4,8 +4,7 @@ import com.enigmastation.ml.bayes.Classifier;
 import com.enigmastation.ml.bayes.ClassifierDataFactory;
 import com.enigmastation.ml.bayes.Feature;
 import com.enigmastation.ml.bayes.Tokenizer;
-import com.enigmastation.ml.common.collections.MapBuilder;
-import com.enigmastation.ml.common.collections.ValueProvider;
+import org.infinispan.Cache;
 
 import java.util.HashMap;
 import java.util.List;
@@ -13,20 +12,16 @@ import java.util.Map;
 import java.util.Set;
 
 public class SimpleClassifier implements Classifier {
-    Map<Object, Feature> features;
-    Map<Object, Integer> categories;
+    Cache<Object, Feature> features;
+    Cache<Object, Integer> categories;
     Tokenizer tokenizer = new PorterTokenizer();
-    Map<Object, Double> thresholds = new MapBuilder().defaultValue(1.0).build();
+    Map<Object, Double> thresholds = new HashMap<>();
     static final ThreadLocal<Object> lastData = new ThreadLocal<>();
     static final ThreadLocal<List<Object>> lastFeatures = new ThreadLocal<>();
 
-    SimpleClassifier(Map<Object, Feature> features, Map<Object, Integer> categories) {
-        this.features = features;
-        this.categories = categories;
-    }
-
     SimpleClassifier(ClassifierDataFactory factory) {
-        this(factory.buildFeatures(), factory.buildCategories());
+        features = factory.buildFeatures();
+        categories = factory.buildCategories();
     }
 
     public SimpleClassifier() {
@@ -98,6 +93,11 @@ public class SimpleClassifier implements Classifier {
 
     private void incrementFeature(Object feature, Object category) {
         Feature f = features.get(feature);
+        if (f == null) {
+            f = new Feature();
+            f.setFeature(feature);
+            f.setCategories(new HashMap<Object, Integer>());
+        }
         features.put(feature, f);
         f.incrementCategoryCount(category);
         /*
@@ -108,7 +108,11 @@ public class SimpleClassifier implements Classifier {
     }
 
     private void incrementCategory(Object category) {
-        categories.put(category, categories.get(category) + 1);
+        Integer oldCount = categories.get(category);
+        if (oldCount == null) {
+            oldCount = 0;
+        }
+        categories.put(category, oldCount + 1);
     }
 
     // the number of times a feature has occurred in a category
@@ -116,7 +120,11 @@ public class SimpleClassifier implements Classifier {
         //if (features.containsKey(feature) && features.get(feature).containsKey(category)) {
         //  return features.get(feature).get(category);
         //}
-        return features.get(feature).getCountForCategory(category);
+        Feature f = features.get(feature);
+        if (f == null) {
+            return 0;
+        }
+        return f.getCountForCategory(category);
     }
 
     int categoryCount(Object category) {
@@ -186,6 +194,9 @@ public class SimpleClassifier implements Classifier {
     }
 
     public double getThreshold(Object category) {
-        return thresholds.get(category);
+        if (thresholds.containsKey(category)) {
+            return thresholds.get(category);
+        }
+        return 1.0;
     }
 }

@@ -25,10 +25,18 @@ public class Feature implements Serializable {
     }
 
     public Integer getCountForCategory(Object category) {
-        return categories.get(category);
+        Integer count = categories.get(category);
+        if (count == null) {
+            return 0;
+        }
+        return count;
     }
 
     public void incrementCategoryCount(Object category) {
-        categories.put(category, categories.get(category) + 1);
+        Integer oldCount = categories.get(category);
+        if (oldCount == null) {
+            oldCount = 0;
+        }
+        categories.put(category, oldCount + 1);
     }
 }

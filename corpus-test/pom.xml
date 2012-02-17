@@ -48,11 +48,6 @@
             <artifactId>bayes</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>${project.parent.groupId}</groupId>
-            <artifactId>infinispan-persistence</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
     <build>

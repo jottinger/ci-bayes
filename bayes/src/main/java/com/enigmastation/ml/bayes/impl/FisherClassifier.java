@@ -1,17 +1,20 @@
 package com.enigmastation.ml.bayes.impl;
 
 import com.enigmastation.ml.bayes.ClassifierDataFactory;
-import com.enigmastation.ml.bayes.Feature;
-import com.enigmastation.ml.common.collections.MapBuilder;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class FisherClassifier extends SimpleClassifier {
-    Map<Object, Double> minimums = new MapBuilder().defaultValue(0.0).build();
+    Map<Object, Double> minimums = new HashMap<>();
 
     public double getMinimum(Object category) {
-        return minimums.get(category);
+        if (minimums.containsKey(category)) {
+            return minimums.get(category);
+        } else {
+            return 0.0;
+        }
     }
 
     public void setMinimum(Object category, double v) {
@@ -19,10 +22,6 @@ public class FisherClassifier extends SimpleClassifier {
     }
 
     public FisherClassifier() {
-    }
-
-    public FisherClassifier(Map<Object, Feature> features, Map<Object, Integer> categories) {
-        super(features, categories);
     }
 
     public FisherClassifier(ClassifierDataFactory factory) {

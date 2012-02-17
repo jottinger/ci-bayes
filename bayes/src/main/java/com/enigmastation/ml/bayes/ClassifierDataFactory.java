@@ -1,9 +1,9 @@
 package com.enigmastation.ml.bayes;
 
-import java.util.Map;
+import org.infinispan.Cache;
 
 public interface ClassifierDataFactory {
-    Map<Object, Integer> buildCategories();
+    Cache<Object, Integer> buildCategories();
 
-    Map<Object, Feature> buildFeatures();
+    Cache<Object, Feature> buildFeatures();
 }

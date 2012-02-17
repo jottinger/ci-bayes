@@ -36,5 +36,11 @@
             <artifactId>common</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.infinispan</groupId>
+            <artifactId>infinispan-core</artifactId>
+            <version>${infinispanVersion}</version>
+        </dependency>
     </dependencies>
 </project>

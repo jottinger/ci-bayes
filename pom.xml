@@ -18,8 +18,6 @@
     <modules>
         <module>common</module>
         <module>bayes</module>
-        <!--<module>cassandra-persistence</module>-->
-        <module>infinispan-persistence</module>
         <module>corpus-test</module>
     </modules>
 
