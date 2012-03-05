@@ -1,11 +1,16 @@
 package com.enigmastation.ml.bayes.impl;
 
 import com.enigmastation.ml.bayes.ClassifierDataFactory;
+import com.enigmastation.ml.bayes.annotations.BayesClassifier;
+import com.enigmastation.ml.bayes.annotations.FisherBayesClassifier;
+import com.enigmastation.ml.bayes.annotations.NaiveBayesClassifier;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@BayesClassifier
+@FisherBayesClassifier
 public class FisherClassifier extends SimpleClassifier {
     Map<Object, Double> minimums = new HashMap<>();
 

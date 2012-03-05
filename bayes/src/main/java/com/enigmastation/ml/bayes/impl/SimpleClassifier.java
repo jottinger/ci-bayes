@@ -4,6 +4,8 @@ import com.enigmastation.ml.bayes.Classifier;
 import com.enigmastation.ml.bayes.ClassifierDataFactory;
 import com.enigmastation.ml.bayes.Feature;
 import com.enigmastation.ml.bayes.Tokenizer;
+import com.enigmastation.ml.bayes.annotations.BayesClassifier;
+import com.enigmastation.ml.bayes.annotations.NaiveBayesClassifier;
 import org.infinispan.Cache;
 
 import java.util.HashMap;
@@ -11,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@BayesClassifier
+@NaiveBayesClassifier
 public class SimpleClassifier implements Classifier {
     Cache<Object, Feature> features;
     Cache<Object, Integer> categories;
