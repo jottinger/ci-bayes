@@ -11,9 +11,10 @@ public class SimpleTokenizer implements Tokenizer {
     public List<Object> tokenize(Object source) {
         String src = source.toString();
         List<Object> tokens = new ArrayList<>(src.length() / 6);
-        Scanner scanner = new Scanner(src);
-        while (scanner.hasNext("\\S*")) {
-            tokens.add(scanner.next("\\S*"));
+        try(Scanner scanner = new Scanner(src)) {
+            while (scanner.hasNext("\\S*")) {
+                tokens.add(scanner.next("\\S*"));
+            }
         }
         return tokens;
     }
